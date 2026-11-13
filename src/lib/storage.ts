@@ -1,0 +1,224 @@
+/**
+ * Everything the app remembers lives in this browser's localStorage, under
+ * two keys. Nothing is sent anywhere. "Export my data" hands the same JSON to
+ * the user as a file; "Import" reads it back.
+ */
+import { useCallback, useSyncExternalStore } from 'react'
+import { DEFAULT_CONTEXT, HOSTING, TEAM_SIZES, type Context } from './scoring.ts'
+
+export type Theme = 'system' | 'light' | 'dark'
+
+export interface Prefs extends Context {
+  theme: Theme
+}
+
+export interface GuideProgress {
+  /** Ids of completed steps. */
+  done: string[]
+  notes: string
+  /** ISO timestamp of the last change. */
+  updatedAt: string
+}
+
+export type Progress = Record<string, GuideProgress>
+
+export const PREFS_KEY = 'exitpath:prefs'
+export const PROGRESS_KEY = 'exitpath:progress'
+export const EXPORT_FORMAT = 'exitpath-export'
+export const EXPORT_VERSION = 1
+
+const DEFAULT_PREFS: Prefs = { ...DEFAULT_CONTEXT, theme: 'system' }
+const EMPTY_PROGRESS: Progress = {}
+const EMPTY_GUIDE: GuideProgress = { done: [], notes: '', updatedAt: '' }
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
+
+/** Accepts anything and returns valid prefs, falling back field by field. */
+export function sanitizePrefs(value: unknown): Prefs {
+  if (!isRecord(value)) return DEFAULT_PREFS
+  const { teamSize, hosting, theme } = value
+  // Object.hasOwn, not `in`: "toString" is not a team size.
+  return {
+    teamSize:
+      typeof teamSize === 'string' && Object.hasOwn(TEAM_SIZES, teamSize)
+        ? (teamSize as Prefs['teamSize'])
+        : DEFAULT_PREFS.teamSize,
+    hosting:
+      typeof hosting === 'string' && Object.hasOwn(HOSTING, hosting)
+        ? (hosting as Prefs['hosting'])
+        : DEFAULT_PREFS.hosting,
+    theme: theme === 'light' || theme === 'dark' || theme === 'system' ? theme : DEFAULT_PREFS.theme,
+  }
+}
+
+/** Accepts anything and returns valid progress, dropping what it cannot read. */
+export function sanitizeProgress(value: unknown): Progress {
+  if (!isRecord(value)) return EMPTY_PROGRESS
+  const out: Progress = {}
+  for (const [guideId, raw] of Object.entries(value)) {
+    if (!isRecord(raw)) continue
+    const done = Array.isArray(raw.done) ? raw.done.filter((id): id is string => typeof id === 'string') : []
+    out[guideId] = {
+      done: [...new Set(done)],
+      notes: typeof raw.notes === 'string' ? raw.notes : '',
+      updatedAt: typeof raw.updatedAt === 'string' ? raw.updatedAt : '',
+    }
+  }
+  return out
+}
+
+// --- a tiny external store, so every component sees the same values ---------
+
+const listeners = new Set<() => void>()
+const cache = new Map<string, { raw: string | null; value: unknown }>()
+/** Holds values for this session when localStorage refuses writes. */
+const memory = new Map<string, string>()
+
+function readRaw(key: string): string | null {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return null // storage blocked (private mode, sandboxed iframe): run in memory
+  }
+}
+
+function read<T>(key: string, sanitize: (value: unknown) => T): T {
+  const raw = memory.has(key) ? memory.get(key)! : readRaw(key)
+  const cached = cache.get(key)
+  if (cached && cached.raw === raw) return cached.value as T
+  let parsed: unknown
+  try {
+    parsed = raw === null ? undefined : JSON.parse(raw)
+  } catch {
+    parsed = undefined
+  }
+  const value = sanitize(parsed)
+  cache.set(key, { raw, value })
+  return value
+}
+
+function write(key: string, value: unknown) {
+  const raw = JSON.stringify(value)
+  try {
+    localStorage.setItem(key, raw)
+    memory.delete(key)
+  } catch {
+    memory.set(key, raw)
+  }
+  for (const listener of listeners) listener()
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener)
+  // Another tab changed something: re-read.
+  const onStorage = (event: StorageEvent) => {
+    if (event.key === null || event.key === PREFS_KEY || event.key === PROGRESS_KEY) listener()
+  }
+  window.addEventListener('storage', onStorage)
+  return () => {
+    listeners.delete(listener)
+    window.removeEventListener('storage', onStorage)
+  }
+}
+
+export const getPrefs = () => read(PREFS_KEY, sanitizePrefs)
+export const getProgress = () => read(PROGRESS_KEY, sanitizeProgress)
+
+export function setPrefs(patch: Partial<Prefs>) {
+  write(PREFS_KEY, { ...getPrefs(), ...patch })
+}
+
+function updateGuide(guideId: string, change: (current: GuideProgress) => Partial<GuideProgress>) {
+  const all = getProgress()
+  const current = all[guideId] ?? EMPTY_GUIDE
+  write(PROGRESS_KEY, {
+    ...all,
+    [guideId]: { ...current, ...change(current), updatedAt: new Date().toISOString() },
+  })
+}
+
+export function setStepDone(guideId: string, stepId: string, done: boolean) {
+  updateGuide(guideId, (current) => ({
+    done: done ? [...new Set([...current.done, stepId])] : current.done.filter((id) => id !== stepId),
+  }))
+}
+
+export function setGuideNotes(guideId: string, notes: string) {
+  updateGuide(guideId, () => ({ notes }))
+}
+
+export function resetGuide(guideId: string) {
+  const { [guideId]: _removed, ...rest } = getProgress()
+  write(PROGRESS_KEY, rest)
+}
+
+export function clearEverything() {
+  for (const key of [PREFS_KEY, PROGRESS_KEY]) {
+    try {
+      localStorage.removeItem(key)
+    } catch {
+      // nothing stored there anyway
+    }
+    memory.delete(key)
+  }
+  for (const listener of listeners) listener()
+}
+
+// --- export / import ---------------------------------------------------------
+
+export interface ExportFile {
+  format: typeof EXPORT_FORMAT
+  version: number
+  exportedAt: string
+  prefs: Prefs
+  progress: Progress
+}
+
+export function exportData(): ExportFile {
+  return {
+    format: EXPORT_FORMAT,
+    version: EXPORT_VERSION,
+    exportedAt: new Date().toISOString(),
+    prefs: getPrefs(),
+    progress: getProgress(),
+  }
+}
+
+/**
+ * Replaces stored data with the contents of an export file.
+ * Throws with a readable message when the file is not one of ours.
+ */
+export function importData(text: string): { guides: number } {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(text)
+  } catch {
+    throw new Error('That file is not valid JSON.')
+  }
+  if (!isRecord(parsed) || parsed.format !== EXPORT_FORMAT) {
+    throw new Error('That file does not look like an ExitPath export.')
+  }
+  if (typeof parsed.version !== 'number' || parsed.version > EXPORT_VERSION) {
+    throw new Error('That export was made by a newer version of ExitPath.')
+  }
+  const progress = sanitizeProgress(parsed.progress)
+  write(PREFS_KEY, sanitizePrefs(parsed.prefs))
+  write(PROGRESS_KEY, progress)
+  return { guides: Object.keys(progress).length }
+}
+
+// --- hooks -------------------------------------------------------------------
+
+export function usePrefs(): Prefs {
+  return useSyncExternalStore(subscribe, getPrefs, () => DEFAULT_PREFS)
+}
+
+export function useAllProgress(): Progress {
+  return useSyncExternalStore(subscribe, getProgress, () => EMPTY_PROGRESS)
+}
+
+export function useGuideProgress(guideId: string): GuideProgress {
+  const snapshot = useCallback(() => getProgress()[guideId] ?? EMPTY_GUIDE, [guideId])
+  return useSyncExternalStore(subscribe, snapshot, () => EMPTY_GUIDE)
+}
