@@ -1,0 +1,163 @@
+{
+  "id": "leaving-notion",
+  "title": "Leaving Notion",
+  "summary": "Get documents, wikis and databases out of Notion and into tools you control, without pretending that databases survive the trip.",
+  "audience": "One person or a small team with a Notion workspace made of documents, a wiki and a handful of databases.",
+  "timeframe": "One to three weeks. Exporting takes minutes; deciding what each database should become takes the time.",
+  "tools": ["notion"],
+  "stack": [
+    {
+      "role": "Team wiki and documents",
+      "alternative": "outline",
+      "why": "The smoothest import for document-heavy workspaces, with real-time editing and permissions. It is source-available rather than open source."
+    },
+    {
+      "role": "Notion-style pages and databases",
+      "alternative": "appflowy",
+      "why": "Keeps the database-and-pages way of working. Free for one person; teams pay per seat, self-hosted or not."
+    },
+    {
+      "role": "Personal notes",
+      "alternative": "logseq",
+      "why": "For individuals who want local notes with backlinks and no server at all."
+    }
+  ],
+  "phases": [
+    {
+      "id": "take-stock",
+      "title": "Take stock",
+      "intro": "Most workspaces are a few dozen pages that matter and several hundred that do not.",
+      "steps": [
+        {
+          "id": "sort-content",
+          "title": "Sort your content into three piles",
+          "detail": "Documents and wiki pages; databases that are really just lists; and databases that run a process, with relations, formulas or automations. The first two migrate well. The third pile needs a decision for each database."
+        },
+        {
+          "id": "list-public",
+          "title": "List public pages, forms and embeds",
+          "detail": "Anything published to the web, shared with guests, or embedded in another site will break. Write down each URL and who depends on it."
+        },
+        {
+          "id": "list-integrations",
+          "title": "List integrations and automations",
+          "detail": "Connected apps, API scripts, buttons and database automations. Note what each one does so that you can rebuild or retire it."
+        },
+        {
+          "id": "prune",
+          "title": "Delete what you would never look for",
+          "detail": "Empty pages, abandoned drafts, templates you never used. Everything you delete now is something you do not have to check after the import."
+        },
+        {
+          "id": "choose-destination",
+          "title": "Choose where each pile goes",
+          "detail": "One destination is simplest, but not required. A common split: documents to a wiki, simple lists to spreadsheets or the wiki's tables, and process databases to a dedicated tool or a rebuilt AppFlowy database."
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "title": "Prepare the destination",
+      "steps": [
+        {
+          "id": "setup-destination",
+          "title": "Set up the new tool",
+          "detail": "Install it or open a hosted account. For Outline, self-hosting needs a sign-in provider before anyone can log in, so sort that out first. For Logseq and solo AppFlowy there is nothing to host.",
+          "links": [
+            { "label": "Outline: self-hosting guide", "url": "https://docs.getoutline.com/s/hosting" }
+          ]
+        },
+        {
+          "id": "design-structure",
+          "title": "Sketch the top-level structure",
+          "detail": "Decide the handful of top-level collections or spaces before importing. An import that mirrors years of accidental Notion nesting gives you the same mess in a new place."
+        },
+        {
+          "id": "trial-import",
+          "title": "Import one section as a trial",
+          "detail": "Export a single teamspace or page tree from Notion and import it. Look at nested pages, images, tables, code blocks and links between pages. Adjust your plan according to what you see."
+        }
+      ]
+    },
+    {
+      "id": "move",
+      "title": "Export and import",
+      "steps": [
+        {
+          "id": "export-all",
+          "title": "Export the whole workspace, twice",
+          "detail": "Once as Markdown & CSV for importing, and once as HTML as a faithful archive that you can open in any browser years from now. Include subpages and files in both.",
+          "links": [
+            {
+              "label": "Notion: export your content",
+              "url": "https://www.notion.com/help/export-your-content"
+            }
+          ]
+        },
+        {
+          "id": "import-documents",
+          "title": "Import documents and wiki pages",
+          "detail": "Run the importer on the Markdown export, section by section if the tool allows. Check the page count against Notion's."
+        },
+        {
+          "id": "rebuild-databases",
+          "title": "Rebuild the databases that matter",
+          "detail": "Import each CSV as a table or grid, then recreate by hand the relations, formulas and views that people actually use. Leave purely historical databases as CSV files in the archive."
+        },
+        {
+          "id": "fix-links",
+          "title": "Repair links between pages",
+          "detail": "Search the imported content for links that still point to notion.so or notion.com and repoint them. Internal links are the most common casualty of any wiki migration."
+        },
+        {
+          "id": "set-permissions",
+          "title": "Set permissions again",
+          "detail": "Notion's sharing settings do not export. Apply access rules to collections in the new tool, starting with anything confidential, before you invite the team."
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "title": "Switch over",
+      "steps": [
+        {
+          "id": "freeze-notion",
+          "title": "Make Notion read-only",
+          "detail": "Change members to read-only access where your plan allows, and put a banner at the top of the main pages with the new address. Anything edited in Notion after the export is lost otherwise."
+        },
+        {
+          "id": "republish",
+          "title": "Republish public pages",
+          "detail": "Publish replacements for the public pages on your list and update the links that point to them from your website, email signatures and other tools."
+        },
+        {
+          "id": "update-bookmarks",
+          "title": "Update links in other tools",
+          "detail": "Chat channel topics, issue templates, onboarding documents and browser bookmarks all point at Notion. Fix the shared ones and tell people to fix their own."
+        }
+      ]
+    },
+    {
+      "id": "wind-down",
+      "title": "Wind down",
+      "steps": [
+        {
+          "id": "store-archive",
+          "title": "Store the archive in two places",
+          "detail": "Keep both exports somewhere that is backed up and independent of the new tool. Open the HTML archive once to check that it works offline."
+        },
+        {
+          "id": "watch-for-gaps",
+          "title": "Keep Notion for a month and note what people go back for",
+          "detail": "Every return visit is a page that was missed or a database that was not rebuilt. Fix those, then stop."
+        },
+        {
+          "id": "downgrade-delete",
+          "title": "Downgrade, then delete the workspace",
+          "detail": "Move to the free plan at the end of the billing period. When a month has passed without anyone needing it, delete the workspace."
+        }
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

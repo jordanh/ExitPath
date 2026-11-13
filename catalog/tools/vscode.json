@@ -1,0 +1,84 @@
+{
+  "id": "vscode",
+  "name": "Visual Studio Code",
+  "vendor": "Microsoft",
+  "category": "editor",
+  "alsoCovers": ["VS Code"],
+  "summary": "Microsoft's editor. The source code is MIT-licensed, but the download from Microsoft is a proprietary build with telemetry, and its extension marketplace and several key extensions are licensed only for Microsoft's own products.",
+  "lockIn": {
+    "level": 2,
+    "factors": [
+      "Marketplace terms restrict its extensions to Microsoft's own builds",
+      "Proprietary extensions with no open equivalent of the same quality: Pylance, C# Dev Kit, Remote Development, Live Share",
+      "Settings Sync through a Microsoft or GitHub account",
+      "Copilot integration"
+    ]
+  },
+  "export": {
+    "difficulty": 1,
+    "summary": "Settings are JSON files in your profile, and your list of extensions is one command away.",
+    "methods": [
+      {
+        "name": "Copy your user settings",
+        "detail": "settings.json, keybindings.json and the snippets folder live in the Code/User directory of your profile. Copy them to the new editor's equivalent directory."
+      },
+      {
+        "name": "List your extensions",
+        "detail": "Run code --list-extensions to produce a list that you can reinstall from another registry."
+      }
+    ],
+    "caveats": [
+      "Settings Sync data cannot be pointed at another editor; make sure the local files are current first",
+      "Check each extension's licence: some forbid use outside Microsoft's builds"
+    ]
+  },
+  "paths": [
+    {
+      "to": "vscodium",
+      "fit": 5,
+      "verdict": "The same editor without Microsoft's build. The only question is whether you depend on a Microsoft-only extension.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Copy your user settings into VSCodium's profile directory and reinstall extensions from Open VSX. Most are there under the same name; check the Microsoft-proprietary ones for open replacements first.",
+        "links": [
+          {
+            "label": "VSCodium: migrating from VS Code",
+            "url": "https://github.com/VSCodium/vscodium/blob/master/docs/migration.md"
+          }
+        ]
+      },
+      "effortHours": [0.5, 2],
+      "transfers": [
+        "Settings, keybindings and snippets, unchanged",
+        "Most extensions, from Open VSX",
+        "Workspaces, tasks and launch configurations"
+      ],
+      "lost": [
+        "Pylance, C# Dev Kit, Live Share and Microsoft's Remote Development extensions",
+        "Settings Sync",
+        "Extensions published only on Microsoft's Marketplace"
+      ]
+    },
+    {
+      "to": "zed",
+      "fit": 3,
+      "verdict": "For people who want a faster editor and are open to changing their extension setup.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Zed offers to import VS Code settings and keybindings on first run, and has a VS Code keymap. Extensions do not transfer: check that your languages and tools are covered natively or in Zed's own catalogue."
+      },
+      "effortHours": [2, 8],
+      "transfers": [
+        "Settings and keybindings, mapped across",
+        "Language support through the same language servers",
+        "Git, debugging and remote development, built in"
+      ],
+      "lost": [
+        "Every VS Code extension",
+        "Notebook and niche-language tooling that only exists as VS Code extensions",
+        "Tasks and launch configurations, which need converting"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

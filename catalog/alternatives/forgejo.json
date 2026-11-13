@@ -1,0 +1,74 @@
+{
+  "id": "forgejo",
+  "name": "Forgejo",
+  "tagline": "A lightweight, community-governed forge",
+  "description": "Git hosting with pull requests, issues, a package registry and built-in CI in one small program. It began as a fork of Gitea in 2022 and is now an independent project under a non-profit umbrella. It is the software behind Codeberg.",
+  "categories": ["code-hosting"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "GPL-3.0",
+  "backing": "Developed under the umbrella of Codeberg e.V., a German non-profit, with open community governance",
+  "since": 2022,
+  "maturity": {
+    "score": 4,
+    "rationale": "Builds on the Gitea codebase dating from 2016 and hosts hundreds of thousands of repositories on Codeberg. Actions and federation are the parts still maturing."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://forgejo.org",
+    "source": "https://codeberg.org/forgejo/forgejo",
+    "docs": "https://forgejo.org/docs/latest/"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "A single binary or container with SQLite, PostgreSQL or MySQL. Running CI adds a separate runner, which deserves some thought about isolation because it executes whatever your repositories tell it to.",
+    "setupHours": [1, 4],
+    "requirements": {
+      "ram": "1 GB",
+      "cpu": "1 core",
+      "notes": "CI runners need their own resources, sized for your builds."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation guide (binary and Docker)",
+        "url": "https://forgejo.org/docs/latest/admin/installation/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Codeberg",
+      "url": "https://codeberg.org",
+      "note": "Free hosting for free and open-source projects, run by the non-profit behind Forgejo"
+    }
+  ],
+  "strengths": [
+    "A tiny footprint: a small VPS hosts a whole team",
+    "Built-in migration pulls repositories, issues, pull requests, labels, milestones and releases from GitHub",
+    "Forgejo Actions uses a workflow syntax modelled on GitHub Actions, so many workflows move with small edits",
+    "Package registry, wiki and project boards with no paid tier"
+  ],
+  "weaknesses": [
+    "Actions is designed to be familiar rather than identical: workflows that lean on GitHub-hosted runners or marketplace actions need work",
+    "No network effect: no stars to chase and few drive-by contributors",
+    "Code search and review tooling are simpler than GitHub's or GitLab's",
+    "Federation between forges is still in development"
+  ],
+  "features": {
+    "pull-requests": "yes",
+    "ci-cd": "yes",
+    "actions-compat": "partial",
+    "packages": "yes",
+    "issues-boards": "yes",
+    "github-import": "yes",
+    "pages": "addon",
+    "lightweight": "yes"
+  },
+  "featureNotes": {
+    "ci-cd": "Forgejo Actions, with a separately installed runner",
+    "actions-compat": "Similar syntax; not every action or context works",
+    "pages": "Through a separate pages server or a CI job"
+  },
+  "reviewed": "2026-11"
+}

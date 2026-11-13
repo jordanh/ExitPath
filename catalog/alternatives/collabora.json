@@ -1,0 +1,72 @@
+{
+  "id": "collabora",
+  "name": "Collabora Online",
+  "tagline": "LibreOffice in the browser, built for self-hosting",
+  "description": "An online office suite built on LibreOffice technology. It adds real-time co-editing in the browser to a file platform, and is what ships as Nextcloud Office. Desktop and mobile apps share the same engine.",
+  "categories": ["office"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "MPL-2.0",
+  "licenseNote": "CODE, the free Collabora Online Development Edition, is fully functional but unsupported and intended for home and small-team use. Supported, long-term builds are a paid subscription.",
+  "backing": "Collabora Productivity (UK), the largest corporate contributor to LibreOffice, funded by support subscriptions",
+  "since": 2015,
+  "maturity": {
+    "score": 4,
+    "rationale": "In production at large public-sector deployments and the default office editor for Nextcloud. Documents are rendered on the server, which is robust but can feel heavier than editors that run entirely in the browser."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://www.collaboraonline.com",
+    "source": "https://github.com/CollaboraOnline/online",
+    "docs": "https://sdk.collaboraonline.com"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "One container next to your file platform. Nextcloud All-in-One installs and wires it up for you; on its own you need a reverse proxy that passes WebSockets and the right allowed-host settings.",
+    "setupHours": [1, 3],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores",
+      "notes": "Memory and CPU scale with the number of documents open at the same time."
+    },
+    "deploy": [
+      {
+        "kind": "one-click",
+        "label": "Included in Nextcloud All-in-One",
+        "url": "https://github.com/nextcloud/all-in-one"
+      },
+      {
+        "kind": "guide",
+        "label": "CODE: Docker image and Linux packages",
+        "url": "https://www.collaboraonline.com/code/"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "Fully open source, with no user or connection cap in the code",
+    "Native OpenDocument support and LibreOffice's very broad format coverage",
+    "Tight Nextcloud integration: it is the editor behind Nextcloud Office",
+    "Same engine as LibreOffice on the desktop, so documents look identical in both"
+  ],
+  "weaknesses": [
+    "Microsoft-format fidelity is LibreOffice's: good, not perfect",
+    "Server-rendered editing can feel laggy on a slow connection or an under-powered server",
+    "CODE builds come without support; a supported version means a subscription",
+    "Like any online editor, it needs a file platform in front of it"
+  ],
+  "features": {
+    "ms-format-fidelity": "partial",
+    "browser-coediting": "yes",
+    "desktop-apps": "yes",
+    "mobile-apps": "yes",
+    "track-changes": "yes",
+    "vba-macros": "partial",
+    "odf-native": "yes"
+  },
+  "featureNotes": {
+    "ms-format-fidelity": "Same engine as LibreOffice",
+    "vba-macros": "Simple macros only"
+  },
+  "reviewed": "2026-11"
+}

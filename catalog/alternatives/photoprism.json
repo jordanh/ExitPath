@@ -1,0 +1,77 @@
+{
+  "id": "photoprism",
+  "name": "PhotoPrism",
+  "tagline": "A photo library for the folders you already have",
+  "description": "A browsing and organising tool for an existing photo collection. Point it at your folders and it indexes them in place, adding places, labels, faces and search. It is a library, not a phone backup service.",
+  "categories": ["photos"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "AGPL-3.0",
+  "licenseNote": "The Community Edition is AGPL-3.0. Some features, including additional user roles and extra map styles, are reserved for paid memberships.",
+  "backing": "PhotoPrism UG (Germany), funded by memberships",
+  "since": 2018,
+  "maturity": {
+    "score": 4,
+    "rationale": "Stable and conservative, maintained by a small full-time team since 2018. It moves more slowly than Immich."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://www.photoprism.app",
+    "source": "https://github.com/photoprism/photoprism",
+    "docs": "https://docs.photoprism.app"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "A single container with MariaDB, or SQLite for small libraries, pointed at your existing photo folders. The documentation is clear; the first index is slow.",
+    "setupHours": [1, 4],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "Swap space is needed for indexing large RAW files and video."
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "Docker Compose setup",
+        "url": "https://docs.photoprism.app/getting-started/docker-compose/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "PikaPods",
+      "url": "https://www.pikapods.com",
+      "note": "Third-party managed hosting, billed by resource use"
+    }
+  ],
+  "strengths": [
+    "Indexes folders in place and leaves your directory structure alone",
+    "Strong browsing: places, calendar, labels, faces, RAW and video",
+    "WebDAV access lets desktop tools and sync apps write straight into the library",
+    "Runs well on modest hardware"
+  ],
+  "weaknesses": [
+    "No first-party mobile apps or automatic phone backup: you pair it with a sync app",
+    "Multi-user support in the free edition is limited",
+    "Reads Google Takeout metadata, but albums and sharing need manual rebuilding",
+    "Slower development pace than its main rival"
+  ],
+  "features": {
+    "auto-backup": "addon",
+    "face-recognition": "yes",
+    "smart-search": "partial",
+    "shared-albums": "yes",
+    "multi-user": "partial",
+    "e2ee": "no",
+    "map-view": "yes",
+    "takeout-import": "partial"
+  },
+  "featureNotes": {
+    "auto-backup": "Through third-party sync apps or WebDAV",
+    "smart-search": "Automatic labels and filters",
+    "shared-albums": "Share links",
+    "multi-user": "Extra roles need a paid membership",
+    "takeout-import": "Reads the metadata files; albums are not recreated"
+  },
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,96 @@
+{
+  "id": "onedrive",
+  "name": "OneDrive & SharePoint files",
+  "vendor": "Microsoft",
+  "category": "files",
+  "alsoCovers": ["OneDrive for Business", "SharePoint document libraries"],
+  "summary": "Microsoft's personal and team file storage, wired into Windows, Office and Teams.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "Windows quietly makes OneDrive the home of your Desktop and Documents folders",
+      "SharePoint libraries carry metadata, permissions and workflows that are not files",
+      "Sharing links embedded in years of emails and chats will break",
+      "Office co-authoring only works on files stored here"
+    ]
+  },
+  "export": {
+    "difficulty": 2,
+    "summary": "Files are ordinary files: sync or copy them out. SharePoint content beyond documents (lists, pages, permissions) has no clean export.",
+    "methods": [
+      {
+        "name": "Sync client",
+        "detail": "Set every folder to 'Always keep on this device', wait for the sync to finish, then copy the folder elsewhere. Simple, but it needs enough local disk space."
+      },
+      {
+        "name": "rclone",
+        "detail": "Copies directly from OneDrive or a SharePoint library to another cloud or server without passing through your laptop. It handles throttling and can resume.",
+        "url": "https://rclone.org/onedrive/"
+      }
+    ],
+    "caveats": [
+      "OneNote notebooks are not plain files and must be exported separately from OneNote",
+      "Path-length and character rules differ, so a few file names may need fixing",
+      "Version history and sharing permissions do not come along",
+      "Turn off folder backup (Known Folder Move) before removing OneDrive, or Windows keeps pointing Documents at an empty folder"
+    ]
+  },
+  "paths": [
+    {
+      "to": "nextcloud",
+      "fit": 4,
+      "verdict": "The like-for-like replacement: web access, share links, desktop and mobile sync, plus calendar and contacts if you want them.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Copy the files into the Nextcloud sync folder, or use rclone to move them server-to-server over WebDAV. Recreate shares afterwards.",
+        "links": [
+          { "label": "rclone WebDAV backend (works with Nextcloud)", "url": "https://rclone.org/webdav/" }
+        ]
+      },
+      "effortHours": [2, 6],
+      "transfers": ["Files and folder structure", "Modification dates", "Access from desktop, web and phone"],
+      "lost": [
+        "Existing share links and permissions",
+        "Version history",
+        "SharePoint lists, pages and workflows",
+        "Office desktop co-authoring (browser co-editing replaces it)"
+      ]
+    },
+    {
+      "to": "seafile",
+      "fit": 4,
+      "verdict": "Choose it for large volumes or huge numbers of files where sync speed matters more than extra apps.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Create libraries that mirror your top-level folders, then copy the files in through the sync client or with rclone's Seafile backend.",
+        "links": [{ "label": "rclone Seafile backend", "url": "https://rclone.org/seafile/" }]
+      },
+      "effortHours": [2, 6],
+      "transfers": ["Files and folder structure", "Modification dates", "Access from desktop, web and phone"],
+      "lost": [
+        "Existing share links and permissions",
+        "Version history",
+        "SharePoint lists, pages and workflows",
+        "The surrounding apps (calendar, tasks) that Nextcloud would give you"
+      ]
+    },
+    {
+      "to": "syncthing",
+      "fit": 2,
+      "verdict": "For one person or a household that only needs the same folders on several computers. It is not a cloud drive.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Download everything to one computer, share the folder in Syncthing and pair your other devices. There is no upload step because there is no server."
+      },
+      "effortHours": [1, 3],
+      "transfers": ["Files and folder structure", "Sync between your own computers"],
+      "lost": [
+        "Web access and share links",
+        "On-demand files: every device holds a full copy unless you exclude folders",
+        "Sharing with people outside your own devices",
+        "A proper mobile experience on iOS"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

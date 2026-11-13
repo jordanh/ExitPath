@@ -1,0 +1,78 @@
+{
+  "id": "bigbluebutton",
+  "name": "BigBlueButton",
+  "tagline": "A virtual classroom: whiteboard, breakouts, polls, recordings",
+  "description": "Web conferencing designed for teaching and workshops. Presenters get a multi-user whiteboard over their slides, shared notes, polls and breakout rooms; sessions are recorded on the server and play back in sync.",
+  "categories": ["video"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "LGPL-3.0",
+  "backing": "BigBlueButton Inc. and Blindside Networks (Canada), with a large education community",
+  "since": 2009,
+  "maturity": {
+    "score": 5,
+    "rationale": "Fifteen years in production at universities and schools worldwide, and integrated with Moodle, Canvas and most other learning platforms."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://bigbluebutton.org",
+    "source": "https://github.com/bigbluebutton/bigbluebutton",
+    "docs": "https://docs.bigbluebutton.org"
+  },
+  "selfHosting": {
+    "difficulty": 4,
+    "summary": "It wants a dedicated Ubuntu server of one specific release with a public IP, and takes over the machine. The install script does the work, but the hardware floor is high and moving between major versions usually means a fresh server.",
+    "setupHours": [4, 10],
+    "requirements": {
+      "ram": "16 GB",
+      "cpu": "8 cores",
+      "notes": "The official minimum for production. You also need a front end to create rooms: Greenlight (included as an option) or a learning platform."
+    },
+    "deploy": [
+      {
+        "kind": "installer",
+        "label": "bbb-install script",
+        "url": "https://github.com/bigbluebutton/bbb-install"
+      },
+      {
+        "kind": "guide",
+        "label": "Installation documentation",
+        "url": "https://docs.bigbluebutton.org"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Commercial hosting and support providers",
+      "url": "https://bigbluebutton.org/commercial-support/"
+    }
+  ],
+  "strengths": [
+    "Purpose-built for teaching: multi-user whiteboard, shared notes, polls and breakout rooms",
+    "Server-side recordings that replay slides, chat and audio together",
+    "Integrates with Moodle, Canvas, Nextcloud and Zulip",
+    "Holds up with 100 or more participants when most are listening"
+  ],
+  "weaknesses": [
+    "Heavy: 8 cores and 16 GB of RAM as a starting point",
+    "Overkill, and slower to start, for a quick one-to-one call",
+    "Needs a room manager (Greenlight or a learning platform) before anyone can create a meeting",
+    "No end-to-end encryption and no native mobile apps"
+  ],
+  "features": {
+    "guest-join": "yes",
+    "screen-sharing": "yes",
+    "recording": "yes",
+    "breakout-rooms": "yes",
+    "whiteboard": "yes",
+    "e2ee": "no",
+    "dial-in": "addon",
+    "large-meetings": "yes",
+    "mobile-apps": "partial"
+  },
+  "featureNotes": {
+    "dial-in": "With a SIP trunk",
+    "mobile-apps": "Runs in mobile browsers; no native apps"
+  },
+  "reviewed": "2026-11"
+}

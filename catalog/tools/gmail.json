@@ -1,0 +1,96 @@
+{
+  "id": "gmail",
+  "name": "Gmail",
+  "vendor": "Google",
+  "category": "email",
+  "alsoCovers": ["Google Workspace mail", "Google Calendar", "Google Contacts"],
+  "summary": "Google's mail service, for personal @gmail.com addresses and for custom domains through Google Workspace, with Calendar and Contacts attached.",
+  "lockIn": {
+    "level": 4,
+    "factors": [
+      "An @gmail.com address belongs to Google and cannot move with you",
+      "'Sign in with Google' ties dozens of other accounts to this one",
+      "Labels, filters and search habits built up over years",
+      "Calendar sharing and meeting invitations inside the Google ecosystem"
+    ]
+  },
+  "export": {
+    "difficulty": 2,
+    "summary": "Mail exports as a standard mbox file or syncs out over IMAP. Calendars and contacts export in open formats. The address itself is what you cannot take.",
+    "methods": [
+      {
+        "name": "Google Takeout",
+        "detail": "Exports all mail as mbox, calendars as .ics and contacts as vCard.",
+        "url": "https://takeout.google.com"
+      },
+      {
+        "name": "IMAP sync",
+        "detail": "imapsync, or your new server's own sync jobs, copies mail directly to the new mailbox. Use an app password or OAuth. Google throttles IMAP downloads, so a large mailbox takes days.",
+        "url": "https://imapsync.lamiral.info/"
+      }
+    ],
+    "caveats": [
+      "With an @gmail.com address, set up forwarding and change your address everywhere gradually; keep the account alive for at least a year",
+      "Labels become folders, so a message with three labels can be copied three times unless your tool deduplicates",
+      "Before closing the account, change every 'Sign in with Google' login to a password or passkey",
+      "Filters export as an XML file that only Gmail understands; recreate the important ones"
+    ]
+  },
+  "paths": [
+    {
+      "to": "thunderbird",
+      "fit": 3,
+      "verdict": "A good first step: move to a client you control while the mailbox stays where it is.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Add the account and sign in with Google; mail, calendars and address books sync. To take mail out of Google altogether, copy folders into Thunderbird's Local Folders or import the Takeout mbox."
+      },
+      "effortHours": [1, 3],
+      "transfers": [
+        "All mail, with labels shown as folders",
+        "Google calendars and contacts, synced",
+        "Several accounts in one unified inbox"
+      ],
+      "lost": [
+        "Gmail's search speed and automatic categories",
+        "Snooze, nudges and smart replies",
+        "Conversation view exactly as Gmail does it"
+      ]
+    },
+    {
+      "to": "mailcow",
+      "fit": 4,
+      "verdict": "For a domain you own, when someone is willing to take on running mail properly.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Create the mailboxes and add a sync job for each Gmail account; mailcow pulls the mail over IMAP in the background. Import calendars and contacts into SOGo, then switch the MX records."
+      },
+      "effortHours": [3, 8],
+      "transfers": ["Mail, with labels as folders", "Calendars and contacts", "Phone sync over ActiveSync"],
+      "lost": [
+        "Gmail's spam filtering quality and its sending reputation",
+        "Gmail filters, which need recreating as Sieve rules",
+        "Google's search",
+        "An @gmail.com address, if that is what you use"
+      ]
+    },
+    {
+      "to": "stalwart",
+      "fit": 3,
+      "verdict": "A lean, modern server for technically confident people who are happy with standard mail clients.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Create the accounts, copy mail across with imapsync, import calendars and contacts over CalDAV and CardDAV, then switch the MX records."
+      },
+      "effortHours": [3, 8],
+      "transfers": ["Mail, with labels as folders", "Calendars and contacts"],
+      "lost": [
+        "Gmail's spam filtering quality and its sending reputation",
+        "Bundled webmail",
+        "Gmail filters, which need recreating as Sieve rules",
+        "An @gmail.com address, if that is what you use"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

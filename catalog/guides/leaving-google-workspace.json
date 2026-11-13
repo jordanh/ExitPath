@@ -1,0 +1,207 @@
+{
+  "id": "leaving-google-workspace",
+  "title": "Leaving Google Workspace",
+  "summary": "Move mail, files, documents and photos out of Google, and untangle the Google account from everything that signs in with it.",
+  "audience": "A household, freelancer or small team using Google Workspace or personal Google accounts for mail, Drive, Docs and Photos.",
+  "timeframe": "Four to eight weeks for the move itself, then up to a year of keeping the old account alive for forwarded mail and forgotten logins.",
+  "tools": ["gmail", "google-drive", "google-docs", "google-photos"],
+  "stack": [
+    {
+      "role": "Files, calendars and contacts",
+      "alternative": "nextcloud",
+      "why": "Replaces Drive, Calendar and Contacts behind one login, hosted by you or by one of many providers."
+    },
+    {
+      "role": "Editing documents in the browser",
+      "alternative": "collabora",
+      "why": "Ships with Nextcloud as Nextcloud Office, the nearest equivalent to opening a Doc from a link."
+    },
+    {
+      "role": "Mail client",
+      "alternative": "thunderbird",
+      "why": "Signs in to Gmail and to your new mailbox at once, so you can move mail between them by dragging folders."
+    },
+    {
+      "role": "Mail server",
+      "alternative": "mailcow",
+      "why": "A complete mail stack if you self-host. For most people a hosted mailbox on their own domain, from a provider that speaks IMAP, CalDAV and CardDAV, is the better choice."
+    },
+    {
+      "role": "Photos",
+      "alternative": "immich",
+      "why": "The closest match to Google Photos, with a well-trodden Takeout import. Ente is the alternative if you want it hosted and end-to-end encrypted."
+    },
+    {
+      "role": "Meetings",
+      "alternative": "jitsi",
+      "why": "Link-based meetings in the browser, as with Meet, with no account needed for guests."
+    }
+  ],
+  "phases": [
+    {
+      "id": "take-stock",
+      "title": "Take stock",
+      "intro": "The Google account is more than its apps. Find out what hangs off it before touching anything.",
+      "steps": [
+        {
+          "id": "own-your-address",
+          "title": "Decide what your address will be",
+          "detail": "If you use an @gmail.com address, register a domain of your own now: it is the only kind of address that can move with you in future. If you already use a custom domain, confirm that you can edit its DNS records."
+        },
+        {
+          "id": "audit-sign-in",
+          "title": "List everything that uses 'Sign in with Google'",
+          "detail": "Open your Google account's security settings and review third-party connections. For each service you still use, add a password or passkey login, or change the account's email address, before you rely on the Google account less.",
+          "links": [
+            {
+              "label": "Google account: third-party connections",
+              "url": "https://myaccount.google.com/connections"
+            }
+          ]
+        },
+        {
+          "id": "check-storage",
+          "title": "Measure what you have",
+          "detail": "Note how much storage Gmail, Drive and Photos each use. That tells you how much disk the new systems need and how long exports will take. Budget free space of about three times your Photos size for the import."
+        },
+        {
+          "id": "list-shared",
+          "title": "List what you share and what is shared with you",
+          "detail": "Shared drives, shared folders, shared calendars and shared albums. Files that other people own will not be in your export: copy the ones you need into your own Drive first."
+        },
+        {
+          "id": "passwords-and-codes",
+          "title": "Move saved passwords and two-factor codes",
+          "detail": "Export passwords from Google Password Manager and import them into a password manager of your own. If you use Google Authenticator, transfer its accounts to an authenticator that lets you export them.",
+          "links": [{ "label": "Google Password Manager", "url": "https://passwords.google.com" }]
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "title": "Build the new home",
+      "intro": "Set everything up alongside Google and get comfortable before moving data.",
+      "steps": [
+        {
+          "id": "decide-hosting",
+          "title": "Decide what you will host yourself",
+          "detail": "Files and photos are reasonable to self-host if you already run a home server or VPS and will keep backups. Mail is the one to hand to a provider unless you have a good reason not to."
+        },
+        {
+          "id": "setup-files",
+          "title": "Set up Nextcloud",
+          "detail": "Install it (All-in-One includes the office editor) or open an account with a managed host. Install the desktop client and the phone app, and turn on calendar and contacts sync on your phone.",
+          "links": [{ "label": "Nextcloud All-in-One", "url": "https://github.com/nextcloud/all-in-one" }]
+        },
+        {
+          "id": "setup-mail",
+          "title": "Set up the new mailbox",
+          "detail": "Create the mailbox on your own domain, add the SPF, DKIM and DMARC records your provider or server gives you, and send test messages both ways with a Gmail address."
+        },
+        {
+          "id": "setup-photos",
+          "title": "Set up the photo library",
+          "detail": "Install Immich, or sign up for Ente, and install the phone app. Let it back up new photos for a few days before importing the old ones, so you know the day-to-day part works.",
+          "links": [
+            {
+              "label": "Immich: requirements and installation",
+              "url": "https://docs.immich.app/install/requirements"
+            }
+          ]
+        },
+        {
+          "id": "setup-backups",
+          "title": "Set up backups and test a restore",
+          "detail": "Anything you host yourself needs an automatic backup to a second location. Restore one file and one photo to prove it works. Google was doing this for you."
+        }
+      ]
+    },
+    {
+      "id": "move",
+      "title": "Move the data",
+      "intro": "Export first, import second, and delete nothing from Google until much later.",
+      "steps": [
+        {
+          "id": "request-takeout",
+          "title": "Request your Google Takeout exports",
+          "detail": "Make separate exports for Drive, Photos and Mail so that a failure in one does not hold up the others. Choose the largest archive size offered. Download every part within the week, before the links expire.",
+          "links": [{ "label": "Google Takeout", "url": "https://takeout.google.com" }]
+        },
+        {
+          "id": "move-files",
+          "title": "Move Drive files and convert Google documents",
+          "detail": "Unpack the Drive export into your Nextcloud folder, or copy directly with rclone, which converts Docs, Sheets and Slides on the way. Open a sample of converted documents and check spreadsheets that used Google-only functions.",
+          "links": [{ "label": "rclone: Google Drive", "url": "https://rclone.org/drive/" }]
+        },
+        {
+          "id": "move-mail",
+          "title": "Copy your mail",
+          "detail": "Add both accounts to Thunderbird and drag folders across, or use an IMAP sync job on your new server. Google throttles downloads, so a large mailbox takes several days. Labels arrive as folders.",
+          "links": [{ "label": "imapsync", "url": "https://imapsync.lamiral.info/" }]
+        },
+        {
+          "id": "move-calendar-contacts",
+          "title": "Move calendars and contacts",
+          "detail": "Import the .ics and vCard files from Takeout into Nextcloud. Check recurring events and birthdays, and send again any meeting series that you organise."
+        },
+        {
+          "id": "import-photos",
+          "title": "Import your photos",
+          "detail": "Run immich-go against the Takeout archives (or use Ente's importer). It reunites photos with their dates and locations, removes duplicates and rebuilds albums. Spot-check a few old albums afterwards, then label faces again.",
+          "links": [{ "label": "immich-go", "url": "https://github.com/simulot/immich-go" }]
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "title": "Switch over",
+      "intro": "Change where new things arrive. The old account keeps working in the background.",
+      "steps": [
+        {
+          "id": "switch-mail",
+          "title": "Send new mail to the new mailbox",
+          "detail": "On a custom domain: lower the TTL, switch the MX records, then sync once more. On an @gmail.com address: turn on forwarding to your new address and add a filter that marks forwarded mail, so you can see who still writes to the old one."
+        },
+        {
+          "id": "update-address",
+          "title": "Change your address where it matters first",
+          "detail": "Bank, government, employer, domain registrar, password manager and anything that could lock you out. Then work through the rest whenever a message arrives at the old address."
+        },
+        {
+          "id": "switch-phone",
+          "title": "Repoint your phone",
+          "detail": "Turn off Google backup for photos, contacts and calendar, and make the new accounts the default for new contacts and events. On Android you can keep a Google account for the Play Store without using it for your data."
+        },
+        {
+          "id": "replace-links",
+          "title": "Replace shared links",
+          "detail": "Share again from Nextcloud the folders and documents that other people rely on, and tell them. Leave the old Drive copies in place for now so that old links do not fail abruptly."
+        }
+      ]
+    },
+    {
+      "id": "wind-down",
+      "title": "Wind down",
+      "intro": "Be slow to delete. Storage is cheap, and regret is not.",
+      "steps": [
+        {
+          "id": "verify",
+          "title": "Verify before deleting anything",
+          "detail": "Compare counts: files, photos per year, mail folders. Open the oldest and the newest items of each. Keep the Takeout archives on a separate disk as a cold copy."
+        },
+        {
+          "id": "downgrade",
+          "title": "Stop paying for Google storage",
+          "detail": "Once the data is verified elsewhere, delete the bulk from Google Photos and Drive, empty the trash, and drop back to the free tier. For Workspace, export once more as administrator before cancelling the subscription."
+        },
+        {
+          "id": "keep-alive",
+          "title": "Keep the old account alive for a year",
+          "detail": "Leave forwarding on, and sign in occasionally so the account is not closed for inactivity. After a year with no important mail arriving, decide whether to close it.",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

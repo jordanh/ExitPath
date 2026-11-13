@@ -1,0 +1,74 @@
+{
+  "id": "outline",
+  "name": "Outline",
+  "tagline": "A fast, polished team wiki",
+  "description": "A knowledge base for teams: nested documents in collections, a clean Markdown-friendly editor with real-time collaboration, strong search and public sharing. It is a document wiki, not a database tool.",
+  "categories": ["notes"],
+  "kind": "server",
+  "openness": "source-available",
+  "license": "BUSL-1.1",
+  "licenseNote": "Business Source License 1.1. You may self-host it for your own organisation, but not offer it to third parties as a hosted document service. Each release converts to Apache-2.0 on its change date, roughly four years later. This is not an OSI-approved open-source licence.",
+  "backing": "General Outline, Inc., a small company funded by its hosted service",
+  "since": 2018,
+  "maturity": {
+    "score": 4,
+    "rationale": "Polished, released steadily for years and used by many companies. A small team maintains it, and self-hosters depend on that team's licensing decisions."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://www.getoutline.com",
+    "source": "https://github.com/outline/outline",
+    "docs": "https://docs.getoutline.com/s/hosting"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "It needs PostgreSQL, Redis, file storage and, the part that surprises people, a sign-in provider: OIDC, Google, Microsoft, Slack or similar. Outline does not manage passwords itself. If you do not already run an identity provider, that becomes a second project.",
+    "setupHours": [3, 8],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "1 core"
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "Self-hosting guide (Docker Compose)",
+        "url": "https://docs.getoutline.com/s/hosting"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Outline Cloud",
+      "url": "https://www.getoutline.com/pricing",
+      "note": "Run by the developers; paid per user"
+    }
+  ],
+  "strengths": [
+    "A fast, uncluttered editor with Markdown shortcuts and real-time collaboration",
+    "Imports Notion and Confluence exports and keeps the page hierarchy",
+    "Collections, granular permissions, public share links and a solid API",
+    "Search that actually finds things"
+  ],
+  "weaknesses": [
+    "Source-available, not open source: see the licence note",
+    "No databases, boards or other Notion-style structured views",
+    "Self-hosting requires an external sign-in provider",
+    "No offline mode and no native mobile apps"
+  ],
+  "features": {
+    "realtime-collab": "yes",
+    "databases": "no",
+    "offline": "no",
+    "plain-files": "no",
+    "public-sharing": "yes",
+    "mobile-apps": "no",
+    "permissions": "yes",
+    "notion-import": "yes",
+    "api": "yes"
+  },
+  "featureNotes": {
+    "plain-files": "Stored in a database; exports to Markdown",
+    "mobile-apps": "Responsive web app"
+  },
+  "reviewed": "2026-11"
+}

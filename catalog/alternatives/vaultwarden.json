@@ -1,0 +1,68 @@
+{
+  "id": "vaultwarden",
+  "name": "Vaultwarden",
+  "tagline": "A lightweight community server for the Bitwarden apps",
+  "description": "An independent, compatible implementation of the Bitwarden server, written in Rust. You keep using the official Bitwarden apps and browser extensions, but point them at a small server of your own.",
+  "categories": ["passwords"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "backing": "A community project led by volunteer maintainers; not affiliated with Bitwarden, Inc.",
+  "since": 2018,
+  "maturity": {
+    "score": 4,
+    "rationale": "Hugely popular among self-hosters for years and actively maintained. It is an unofficial reimplementation, though: it has had far less independent security review than Bitwarden's own server, and support for new client features sometimes lags."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://github.com/dani-garcia/vaultwarden",
+    "source": "https://github.com/dani-garcia/vaultwarden",
+    "docs": "https://github.com/dani-garcia/vaultwarden/wiki"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "One small container and a reverse proxy with HTTPS. The software is the easy part. You become the sole guardian of every password you own, so off-site backups and prompt updates are not optional.",
+    "setupHours": [1, 3],
+    "requirements": {
+      "ram": "256 MB",
+      "cpu": "1 core",
+      "notes": "A Raspberry Pi is plenty."
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "Using Docker Compose (wiki)",
+        "url": "https://github.com/dani-garcia/vaultwarden/wiki/Using-Docker-Compose"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "Runs on almost nothing",
+    "Works with the official Bitwarden apps and browser extensions",
+    "Includes features that are paid on Bitwarden's own server, such as organisations and one-time codes",
+    "A single container with SQLite by default, so backups are simple"
+  ],
+  "weaknesses": [
+    "Unofficial: compatibility depends on keeping up with Bitwarden's clients, and occasionally breaks until patched",
+    "Far less independent security review than Bitwarden's server",
+    "An exposed, unpatched instance is a high-value target, and that risk is yours",
+    "No vendor support and no enterprise directory integration"
+  ],
+  "features": {
+    "browser-autofill": "yes",
+    "mobile-apps": "yes",
+    "built-in-sync": "yes",
+    "team-sharing": "yes",
+    "passkeys": "yes",
+    "totp": "yes",
+    "audited": "partial",
+    "offline-vault": "no"
+  },
+  "featureNotes": {
+    "browser-autofill": "Using the official Bitwarden extensions",
+    "mobile-apps": "Using the official Bitwarden apps",
+    "audited": "The clients are Bitwarden's audited ones; the server has had limited review"
+  },
+  "reviewed": "2026-11"
+}

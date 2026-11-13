@@ -1,0 +1,106 @@
+{
+  "id": "microsoft-office",
+  "name": "Microsoft Office apps",
+  "vendor": "Microsoft",
+  "category": "office",
+  "alsoCovers": ["Word", "Excel", "PowerPoint", "Microsoft 365 Apps"],
+  "summary": "Word, Excel and PowerPoint, on the desktop and in the browser, sold by subscription as part of Microsoft 365.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "Everyone you work with sends, and expects, .docx, .xlsx and .pptx",
+      "Macros, Power Query, data models and add-ins exist only in Excel",
+      "Templates, styles and fonts that render differently elsewhere",
+      "Real-time co-authoring only works on files stored in OneDrive or SharePoint"
+    ]
+  },
+  "export": {
+    "difficulty": 1,
+    "summary": "Your documents are already files in a documented format. There is nothing to export, only compatibility to check.",
+    "methods": [
+      {
+        "name": "Keep the files",
+        "detail": "Office files open directly in every alternative listed here. Download anything that lives only in OneDrive or SharePoint so that you hold local copies."
+      },
+      {
+        "name": "Batch-convert to OpenDocument (optional)",
+        "detail": "LibreOffice can convert whole folders from the command line (soffice --headless --convert-to odt *.docx). Only worth doing for documents you will keep editing; archives can stay as they are."
+      }
+    ],
+    "caveats": [
+      "Files protected with sensitivity labels or rights management must be unprotected while you still have a licence",
+      "Install metric-compatible fonts such as Carlito and Caladea so that layouts do not reflow",
+      "Desktop Office keeps working in read-only mode after a subscription ends, but do not rely on it for the migration"
+    ]
+  },
+  "paths": [
+    {
+      "to": "libreoffice",
+      "fit": 4,
+      "verdict": "The default choice for individuals and for anyone who mostly works alone on documents.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Opens Office files directly. Test your ten most complex documents first: long Word files with tracked changes, spreadsheets with pivot tables or macros, and animated slide decks are where differences show.",
+        "links": [
+          {
+            "label": "Feature comparison with Microsoft Office (Document Foundation wiki)",
+            "url": "https://wiki.documentfoundation.org/Feature_Comparison:_LibreOffice_-_Microsoft_Office"
+          }
+        ]
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Documents, spreadsheets and presentations",
+        "Tracked changes and comments",
+        "Styles, charts and the great majority of formulas"
+      ],
+      "lost": [
+        "VBA macros beyond simple ones",
+        "Power Query, Power Pivot and data-model features",
+        "Real-time co-authoring",
+        "Pixel-identical layout in complex documents"
+      ]
+    },
+    {
+      "to": "onlyoffice",
+      "fit": 4,
+      "verdict": "Best when you exchange Office files with outsiders all day and need them to come back intact.",
+      "import": {
+        "difficulty": 1,
+        "summary": "It works on .docx, .xlsx and .pptx natively, so there is no conversion step. Put the files on your file platform and edit them."
+      },
+      "effortHours": [1, 4],
+      "transfers": [
+        "Documents, spreadsheets and presentations, in their original formats",
+        "Tracked changes and comments",
+        "Co-editing in the browser, once connected to a file platform"
+      ],
+      "lost": [
+        "All VBA macros (it has a separate JavaScript macro system)",
+        "Power Query, Power Pivot and data-model features",
+        "Some advanced Word features, such as complex mail merges and fields"
+      ]
+    },
+    {
+      "to": "collabora",
+      "fit": 3,
+      "verdict": "The natural pick if you are moving to Nextcloud and want a fully open stack.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Same engine as LibreOffice, so the same compatibility testing applies. Files stay in their original format unless you choose to convert them."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Documents, spreadsheets and presentations",
+        "Tracked changes and comments",
+        "Co-editing in the browser, once connected to a file platform"
+      ],
+      "lost": [
+        "VBA macros beyond simple ones",
+        "Power Query, Power Pivot and data-model features",
+        "Pixel-identical layout in complex documents"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

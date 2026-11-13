@@ -1,0 +1,14 @@
+{
+  "id": "microsoft-365",
+  "name": "Microsoft 365",
+  "vendor": "Microsoft",
+  "summary": "Office apps, mail, files, chat and meetings under one subscription and one login. Leaving means replacing each part; they do not all have to go at once.",
+  "components": [
+    { "label": "Word, Excel, PowerPoint", "tool": "microsoft-office" },
+    { "label": "OneDrive and SharePoint", "tool": "onedrive" },
+    { "label": "Outlook and Exchange", "tool": "outlook-exchange" },
+    { "label": "Teams chat", "tool": "microsoft-teams" },
+    { "label": "Teams meetings", "tool": "zoom" }
+  ],
+  "guide": "leaving-microsoft-365"
+}

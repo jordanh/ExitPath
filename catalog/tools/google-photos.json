@@ -1,0 +1,108 @@
+{
+  "id": "google-photos",
+  "name": "Google Photos",
+  "vendor": "Google",
+  "category": "photos",
+  "summary": "Automatic phone backup with search, face grouping and sharing. For many people, the only complete copy of a decade of photographs.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "It may hold the only copy of your photos",
+      "Albums, shared albums and partner sharing",
+      "Search, faces and memories that you have come to rely on",
+      "Storage shared with Gmail and Drive"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "Google Takeout hands over everything, but as dozens of archive files with the metadata split into separate JSON files. The right import tool puts it back together.",
+    "methods": [
+      {
+        "name": "Google Takeout",
+        "detail": "Select only Google Photos, choose the largest archive size offered and download every part. Large libraries take hours to prepare and days to download.",
+        "url": "https://takeout.google.com"
+      }
+    ],
+    "caveats": [
+      "Dates, locations and descriptions edited in Google Photos live in JSON sidecar files, not in the images",
+      "A photo appears once per album and again by year, so naive copying creates duplicates",
+      "'Storage saver' uploads are the compressed versions; originals you did not keep elsewhere are gone",
+      "Shared albums owned by other people are not included",
+      "Download links expire after about a week, and you need free disk space of two to three times the library size while importing"
+    ]
+  },
+  "paths": [
+    {
+      "to": "immich",
+      "fit": 5,
+      "verdict": "The closest match to how Google Photos works, if you are willing to run a server and its backups.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Run immich-go against the Takeout archives directly, without unpacking them. It matches the sidecar metadata, removes duplicates and recreates albums.",
+        "links": [
+          {
+            "label": "immich-go",
+            "url": "https://github.com/simulot/immich-go"
+          }
+        ]
+      },
+      "effortHours": [3, 8],
+      "transfers": [
+        "Photos and videos at the quality Google stored",
+        "Dates, locations and descriptions",
+        "Albums",
+        "Automatic backup from your phone from now on"
+      ],
+      "lost": [
+        "Face names: recognition runs again and you re-label",
+        "Shared albums and partner sharing, which you set up afresh",
+        "Edits made in Google Photos, unless saved as copies",
+        "Google's off-site redundancy: backups are now your job"
+      ]
+    },
+    {
+      "to": "ente",
+      "fit": 4,
+      "verdict": "For people who want privacy without running anything: the hosted plan is the realistic option for most families.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Ente's desktop app imports the unpacked Takeout folders directly, reading the JSON metadata and preserving albums."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Photos and videos at the quality Google stored",
+        "Dates, locations and descriptions",
+        "Albums",
+        "Automatic backup from your phone from now on"
+      ],
+      "lost": [
+        "Face names: recognition runs again on your devices",
+        "Shared albums, which you set up afresh",
+        "Edits made in Google Photos, unless saved as copies",
+        "Free storage beyond the small free tier"
+      ]
+    },
+    {
+      "to": "photoprism",
+      "fit": 3,
+      "verdict": "For people who think in folders and want a browsable archive more than a phone backup service.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Unpack the Takeout archives into PhotoPrism's import folder and run an import; it reads the JSON metadata files. Albums are not recreated, and you add a phone sync app separately."
+      },
+      "effortHours": [3, 8],
+      "transfers": [
+        "Photos and videos at the quality Google stored",
+        "Dates, locations and descriptions",
+        "A folder structure you control"
+      ],
+      "lost": [
+        "Albums, which you rebuild by hand",
+        "Automatic phone backup, unless you add a sync app",
+        "Face names",
+        "Shared albums and partner sharing"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

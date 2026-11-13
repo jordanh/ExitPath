@@ -1,0 +1,74 @@
+{
+  "id": "onlyoffice",
+  "name": "ONLYOFFICE Docs",
+  "tagline": "Browser editors built around Microsoft's file formats",
+  "description": "Online editors for documents, spreadsheets, presentations, PDFs and forms that use .docx, .xlsx and .pptx as their native formats. It plugs into a file platform such as Nextcloud or Seafile, and there are free desktop and mobile editors as well.",
+  "categories": ["office"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "AGPL-3.0",
+  "licenseNote": "The free Community build is limited to 20 simultaneous editing connections; larger teams need a paid licence. In 2026 Nextcloud, IONOS and others forked the editors as Euro-Office after a dispute over ONLYOFFICE's additional licence terms, and ONLYOFFICE suspended its partnership with Nextcloud. Check which office integration your file platform currently supports before committing.",
+  "backing": "Ascensio System SIA, headquartered in Latvia. The Russian origins of its development team were cited by Nextcloud as one reason for the 2026 Euro-Office fork.",
+  "since": 2014,
+  "maturity": {
+    "score": 4,
+    "rationale": "Widely deployed and polished, with the best Microsoft-format fidelity of the open options. It loses a point for the connection cap on the free build and for the unsettled 2026 fork and partnership dispute."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://www.onlyoffice.com",
+    "source": "https://github.com/ONLYOFFICE/DocumentServer",
+    "docs": "https://helpcenter.onlyoffice.com"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "A single Docker container, but it is only an editor: it needs a file platform such as Nextcloud or Seafile in front of it, and a JWT secret shared between the two.",
+    "setupHours": [1, 3],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "Run it on a separate host name from your file platform, behind HTTPS."
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "Official Docker image and Compose file",
+        "url": "https://github.com/ONLYOFFICE/Docker-DocumentServer"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "ONLYOFFICE DocSpace (cloud)",
+      "url": "https://www.onlyoffice.com",
+      "note": "Hosted rooms and editors run by the vendor; free tier for small teams"
+    }
+  ],
+  "strengths": [
+    "Uses .docx, .xlsx and .pptx as its native formats, so Microsoft files survive round trips better than anywhere else",
+    "Familiar ribbon-style interface eases the move for Office users",
+    "Real-time co-editing, comments and tracked changes in the browser",
+    "Free desktop and mobile editors for offline work"
+  ],
+  "weaknesses": [
+    "The free Community build stops at 20 concurrent connections",
+    "VBA macros are not supported; it has its own JavaScript macro system",
+    "Governance and trust questions after the 2026 fork: see the licence note",
+    "It does not store files itself, so it always needs a file platform alongside"
+  ],
+  "features": {
+    "ms-format-fidelity": "yes",
+    "browser-coediting": "yes",
+    "desktop-apps": "yes",
+    "mobile-apps": "yes",
+    "track-changes": "yes",
+    "vba-macros": "no",
+    "odf-native": "no"
+  },
+  "featureNotes": {
+    "browser-coediting": "Up to 20 simultaneous connections in the free build",
+    "vba-macros": "JavaScript macros instead",
+    "odf-native": "Opens and saves ODF by converting"
+  },
+  "reviewed": "2026-11"
+}

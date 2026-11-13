@@ -1,0 +1,80 @@
+{
+  "id": "mailcow",
+  "name": "mailcow",
+  "tagline": "The proven Docker mail suite with a friendly admin UI",
+  "description": "A complete mail server assembled from long-established parts (Postfix, Dovecot, Rspamd and SOGo) and delivered as one Docker Compose stack with a web admin. It provides mailboxes, webmail, calendars, contacts and phone sync.",
+  "categories": ["email"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "GPL-3.0",
+  "backing": "Maintained by Servercow and The Infrastruktur Company (Germany), funded by support contracts and sponsors",
+  "since": 2016,
+  "maturity": {
+    "score": 5,
+    "rationale": "Built entirely from battle-tested components and run by thousands of small organisations. Updating is a single script."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://mailcow.email",
+    "source": "https://github.com/mailcow/mailcow-dockerized",
+    "docs": "https://docs.mailcow.email"
+  },
+  "selfHosting": {
+    "difficulty": 5,
+    "summary": "Installation is a guided Docker Compose setup. The hard part is everything specific to email: a clean static IP with reverse DNS, SPF, DKIM and DMARC records, an open port 25, and watching blocklists so that your mail keeps arriving. If it goes down, your mail bounces.",
+    "setupHours": [6, 16],
+    "requirements": {
+      "ram": "6 GB",
+      "cpu": "2 cores",
+      "notes": "Virus scanning and full-text search account for much of the memory; both can be switched off on smaller machines."
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "mailcow: dockerized",
+        "url": "https://github.com/mailcow/mailcow-dockerized"
+      },
+      {
+        "kind": "guide",
+        "label": "Installation and DNS setup",
+        "url": "https://docs.mailcow.email"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Servercow",
+      "url": "https://www.servercow.de",
+      "note": "Managed mailcow instances from the project's original maintainers"
+    }
+  ],
+  "strengths": [
+    "Everything in one stack: SMTP, IMAP, spam and virus filtering, webmail, calendars and contacts",
+    "ActiveSync through SOGo keeps phones and Outlook working without extra apps",
+    "Admin UI covers domains, mailboxes, aliases, quarantine, DKIM keys and two-factor login",
+    "Built-in sync jobs pull existing mail from your old provider over IMAP"
+  ],
+  "weaknesses": [
+    "Heavy: plan for 6 GB of RAM",
+    "Deliverability to Gmail and Outlook depends on IP reputation that you have to earn and keep",
+    "Docker-only, and it expects to own ports 25, 80 and 443 on the host",
+    "SOGo's webmail is functional rather than pleasant"
+  ],
+  "features": {
+    "hosts-mailboxes": "yes",
+    "desktop-app": "no",
+    "webmail": "yes",
+    "mobile-apps": "partial",
+    "calendar-contacts": "yes",
+    "spam-filtering": "yes",
+    "exchange-protocols": "partial",
+    "openpgp": "partial"
+  },
+  "featureNotes": {
+    "desktop-app": "Use any mail client, for example Thunderbird",
+    "mobile-apps": "No app of its own; phones sync natively over ActiveSync or IMAP",
+    "exchange-protocols": "ActiveSync via SOGo",
+    "openpgp": "In the SOGo webmail"
+  },
+  "reviewed": "2026-11"
+}

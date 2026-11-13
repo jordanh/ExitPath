@@ -1,0 +1,53 @@
+{
+  "id": "zed",
+  "name": "Zed",
+  "tagline": "A fast, native editor written in Rust",
+  "description": "A code editor built from scratch for speed, with language servers, a debugger, Git, remote development and real-time collaboration built in rather than added by extensions.",
+  "categories": ["editor"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "GPL-3.0",
+  "licenseNote": "The editor is GPL-3.0, its collaboration server AGPL-3.0 and its UI framework Apache-2.0. Signing in is optional and only needed for collaboration and Zed's hosted AI. Contributions require a contributor licence agreement.",
+  "backing": "Zed Industries (US, venture-backed), funded by paid AI plans",
+  "since": 2023,
+  "maturity": {
+    "score": 4,
+    "rationale": "Stable on macOS, Linux and Windows, with weekly releases and a fast-growing extension catalogue. It is younger than VS Code, and some niches are thinner."
+  },
+  "platforms": ["windows", "macos", "linux"],
+  "links": {
+    "website": "https://zed.dev",
+    "source": "https://github.com/zed-industries/zed",
+    "docs": "https://zed.dev/docs"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Noticeably faster and lighter than Electron-based editors",
+    "Imports VS Code settings and keybindings; Vim and Helix modes are built in",
+    "Language servers, debugger, Git and remote development over SSH work out of the box",
+    "AI features are optional, and work with your own API keys or local models"
+  ],
+  "weaknesses": [
+    "It cannot run VS Code extensions, and its own catalogue is smaller",
+    "Backed by a venture-funded company whose business is AI subscriptions",
+    "Some long-tail language and framework tooling is less complete than in VS Code",
+    "Collaboration goes through Zed's servers unless you run your own"
+  ],
+  "features": {
+    "vscode-extensions": "no",
+    "language-servers": "yes",
+    "debugger": "yes",
+    "remote-dev": "yes",
+    "settings-import": "yes",
+    "no-telemetry": "partial",
+    "ai-optional": "yes",
+    "live-collab": "yes"
+  },
+  "featureNotes": {
+    "vscode-extensions": "Its own extension system",
+    "no-telemetry": "On by default; one setting turns it off",
+    "ai-optional": "Can be switched off entirely"
+  },
+  "reviewed": "2026-11"
+}

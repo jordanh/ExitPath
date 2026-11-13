@@ -1,0 +1,81 @@
+{
+  "id": "zulip",
+  "name": "Zulip",
+  "tagline": "Topic-based chat for teams that work asynchronously",
+  "description": "Team chat in which every message belongs to a named topic inside a channel. Conversations stay separate and readable, so a day away means skimming a list of topics instead of scrolling one endless stream.",
+  "categories": ["chat"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "Apache-2.0",
+  "licenseNote": "Every server feature is in the open-source build. Self-hosters pay only for optional support and, above 10 users, for the hosted mobile push notification relay, which is free for qualifying community organisations.",
+  "backing": "Kandra Labs (US), an independent company funded by hosting and support revenue",
+  "since": 2015,
+  "maturity": {
+    "score": 5,
+    "rationale": "Over a decade in the open, with a careful engineering culture, thorough documentation and a smooth, well-tested upgrade path."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://zulip.com",
+    "source": "https://github.com/zulip/zulip",
+    "docs": "https://zulip.readthedocs.io"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "One installer script on a fresh Ubuntu or Debian server sets up the whole stack, certificates included. It expects a dedicated machine rather than a shared one; a Docker image exists but is the less-travelled path.",
+    "setupHours": [2, 4],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "1 core",
+      "notes": "2 GB with swap is the minimum; use 4 GB for a team of more than a hundred."
+    },
+    "deploy": [
+      {
+        "kind": "installer",
+        "label": "Production installer",
+        "url": "https://zulip.readthedocs.io/en/stable/production/install.html"
+      },
+      {
+        "kind": "docker-compose",
+        "label": "docker-zulip",
+        "url": "https://github.com/zulip/docker-zulip"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Zulip Cloud",
+      "url": "https://zulip.com/plans/",
+      "note": "Free tier with a limited searchable history; paid plans per user"
+    }
+  ],
+  "strengths": [
+    "Topics make it possible to catch up in minutes and to hold several conversations in one channel",
+    "Official importers for Slack, Mattermost and Microsoft Teams",
+    "No open-core split: SSO, guest accounts and fine-grained permissions are in the free server",
+    "Excellent documentation and upgrade tooling"
+  ],
+  "weaknesses": [
+    "The topic model takes a week to click, and some teams never warm to it",
+    "The interface is dense and less polished than Slack's",
+    "Mobile push for more than 10 self-hosted users needs a paid plan or a community sponsorship",
+    "No end-to-end encryption, and calls are handed to Jitsi, BigBlueButton or Zoom rather than built in"
+  ],
+  "features": {
+    "threads": "yes",
+    "mobile-apps": "yes",
+    "calls": "addon",
+    "free-sso": "yes",
+    "e2ee": "no",
+    "federation": "no",
+    "integrations": "yes",
+    "slack-import": "yes",
+    "unlimited-history": "yes"
+  },
+  "featureNotes": {
+    "threads": "Topics rather than Slack-style threads",
+    "mobile-apps": "Push notifications are free for up to 10 self-hosted users",
+    "calls": "One click starts a Jitsi, BigBlueButton or Zoom call"
+  },
+  "reviewed": "2026-11"
+}

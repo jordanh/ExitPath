@@ -1,0 +1,73 @@
+{
+  "id": "immich",
+  "name": "Immich",
+  "tagline": "The self-hosted Google Photos experience",
+  "description": "A photo and video server with mobile apps that back up your camera roll automatically. Timeline, albums, face recognition, search by content, map and sharing all run on your own hardware.",
+  "categories": ["photos"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "licenseNote": "Every feature is free. An optional supporter licence funds development and unlocks nothing.",
+  "backing": "FUTO (US) employs the core team; optional supporter purchases",
+  "since": 2022,
+  "maturity": {
+    "score": 4,
+    "rationale": "Declared stable in late 2025 after years of breakneck development, and now on a predictable release cadence. Still young enough that the project itself insists you keep an independent backup."
+  },
+  "platforms": ["web", "android", "ios"],
+  "links": {
+    "website": "https://immich.app",
+    "source": "https://github.com/immich-app/immich",
+    "docs": "https://docs.immich.app/"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "A well-documented Docker Compose stack: server, machine learning, PostgreSQL and a cache. The first indexing of a large library keeps the CPU busy for hours or days; after that it idles quietly.",
+    "setupHours": [2, 5],
+    "requirements": {
+      "ram": "6 GB",
+      "cpu": "2 cores",
+      "notes": "Check the current requirements page before buying hardware. Budget storage for your library plus roughly 10–20% for thumbnails and transcoded video."
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "Requirements and Docker Compose install",
+        "url": "https://docs.immich.app/install/requirements"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "PikaPods",
+      "url": "https://www.pikapods.com",
+      "note": "Third-party managed hosting, billed by resource use"
+    }
+  ],
+  "strengths": [
+    "Mobile apps with automatic background backup, just like Google Photos",
+    "Face recognition, search by content, map and memories, all computed on your own server",
+    "Shared albums, partner sharing and public links",
+    "External libraries index folders you already have without copying them"
+  ],
+  "weaknesses": [
+    "No end-to-end encryption: whoever runs the server can see the photos",
+    "You are the backup. Immich is not a backup tool, and its documentation tells you to keep separate copies",
+    "Google Takeout import relies on the community tool immich-go, which works well but is not official",
+    "Editing tools are basic"
+  ],
+  "features": {
+    "auto-backup": "yes",
+    "face-recognition": "yes",
+    "smart-search": "yes",
+    "shared-albums": "yes",
+    "multi-user": "yes",
+    "e2ee": "no",
+    "map-view": "yes",
+    "takeout-import": "addon"
+  },
+  "featureNotes": {
+    "takeout-import": "With the community tool immich-go"
+  },
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,74 @@
+{
+  "id": "gitlab",
+  "name": "GitLab Community Edition",
+  "tagline": "A complete DevOps platform in one application",
+  "description": "Git hosting, merge requests, issue boards, a package and container registry, Pages and one of the most capable CI/CD systems available, all in a single self-managed application.",
+  "categories": ["code-hosting"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "MIT",
+  "licenseNote": "The Community Edition is MIT-licensed. Many features (advanced approval rules, security scanning, portfolio planning and more) exist only in the proprietary paid tiers.",
+  "backing": "GitLab Inc. (US, publicly traded)",
+  "since": 2011,
+  "maturity": {
+    "score": 5,
+    "rationale": "Fifteen years of monthly releases, with well-documented upgrade paths and self-managed installs at every scale."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://about.gitlab.com",
+    "source": "https://gitlab.com/gitlab-org/gitlab-foss",
+    "docs": "https://docs.gitlab.com"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "The Linux package or official Docker image installs everything in one go, and upgrades are well documented as long as you follow the prescribed version path. It is a large application: give it real hardware and it behaves.",
+    "setupHours": [3, 8],
+    "requirements": {
+      "ram": "8 GB",
+      "cpu": "4 cores",
+      "notes": "It can be tuned to run in less memory, but it is not happy there. CI runners need their own machines."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation methods",
+        "url": "https://docs.gitlab.com/install/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "GitLab.com",
+      "url": "https://about.gitlab.com/pricing/",
+      "note": "Free tier with CI minute limits; paid plans per user"
+    }
+  ],
+  "strengths": [
+    "Mature built-in CI/CD that many teams prefer to GitHub Actions",
+    "The official GitHub importer brings repositories, issues, pull requests, comments and releases",
+    "Everything in one place: registry, Pages, environments, issue boards and wiki",
+    "Clear upgrade paths and a long history of self-managed installs"
+  ],
+  "weaknesses": [
+    "Resource-hungry: 8 GB of RAM before your first repository",
+    "GitHub Actions workflows must be rewritten as GitLab CI pipelines",
+    "Open core, with many attractive features locked to paid tiers",
+    "A busy interface; small teams use a fraction of it"
+  ],
+  "features": {
+    "pull-requests": "yes",
+    "ci-cd": "yes",
+    "actions-compat": "no",
+    "packages": "yes",
+    "issues-boards": "yes",
+    "github-import": "yes",
+    "pages": "yes",
+    "lightweight": "no"
+  },
+  "featureNotes": {
+    "pull-requests": "Called merge requests",
+    "actions-compat": "Pipelines use GitLab's own syntax"
+  },
+  "reviewed": "2026-11"
+}

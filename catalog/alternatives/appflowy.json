@@ -1,0 +1,77 @@
+{
+  "id": "appflowy",
+  "name": "AppFlowy",
+  "tagline": "The closest open look-alike to Notion, local-first",
+  "description": "Pages, databases, boards, calendars and grids in native apps that store your data on your device first. Syncing and collaboration go through AppFlowy's cloud or a self-hosted server.",
+  "categories": ["notes"],
+  "kind": "desktop",
+  "openness": "open-core",
+  "license": "AGPL-3.0",
+  "licenseNote": "The desktop and mobile apps are AGPL-3.0 and free for local use. The current self-hosted sync server is distributed under a commercial licence: its free tier covers one user seat and up to three guest editors, and teams pay per seat whether they self-host or use AppFlowy's cloud. The earlier AGPL server is no longer the maintained one.",
+  "backing": "AppFlowy, Inc., a venture-backed startup funded by paid plans",
+  "since": 2021,
+  "maturity": {
+    "score": 3,
+    "rationale": "Popular and fast-moving, but still changing shape: sync, permissions and the self-hosting licence have all shifted recently. Fine for personal use; evaluate carefully before rolling it out to a team."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://appflowy.com",
+    "source": "https://github.com/AppFlowy-IO/AppFlowy",
+    "docs": "https://appflowy.com/docs"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "Solo use needs no server at all. Syncing between people means running AppFlowy's self-hosted server stack with Docker Compose (several services plus PostgreSQL and object storage) under its commercial licence, which is free for a single seat.",
+    "setupHours": [3, 8],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores"
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "AppFlowy Self-Hosted (commercial licence, free tier)",
+        "url": "https://github.com/AppFlowy-IO/AppFlowy-SelfHost-Commercial"
+      }
+    ],
+    "optional": true
+  },
+  "managedHosting": [
+    {
+      "label": "AppFlowy Cloud",
+      "url": "https://appflowy.com/pricing",
+      "note": "Free tier for individuals; paid per seat for teams"
+    }
+  ],
+  "strengths": [
+    "Pages, databases, boards and calendars that feel like Notion",
+    "Works fully offline: your data lives on your device first",
+    "Native apps on every platform",
+    "Imports Notion exports, including simple databases"
+  ],
+  "weaknesses": [
+    "Team self-hosting is not free: the sync server's free tier is a single seat",
+    "Collaboration, permissions and web publishing trail Notion and Outline",
+    "Database relations, formulas and automations need rebuilding after import",
+    "Rapid change means occasional sync bugs and breaking updates"
+  ],
+  "features": {
+    "realtime-collab": "yes",
+    "databases": "yes",
+    "offline": "yes",
+    "plain-files": "no",
+    "public-sharing": "yes",
+    "mobile-apps": "yes",
+    "permissions": "partial",
+    "notion-import": "yes",
+    "api": "partial"
+  },
+  "featureNotes": {
+    "realtime-collab": "Needs AppFlowy Cloud or the self-hosted server",
+    "plain-files": "Local database; exports to Markdown",
+    "public-sharing": "Through the sync server or cloud",
+    "api": "Server API on self-hosted deployments"
+  },
+  "reviewed": "2026-11"
+}

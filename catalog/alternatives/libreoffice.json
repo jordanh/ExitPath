@@ -1,0 +1,51 @@
+{
+  "id": "libreoffice",
+  "name": "LibreOffice",
+  "tagline": "The full desktop office suite, no account needed",
+  "description": "Writer, Calc, Impress, Draw and Base: a complete office suite that runs on your own computer. It opens and saves Microsoft formats and uses the OpenDocument standard natively.",
+  "categories": ["office"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "MPL-2.0",
+  "backing": "The Document Foundation, a German non-profit, with paid engineering from Collabora, allotropia and other ecosystem companies",
+  "since": 2010,
+  "maturity": {
+    "score": 5,
+    "rationale": "Fifteen years of releases on a twice-yearly schedule (and a lineage going back to StarOffice), the default office suite on most Linux distributions, and deployed across public administrations such as Schleswig-Holstein."
+  },
+  "platforms": ["windows", "macos", "linux"],
+  "links": {
+    "website": "https://www.libreoffice.org",
+    "source": "https://github.com/LibreOffice/core",
+    "docs": "https://help.libreoffice.org"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Works entirely offline with no account and no subscription",
+    "Opens and saves .docx, .xlsx and .pptx as well as OpenDocument",
+    "Handles very large spreadsheets and legacy formats that web editors refuse",
+    "Can batch-convert whole folders of documents from the command line"
+  ],
+  "weaknesses": [
+    "No real-time co-editing: collaboration means passing files around, or pairing it with Collabora Online",
+    "Complex Word layouts, Excel pivot tables and PowerPoint animations can shift when files go back and forth",
+    "VBA macros run only partially; anything substantial needs rewriting",
+    "The default interface feels dated next to Microsoft 365, though a ribbon-style layout is available"
+  ],
+  "features": {
+    "ms-format-fidelity": "partial",
+    "browser-coediting": "no",
+    "desktop-apps": "yes",
+    "mobile-apps": "no",
+    "track-changes": "yes",
+    "vba-macros": "partial",
+    "odf-native": "yes"
+  },
+  "featureNotes": {
+    "ms-format-fidelity": "Good for everyday documents; test your most complex ones",
+    "browser-coediting": "Collabora Online is the browser version of the same engine",
+    "vba-macros": "Simple macros only"
+  },
+  "reviewed": "2026-11"
+}

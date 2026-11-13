@@ -1,0 +1,110 @@
+{
+  "id": "microsoft-teams",
+  "name": "Microsoft Teams",
+  "vendor": "Microsoft",
+  "category": "chat",
+  "alsoCovers": ["Teams chat", "Teams channels"],
+  "summary": "Microsoft's hub for chat, channels and meetings, bundled with most Microsoft 365 plans. This entry covers chat and channels; for meetings, see the Zoom entry.",
+  "lockIn": {
+    "level": 5,
+    "factors": [
+      "Getting chat history out is slow, partial and administrator-only",
+      "Every team is backed by a Microsoft 365 group and a SharePoint site",
+      "Meetings, calendars and telephony all route through it",
+      "Partners and customers expect Teams meeting links",
+      "Bundled pricing makes it feel free"
+    ]
+  },
+  "export": {
+    "difficulty": 4,
+    "summary": "There is no export button for users. Administrators of smaller tenants can request Microsoft's Teams data export tool, which takes weeks to be granted; larger tenants are left with compliance tooling or the Graph API.",
+    "methods": [
+      {
+        "name": "Teams data export tool",
+        "detail": "Requested through the Teams admin center, for tenants of up to about 500 users. Access can take around a month to arrive, and your tenant must stay active while you use it. It exports teams, channels and channel messages."
+      },
+      {
+        "name": "Microsoft Graph export APIs",
+        "detail": "Programmatic access to all messages. Metered, requires an app registration with admin consent, and you write the converter yourself.",
+        "url": "https://learn.microsoft.com/microsoftteams/export-teams-content"
+      },
+      {
+        "name": "Channel files",
+        "detail": "Files shared in channels live in the team's SharePoint site and can be copied out like any other SharePoint library."
+      }
+    ],
+    "caveats": [
+      "Start the export request weeks before you plan to switch",
+      "Direct messages and private channels are the hardest to get out; plan to keep an archive for reference instead of migrating them",
+      "Do not cancel licences until the export has finished and been verified",
+      "Meeting recordings are stored in OneDrive and SharePoint, not in Teams itself"
+    ]
+  },
+  "paths": [
+    {
+      "to": "zulip",
+      "fit": 3,
+      "verdict": "The only option here with an official Teams importer, and a good fit if your team wants calmer, more organised conversations.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Zulip's importer takes the output of Microsoft's Teams data export tool and recreates users, teams as channels and public channel history. Direct messages and private channels are not imported.",
+        "links": [
+          {
+            "label": "Zulip: migrating from other chat tools",
+            "url": "https://zulip.com/help/migrating-from-other-chat-tools"
+          }
+        ]
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Users and their roles",
+        "Teams, as channels with their members",
+        "Public channel message history"
+      ],
+      "lost": [
+        "Direct messages and private-channel history",
+        "Built-in meetings (Zulip hands calls to Jitsi or BigBlueButton)",
+        "Tabs, apps and Power Automate flows",
+        "Presence and calendar integration with Outlook"
+      ]
+    },
+    {
+      "to": "mattermost",
+      "fit": 4,
+      "verdict": "The most familiar layout for people coming from Teams channels, if you accept starting with a clean history.",
+      "import": {
+        "difficulty": 5,
+        "summary": "There is no Teams importer. Recreate teams and channels, move files across from SharePoint, and start history fresh. Anyone determined to bring history must convert a Teams export into Mattermost's bulk-import format with their own scripts."
+      },
+      "effortHours": [2, 5],
+      "transfers": ["Team and channel structure, recreated by hand", "Channel files, copied from SharePoint"],
+      "lost": [
+        "All message history, unless you write a converter",
+        "Group calls and meetings in the free edition",
+        "Tabs, apps and Power Automate flows",
+        "Presence and calendar integration with Outlook"
+      ]
+    },
+    {
+      "to": "element",
+      "fit": 3,
+      "verdict": "For organisations that need end-to-end encryption or want to federate with partners who also run Matrix.",
+      "import": {
+        "difficulty": 5,
+        "summary": "There is no importer. Recreate spaces and rooms and start history fresh. A Matrix bridge to Teams can relay messages both ways during the transition, but it needs its own setup and Microsoft app registration."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Team and channel structure, recreated as spaces and rooms",
+        "Channel files, copied from SharePoint"
+      ],
+      "lost": [
+        "All message history",
+        "Tabs, apps and Power Automate flows",
+        "Presence and calendar integration with Outlook",
+        "The simplicity of not thinking about encryption keys"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,193 @@
+{
+  "id": "leaving-slack",
+  "title": "Leaving Slack",
+  "summary": "Move a team's channels, history and integrations to a chat server you control, with one rehearsal and one clean cut-over.",
+  "audience": "A team of 5 to 150 people on a Slack Free, Pro or Business+ workspace.",
+  "timeframe": "Two to four weeks: a few days to set up and rehearse, one switch-over day, and a fortnight of keeping Slack readable.",
+  "tools": ["slack"],
+  "stack": [
+    {
+      "role": "Team chat",
+      "alternative": "mattermost",
+      "why": "The most familiar layout for people coming from Slack, with an official import path. Install Team Edition explicitly, and read its licence note first."
+    },
+    {
+      "role": "Team chat, if you want less noise",
+      "alternative": "zulip",
+      "why": "Also has an official Slack importer, and no paid tier for server features. The steps below work for either; only the import tool differs."
+    },
+    {
+      "role": "Calls",
+      "alternative": "jitsi",
+      "why": "Replaces huddles. Both chat servers can start a Jitsi call from a channel."
+    }
+  ],
+  "phases": [
+    {
+      "id": "take-stock",
+      "title": "Take stock",
+      "intro": "Find out what Slack is really doing for you beyond messages.",
+      "steps": [
+        {
+          "id": "check-export-rights",
+          "title": "Check what your plan lets you export",
+          "detail": "Free and Pro workspaces export public channels only. Business+ owners can also export private channels and direct messages. Decide now whether public history is enough, and tell the team what will and will not come across.",
+          "links": [
+            {
+              "label": "Slack: export your workspace data",
+              "url": "https://slack.com/help/articles/201658943-Export-your-workspace-data"
+            }
+          ]
+        },
+        {
+          "id": "list-integrations",
+          "title": "List every app, bot and webhook",
+          "detail": "Go through the workspace's app management page. For each integration, write down what posts where and who owns it. Sort them into: has an equivalent, can use a generic webhook, or will be dropped."
+        },
+        {
+          "id": "prune-channels",
+          "title": "Archive dead channels",
+          "detail": "Archive channels nobody has used for months. Fewer channels means a faster import and a tidier start."
+        },
+        {
+          "id": "list-externals",
+          "title": "List guests and Slack Connect channels",
+          "detail": "Shared channels with customers or partners cannot move. Agree with each external party what replaces them: email, a guest account on your new server, or keeping a small Slack workspace just for that."
+        },
+        {
+          "id": "pick-destination",
+          "title": "Choose Mattermost or Zulip",
+          "detail": "Try both for a few days with two or three colleagues, on a test server or a hosted trial. Mattermost needs almost no retraining. Zulip asks people to learn topics and repays it with far calmer channels. Check the features you need against each one's free edition."
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "title": "Build the new server",
+      "steps": [
+        {
+          "id": "install",
+          "title": "Install the server",
+          "detail": "Follow the official installation path on a fresh machine, with HTTPS and a proper host name. For Mattermost, make sure you install Team Edition: the default Entry edition limits visible history.",
+          "links": [
+            { "label": "Mattermost: Docker deployment", "url": "https://github.com/mattermost/docker" },
+            {
+              "label": "Zulip: production installer",
+              "url": "https://zulip.readthedocs.io/en/stable/production/install.html"
+            }
+          ]
+        },
+        {
+          "id": "configure-email-push",
+          "title": "Configure email and mobile notifications",
+          "detail": "Set up outgoing email for invitations and password resets, and enable the mobile push notification service. Test both on a real phone: missing notifications are the fastest way to lose people's trust in a new chat tool."
+        },
+        {
+          "id": "setup-backups",
+          "title": "Set up backups and test a restore",
+          "detail": "Back up the database and the uploaded files to a second location on a schedule, and restore them once onto a scratch machine."
+        },
+        {
+          "id": "setup-login",
+          "title": "Decide how people will log in",
+          "detail": "Email and password works everywhere. If you want single sign-on, check that your chosen server includes it in the edition you are running before you promise it.",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "rehearse",
+      "title": "Rehearse the import",
+      "intro": "Do the whole import once on a throwaway server. Problems found here cost nothing.",
+      "steps": [
+        {
+          "id": "export",
+          "title": "Export the workspace",
+          "detail": "Run the export from Slack's settings and download the archive. It contains messages and links to files, not the files themselves."
+        },
+        {
+          "id": "fetch-files",
+          "title": "Fetch the uploaded files",
+          "detail": "Use slack-advanced-exporter to download attachments into the archive, along with user email addresses, which the importers need to match accounts.",
+          "links": [
+            {
+              "label": "slack-advanced-exporter",
+              "url": "https://github.com/grundleborg/slack-advanced-exporter"
+            }
+          ]
+        },
+        {
+          "id": "trial-import",
+          "title": "Import into a test server",
+          "detail": "For Mattermost, convert the archive with mmetl and run a bulk import. For Zulip, run its Slack import command. Expect the first attempt to reveal something: a user without an email address, an oversized file, a channel name that clashes.",
+          "links": [
+            { "label": "mmetl", "url": "https://github.com/mattermost/mmetl" },
+            {
+              "label": "Zulip: migrating from other chat tools",
+              "url": "https://zulip.com/help/migrating-from-other-chat-tools"
+            }
+          ]
+        },
+        {
+          "id": "review-import",
+          "title": "Check the result with a colleague",
+          "detail": "Look at a busy channel, an old thread, a message with attachments and a message with emoji reactions. Note how long the import took: that is the length of your switch-over window."
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "title": "Switch over",
+      "intro": "Pick a quiet time. Friday afternoon works well.",
+      "steps": [
+        {
+          "id": "announce",
+          "title": "Announce the date",
+          "detail": "Give a week's notice in Slack itself and by email: the date, the new address, how to log in, and what will not come across. Ask people to save anything important from their direct messages."
+        },
+        {
+          "id": "final-export",
+          "title": "Freeze Slack and take the final export",
+          "detail": "Post a closing message in every active channel, restrict posting to admins where your plan allows, then export and fetch files exactly as rehearsed."
+        },
+        {
+          "id": "final-import",
+          "title": "Run the real import",
+          "detail": "Import into the production server, then invite everyone. Imported accounts are matched by email address, so people set a password and find their history waiting."
+        },
+        {
+          "id": "rewire-integrations",
+          "title": "Reconnect integrations",
+          "detail": "Work down the list from the first phase. Both servers accept Slack-format incoming webhooks, so for many tools you only need to paste a new URL."
+        },
+        {
+          "id": "install-apps",
+          "title": "Get the apps onto every device",
+          "detail": "Share links to the desktop and mobile apps with the server address ready to paste. Check in with the least technical person on the team first."
+        }
+      ]
+    },
+    {
+      "id": "wind-down",
+      "title": "Wind down",
+      "steps": [
+        {
+          "id": "parallel-read",
+          "title": "Keep Slack readable for two weeks",
+          "detail": "Leave the workspace open but silent. Note every time someone goes back for something: a pinned message, a private conversation, a file. Move what matters."
+        },
+        {
+          "id": "store-archive",
+          "title": "Store the export archive safely",
+          "detail": "Keep the final export, with files, in your backups. It is your only record of anything that was not imported."
+        },
+        {
+          "id": "downgrade",
+          "title": "Downgrade, then delete",
+          "detail": "Drop to the free plan at the end of the billing period. Delete the workspace once nobody has opened it for a month, unless you are keeping it for shared channels with outside parties."
+        }
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

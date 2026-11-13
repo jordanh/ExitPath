@@ -1,0 +1,104 @@
+{
+  "id": "outlook-exchange",
+  "name": "Outlook & Exchange Online",
+  "vendor": "Microsoft",
+  "category": "email",
+  "alsoCovers": ["Microsoft 365 mail", "Outlook.com", "Hotmail"],
+  "summary": "Microsoft's hosted mailboxes, calendars and contacts, and the Outlook client that goes with them.",
+  "lockIn": {
+    "level": 4,
+    "factors": [
+      "An @outlook.com or @hotmail.com address belongs to Microsoft and cannot move with you",
+      "Shared mailboxes, delegated calendars, room booking and distribution groups",
+      "Meeting invitations and free/busy lookups that assume everyone is on Exchange",
+      "Password login for IMAP is switched off, so third-party tools must use modern authentication",
+      "Years of mail in online archives and .pst files"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "Mail comes out over IMAP or as .pst archives; calendars and contacts export as .ics and .csv. Rules, delegation and shared-mailbox permissions do not export at all.",
+    "methods": [
+      {
+        "name": "IMAP sync",
+        "detail": "Use imapsync, or your new server's built-in sync jobs, to copy each mailbox folder by folder to the new server. Exchange Online requires OAuth2 rather than a password.",
+        "url": "https://imapsync.lamiral.info/"
+      },
+      {
+        "name": "PST export",
+        "detail": "Outlook for Windows exports a mailbox to a .pst file, and administrators can export in bulk through Microsoft Purview. The readpst tool (libpst) converts .pst to mbox for other clients."
+      },
+      {
+        "name": "Calendar and contacts",
+        "detail": "Export calendars as .ics and contacts as .csv or vCard, then import them into your new calendar and address book."
+      }
+    ],
+    "caveats": [
+      "If your address is @outlook.com or @hotmail.com, set up forwarding and change your address everywhere gradually",
+      "Recurring meetings that you organise must be sent again from the new calendar",
+      "Inbox rules, categories and signatures have to be recreated",
+      "Lower the DNS TTL on your MX records a few days before switching, so that the change takes effect quickly"
+    ]
+  },
+  "paths": [
+    {
+      "to": "thunderbird",
+      "fit": 3,
+      "verdict": "The lowest-risk first step: change the client now, keep the mailbox, and move the server later, or never.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Add the account and your mail appears, using Thunderbird's native Exchange support or IMAP with modern authentication. Local .pst archives need converting unless you import on a Windows machine that still has Outlook installed."
+      },
+      "effortHours": [1, 4],
+      "transfers": [
+        "All mail and folders held on the server",
+        "Several accounts in one unified inbox",
+        "Calendars and contacts, directly or after an export"
+      ],
+      "lost": [
+        "Outlook rules and Quick Steps",
+        "Teams and Office integration, such as meeting buttons and presence",
+        "Shared-calendar conveniences that depend on Exchange"
+      ]
+    },
+    {
+      "to": "mailcow",
+      "fit": 4,
+      "verdict": "For organisations that own their domain and have someone willing to run a mail server properly.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Create the mailboxes, then use mailcow's built-in sync jobs to pull each one across over IMAP. Run both systems in parallel, switch the MX records, and sync once more to catch stragglers."
+      },
+      "effortHours": [3, 8],
+      "transfers": [
+        "Mail and folder structure",
+        "Calendars and contacts, after export and import",
+        "Phone and Outlook sync over ActiveSync"
+      ],
+      "lost": [
+        "Shared-mailbox permissions and delegation, which you recreate by hand",
+        "Server-side rules",
+        "Microsoft's sending reputation: yours starts from zero",
+        "Compliance features such as retention policies and eDiscovery"
+      ]
+    },
+    {
+      "to": "stalwart",
+      "fit": 3,
+      "verdict": "A lean, modern server for technically confident teams who are happy to use standard mail clients.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Create the accounts, copy mailboxes across with imapsync, import calendars and contacts over CalDAV and CardDAV, then switch the MX records."
+      },
+      "effortHours": [3, 8],
+      "transfers": ["Mail and folder structure", "Calendars and contacts, after export and import"],
+      "lost": [
+        "ActiveSync: phones and Outlook connect over IMAP, CalDAV and CardDAV instead",
+        "Shared-mailbox permissions and delegation, which you recreate by hand",
+        "Bundled webmail",
+        "Microsoft's sending reputation: yours starts from zero"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

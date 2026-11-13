@@ -1,0 +1,70 @@
+{
+  "id": "stalwart",
+  "name": "Stalwart",
+  "tagline": "A modern all-in-one mail server in a single binary",
+  "description": "A mail and collaboration server written in Rust. One program provides SMTP, IMAP, JMAP and POP3, spam filtering, DKIM signing and automatic TLS, along with calendars, contacts and file storage over CalDAV, CardDAV and WebDAV.",
+  "categories": ["email"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "AGPL-3.0",
+  "licenseNote": "Dual-licensed. The project says about 85% of features are in the AGPL-3.0 edition; the rest (multi-tenancy, SCIM provisioning and other large-deployment features) need an Enterprise licence. The project has committed not to move existing open features behind it.",
+  "backing": "Stalwart Labs, funded by Enterprise subscriptions, sponsors and NLnet grants",
+  "since": 2022,
+  "maturity": {
+    "score": 3,
+    "rationale": "Reached 1.0 in late 2026 after several years of rapid pre-release development. Technically impressive and increasingly popular, but far younger than the Postfix and Dovecot stack it replaces, and upgrading to 1.0 needs a one-time data migration."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://stalw.art",
+    "source": "https://github.com/stalwartlabs/stalwart",
+    "docs": "https://stalw.art/docs/"
+  },
+  "selfHosting": {
+    "difficulty": 5,
+    "summary": "Installing it is quick: one binary or container, with a web admin that tells you which DNS records to create. The difficulty is email itself. You need a clean static IP with reverse DNS, SPF, DKIM and DMARC, an open port 25, and ongoing attention to blocklists and deliverability. If it goes down, your mail bounces.",
+    "setupHours": [6, 16],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "1 core",
+      "notes": "Check that your hosting provider allows outbound port 25 and lets you set reverse DNS before you start."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation guide (Docker, Linux, macOS, Windows)",
+        "url": "https://stalw.art/docs/"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "One binary handles sending, receiving, storage, spam filtering, DKIM and certificates",
+    "Calendars, contacts and files in the same server over open protocols",
+    "Modest memory use; scales from a small VPS to a cluster",
+    "Web admin with DNS checks and DMARC and TLS reports built in"
+  ],
+  "weaknesses": [
+    "Young compared with Postfix and Dovecot: fewer war stories and fewer people who can help at 3 a.m.",
+    "Deliverability is still your problem: IP reputation, reverse DNS and blocklists",
+    "No bundled webmail yet; bring a mail client or run a separate JMAP or IMAP webmail",
+    "No Exchange ActiveSync, so Outlook and phones connect over IMAP, CalDAV and CardDAV"
+  ],
+  "features": {
+    "hosts-mailboxes": "yes",
+    "desktop-app": "no",
+    "webmail": "no",
+    "mobile-apps": "no",
+    "calendar-contacts": "yes",
+    "spam-filtering": "yes",
+    "exchange-protocols": "no",
+    "openpgp": "partial"
+  },
+  "featureNotes": {
+    "desktop-app": "Use any mail client, for example Thunderbird",
+    "webmail": "Planned; third-party webmail works today",
+    "mobile-apps": "Use any IMAP or JMAP mail app",
+    "openpgp": "Can encrypt stored mail with your public key"
+  },
+  "reviewed": "2026-11"
+}

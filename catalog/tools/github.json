@@ -1,0 +1,96 @@
+{
+  "id": "github",
+  "name": "GitHub",
+  "vendor": "Microsoft",
+  "category": "code-hosting",
+  "alsoCovers": ["GitHub Actions", "GitHub Enterprise Cloud"],
+  "summary": "The largest code host: Git repositories, pull requests, issues, Actions and the social graph of open source.",
+  "lockIn": {
+    "level": 4,
+    "factors": [
+      "Issues, pull requests and review history live outside the Git repository",
+      "Actions workflows and the marketplace actions they depend on",
+      "The community: stars, followers, drive-by contributors and 'Sign in with GitHub'",
+      "Integrations that assume GitHub: bots, deploy hooks, package registries, Pages",
+      "Copilot and Codespaces"
+    ]
+  },
+  "export": {
+    "difficulty": 2,
+    "summary": "Git history moves with one command. Issues, pull requests, releases and wikis are reachable through the API, and both forges below import them for you.",
+    "methods": [
+      {
+        "name": "git clone --mirror",
+        "detail": "Copies every branch, tag and ref. This is the part that can never be locked in."
+      },
+      {
+        "name": "Built-in importers",
+        "detail": "Forgejo and GitLab both pull a repository together with its issues, pull requests, labels, milestones and releases, using a personal access token."
+      },
+      {
+        "name": "Migration archives",
+        "detail": "GitHub can produce an archive of an organisation's or user's repositories and metadata as JSON, which is useful for safekeeping.",
+        "url": "https://docs.github.com/en/migrations"
+      }
+    ],
+    "caveats": [
+      "API rate limits make very large repositories slow to import",
+      "Imported comments are attributed to the importing account unless matching users exist on the new forge",
+      "Actions secrets, branch protection rules and webhooks must be recreated",
+      "Git LFS objects need a separate fetch and push",
+      "Stars, watchers and forks stay behind; consider leaving a read-only mirror that points to the new home"
+    ]
+  },
+  "paths": [
+    {
+      "to": "forgejo",
+      "fit": 4,
+      "verdict": "The best fit for small teams and open-source projects that want something light and community-governed.",
+      "import": {
+        "difficulty": 2,
+        "summary": "New Migration → GitHub, paste a token and tick what to bring: issues, pull requests, labels, milestones, releases and wiki. Workflow files need reviewing, because Forgejo Actions is similar to GitHub Actions rather than identical."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Full Git history, branches and tags",
+        "Issues, pull requests, labels, milestones and releases",
+        "Wikis",
+        "Many Actions workflows, after edits"
+      ],
+      "lost": [
+        "Stars, followers and discoverability",
+        "Workflows that rely on GitHub-hosted runners or GitHub-specific actions",
+        "Dependabot, code scanning and Copilot",
+        "GitHub Apps and marketplace integrations"
+      ]
+    },
+    {
+      "to": "gitlab",
+      "fit": 4,
+      "verdict": "For teams that want the most complete built-in CI/CD and are prepared to give it serious hardware.",
+      "import": {
+        "difficulty": 2,
+        "summary": "GitLab's GitHub importer brings repositories with issues, pull requests (as merge requests), comments, labels, milestones and releases. The larger job is rewriting Actions workflows as GitLab CI pipelines.",
+        "links": [
+          {
+            "label": "GitLab: import from GitHub",
+            "url": "https://docs.gitlab.com/user/project/import/github/"
+          }
+        ]
+      },
+      "effortHours": [4, 12],
+      "transfers": [
+        "Full Git history, branches and tags",
+        "Issues, pull requests, comments, labels, milestones and releases",
+        "Wikis"
+      ],
+      "lost": [
+        "Every Actions workflow, which must be rewritten",
+        "Stars, followers and discoverability",
+        "GitHub Apps and marketplace integrations",
+        "Features that are free on GitHub but paid on GitLab, such as some approval rules"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

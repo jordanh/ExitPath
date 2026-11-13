@@ -1,0 +1,90 @@
+{
+  "id": "closed-terminals",
+  "name": "macOS Terminal & closed terminals",
+  "vendor": "Apple and others",
+  "category": "terminal",
+  "alsoCovers": ["Terminal.app", "Termius", "SecureCRT"],
+  "summary": "The terminal that ships with macOS, and the commercial terminals and SSH clients people replace it with. Warp, once the best-known proprietary terminal, opened its client under AGPL-3.0 in 2026; its account, cloud and agent features remain a hosted service.",
+  "lockIn": {
+    "level": 1,
+    "factors": [
+      "Saved profiles, colours and key bindings",
+      "Synced SSH host lists in commercial clients",
+      "Muscle memory"
+    ]
+  },
+  "export": {
+    "difficulty": 1,
+    "summary": "A terminal holds almost no data. Your shell configuration, history and SSH keys live in your home directory and work everywhere.",
+    "methods": [
+      {
+        "name": "Nothing to export",
+        "detail": "Shell configuration (.zshrc, .bashrc), history and the ~/.ssh directory are independent of the terminal application."
+      },
+      {
+        "name": "SSH host lists",
+        "detail": "Commercial SSH clients can usually export their saved hosts. Turn them into entries in ~/.ssh/config, which every terminal understands."
+      }
+    ],
+    "caveats": ["Colour schemes need choosing again; most popular themes exist for all three alternatives"]
+  },
+  "paths": [
+    {
+      "to": "ghostty",
+      "fit": 5,
+      "verdict": "The easiest switch on macOS and Linux: it looks and behaves like a native app and needs no setup.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Install it and open it. Pick a theme and font in the config file if the defaults do not suit you."
+      },
+      "effortHours": [0.5, 1.5],
+      "transfers": [
+        "Your shell, its configuration and history",
+        "SSH keys and ~/.ssh/config",
+        "Tabs, splits and native shortcuts"
+      ],
+      "lost": [
+        "Synced host lists and credential vaults from commercial SSH clients",
+        "A graphical settings window",
+        "Windows support, if you also work there"
+      ]
+    },
+    {
+      "to": "wezterm",
+      "fit": 4,
+      "verdict": "For people who work across Windows, macOS and Linux, or want to replace tmux as well.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Install it and write a short Lua configuration file for your font, colours and key bindings. SSH hosts from ~/.ssh/config appear automatically."
+      },
+      "effortHours": [1, 3],
+      "transfers": [
+        "Your shell, its configuration and history",
+        "SSH keys and ~/.ssh/config, used for built-in remote sessions",
+        "One configuration file shared across operating systems"
+      ],
+      "lost": [
+        "Synced host lists and credential vaults from commercial SSH clients",
+        "A graphical settings window",
+        "A platform-native look"
+      ]
+    },
+    {
+      "to": "alacritty",
+      "fit": 3,
+      "verdict": "For minimalists who already use tmux or a tiling window manager.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Install it and add a small TOML file for your font and colours. If you relied on tabs or splits, set up tmux or Zellij alongside."
+      },
+      "effortHours": [1, 3],
+      "transfers": ["Your shell, its configuration and history", "SSH keys and ~/.ssh/config"],
+      "lost": [
+        "Tabs and splits, unless you add a multiplexer",
+        "Ligatures and inline images",
+        "Synced host lists and credential vaults from commercial SSH clients"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}
