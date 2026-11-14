@@ -1,0 +1,72 @@
+{
+  "id": "seafile",
+  "name": "Seafile",
+  "tagline": "Lean file sync that stays fast with millions of files",
+  "description": "A file sync and share server built for performance. Files are organised into libraries, synced at block level and deduplicated; a drive client shows everything without downloading it. Collaborative documents and a wiki are included.",
+  "categories": ["files"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "AGPL-3.0",
+  "licenseNote": "The Community Edition server is open source (the web interface is Apache-2.0). The Professional Edition, free for up to three users, adds features such as full-text search and audit logs.",
+  "backing": "Seafile Ltd., a company based in China, funded by Professional Edition licences",
+  "since": 2012,
+  "maturity": {
+    "score": 4,
+    "rationale": "In production at universities and research institutes for over a decade and noticeably faster than Nextcloud at pure sync. The community is smaller and the documentation thinner."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://www.seafile.com",
+    "source": "https://github.com/haiwen/seafile",
+    "docs": "https://manual.seafile.com"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "An official Docker Compose setup with a database and cache alongside. There are fewer moving parts than in Nextcloud, but the documentation assumes more of you and upgrades between major versions involve manual steps.",
+    "setupHours": [2, 6],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores"
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "Official Docker deployment",
+        "url": "https://github.com/haiwen/seafile-docker"
+      },
+      {
+        "kind": "guide",
+        "label": "Server manual",
+        "url": "https://manual.seafile.com"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "Block-level sync and deduplication make it quick with large files and huge folders",
+    "The drive client offers on-demand files on Windows, macOS and Linux",
+    "Low resource use for the number of users it serves",
+    "Libraries can be encrypted on the client with a password the server never sees"
+  ],
+  "weaknesses": [
+    "Files are stored as deduplicated blocks, not as plain files on disk; getting them back without Seafile's own tools is not trivial",
+    "Far fewer integrations than Nextcloud: it is a file platform, not a workspace",
+    "Some features you may expect, such as full-text search, are Professional Edition only",
+    "A smaller English-language community when you need help"
+  ],
+  "features": {
+    "desktop-sync": "yes",
+    "on-demand-files": "yes",
+    "mobile-apps": "yes",
+    "share-links": "yes",
+    "browser-editing": "addon",
+    "versioning": "yes",
+    "e2ee": "partial",
+    "serverless": "no"
+  },
+  "featureNotes": {
+    "browser-editing": "With ONLYOFFICE or Collabora connected",
+    "e2ee": "Encrypted libraries protect contents, not file names or sizes"
+  },
+  "reviewed": "2026-11"
+}

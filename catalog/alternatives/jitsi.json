@@ -1,0 +1,87 @@
+{
+  "id": "jitsi",
+  "name": "Jitsi Meet",
+  "tagline": "Browser video meetings anyone can join from a link",
+  "description": "Video conferencing that runs in the browser with no account and no install for guests. Use the free public instance, a hosted service, or run your own.",
+  "categories": ["video"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "Apache-2.0",
+  "backing": "8x8, Inc. (US), which employs the core team and sells a hosted version",
+  "since": 2013,
+  "maturity": {
+    "score": 5,
+    "rationale": "More than a decade in production, embedded in many other products, and proven at very large scale during 2020."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://jitsi.org",
+    "source": "https://github.com/jitsi/jitsi-meet",
+    "docs": "https://jitsi.github.io/handbook/"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "The Docker setup or Debian packages get you running quickly on a server with a public IP. Most trouble is networking: UDP port 10000 must reach the video bridge, and participants behind strict firewalls need a TURN server.",
+    "setupHours": [2, 6],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "Video is bound by CPU and bandwidth, not memory: plan for a symmetric uplink and more cores as concurrent meetings grow."
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "docker-jitsi-meet",
+        "url": "https://github.com/jitsi/docker-jitsi-meet"
+      },
+      {
+        "kind": "guide",
+        "label": "Self-hosting handbook",
+        "url": "https://jitsi.github.io/handbook/docs/devops-guide/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "meet.jit.si",
+      "url": "https://meet.jit.si",
+      "note": "Free public instance; whoever starts the meeting must sign in"
+    },
+    {
+      "label": "Jitsi as a Service (8x8)",
+      "url": "https://jaas.8x8.vc",
+      "note": "Hosted and embeddable, with a free tier"
+    }
+  ],
+  "strengths": [
+    "No accounts and no installs for guests: share a link and people join from a browser",
+    "A free public instance for trying it out or for occasional meetings",
+    "Integrates with Zulip, Mattermost, Nextcloud and Element, and is easy to embed",
+    "Breakout rooms, polls, reactions and screen sharing included"
+  ],
+  "weaknesses": [
+    "Quality drops in big calls: beyond a few dozen active cameras you need to tune or scale out",
+    "Recording needs a separate, resource-hungry Jibri instance",
+    "No scheduling, persistent rooms or calendar integration of its own",
+    "End-to-end encryption is optional, browser-dependent and disables recording"
+  ],
+  "features": {
+    "guest-join": "yes",
+    "screen-sharing": "yes",
+    "recording": "addon",
+    "breakout-rooms": "yes",
+    "whiteboard": "partial",
+    "e2ee": "partial",
+    "dial-in": "addon",
+    "large-meetings": "partial",
+    "mobile-apps": "yes"
+  },
+  "featureNotes": {
+    "recording": "Via the Jibri component",
+    "whiteboard": "Optional built-in whiteboard, off by default on self-hosted installs",
+    "e2ee": "Opt-in, in supporting browsers",
+    "dial-in": "Needs the Jigasi gateway and a SIP provider",
+    "large-meetings": "Works with tuning; most people watching, few on camera"
+  },
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,252 @@
+{
+  "id": "leaving-microsoft-365",
+  "title": "Leaving Microsoft 365",
+  "summary": "Replace mail, files, office apps, chat and meetings for a small organisation without losing data or a day of work.",
+  "audience": "A small organisation of 2 to 50 people on Microsoft 365 Business, with its own domain name.",
+  "timeframe": "Six to ten weeks. Most of that is waiting: for exports, for DNS, and for people to settle in while both systems run side by side.",
+  "tools": ["microsoft-office", "onedrive", "outlook-exchange", "microsoft-teams"],
+  "stack": [
+    {
+      "role": "Files, calendars and contacts",
+      "alternative": "nextcloud",
+      "why": "One login for files, calendars and contacts, with plenty of managed hosts if you would rather not run it yourself."
+    },
+    {
+      "role": "Editing documents together",
+      "alternative": "collabora",
+      "why": "Ships with Nextcloud as Nextcloud Office, so there is nothing extra to integrate."
+    },
+    {
+      "role": "Office on the desktop",
+      "alternative": "libreoffice",
+      "why": "The same engine as the browser editor, for offline work and heavy documents."
+    },
+    {
+      "role": "Mail client",
+      "alternative": "thunderbird",
+      "why": "Speaks to both the old Exchange mailbox and the new one, so people can switch client before the server changes."
+    },
+    {
+      "role": "Mail server",
+      "alternative": "mailcow",
+      "why": "A complete, proven mail stack if you self-host. A hosted mailbox from a provider that speaks IMAP, CalDAV and CardDAV is an equally good answer, and much less work."
+    },
+    {
+      "role": "Team chat",
+      "alternative": "zulip",
+      "why": "The only option with an official importer for Teams channels and their history."
+    },
+    {
+      "role": "Meetings",
+      "alternative": "jitsi",
+      "why": "Guests join from a link in their browser, and Zulip starts calls in it with one click."
+    }
+  ],
+  "phases": [
+    {
+      "id": "take-stock",
+      "title": "Take stock",
+      "intro": "Nothing changes for anyone yet. You are finding out what you actually use, and starting the things that take weeks.",
+      "steps": [
+        {
+          "id": "list-accounts",
+          "title": "List every account, shared mailbox and group",
+          "detail": "Export the user and licence list from the Microsoft 365 admin center. Add shared mailboxes, distribution lists, room calendars and any service accounts. This list becomes your checklist for who and what has been moved."
+        },
+        {
+          "id": "find-dependencies",
+          "title": "Find everything that signs in with Microsoft",
+          "detail": "Look for other services that use 'Sign in with Microsoft', devices managed through Entra ID or Intune, and printers or applications that send mail through Exchange. Each one needs a new login or a new mail relay before you cancel."
+        },
+        {
+          "id": "check-dns",
+          "title": "Make sure you control your domain's DNS",
+          "detail": "Log in to the registrar or DNS host for your domain and confirm you can edit records. The mail cut-over depends on it, and recovering a lost registrar login can take days."
+        },
+        {
+          "id": "set-date",
+          "title": "Find your renewal date and work backwards",
+          "detail": "Check whether you are billed monthly or annually and when the term ends. Aim to switch over at least three weeks before that date, so that the parallel run finishes before you have to renew."
+        },
+        {
+          "id": "test-documents",
+          "title": "Test your ten hardest documents",
+          "detail": "Open your most complex Word, Excel and PowerPoint files in LibreOffice. Note which ones break. Workbooks that depend on VBA or Power Query are the usual casualties: decide whether to rebuild them or keep one Excel licence for the people who need it.",
+          "links": [
+            {
+              "label": "Feature comparison: LibreOffice and Microsoft Office",
+              "url": "https://wiki.documentfoundation.org/Feature_Comparison:_LibreOffice_-_Microsoft_Office"
+            }
+          ]
+        },
+        {
+          "id": "request-teams-export",
+          "title": "Request the Teams data export now",
+          "detail": "Access to Microsoft's Teams export tool is granted on request and can take around a month. Ask for it today, even if you are not sure you will import the history."
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "title": "Build the new home",
+      "intro": "Set everything up alongside Microsoft 365 and prove it works with a few volunteers before anyone else has to care.",
+      "steps": [
+        {
+          "id": "decide-hosting",
+          "title": "Decide what you will host yourself",
+          "detail": "For each piece, choose between running it and paying someone to. Files and chat are reasonable to self-host. Mail is the one to think hardest about: a hosted mailbox on your own domain keeps you independent of Microsoft without making you a mail administrator."
+        },
+        {
+          "id": "setup-files",
+          "title": "Set up Nextcloud with office editing",
+          "detail": "Install Nextcloud (All-in-One includes the office editor) or open an account with a managed host. Create users and groups that mirror your teams, and a shared folder for each SharePoint library you plan to move.",
+          "links": [{ "label": "Nextcloud All-in-One", "url": "https://github.com/nextcloud/all-in-one" }]
+        },
+        {
+          "id": "setup-backups",
+          "title": "Set up backups before any data goes in",
+          "detail": "Configure automatic backups to a second location and restore one file as a test. Microsoft was doing this for you; from now on it is your job or your host's."
+        },
+        {
+          "id": "setup-mail",
+          "title": "Prepare the new mail service",
+          "detail": "Create your domain and mailboxes on the new mail server or provider. Add its DKIM record now, and prepare the SPF change, but leave the MX records pointing at Microsoft. Send test messages from the new service to Gmail and Outlook addresses and check that they arrive in the inbox."
+        },
+        {
+          "id": "setup-chat",
+          "title": "Set up chat and meetings",
+          "detail": "Install Zulip, or open a Zulip Cloud organisation, and choose a Jitsi instance for calls. Create the channels you expect to need; the Teams import, if you run it, will add the rest."
+        },
+        {
+          "id": "pilot",
+          "title": "Run a one-week pilot with two or three volunteers",
+          "detail": "Have them do real work in the new tools and write down every snag. Fix what you can and collect the rest for the cheat sheet you will hand to everyone else."
+        }
+      ]
+    },
+    {
+      "id": "move",
+      "title": "Move the data",
+      "intro": "Copy, do not move. Microsoft 365 stays the source of truth until the switch.",
+      "steps": [
+        {
+          "id": "copy-files",
+          "title": "Copy OneDrive and SharePoint files",
+          "detail": "Use rclone to copy each OneDrive and each SharePoint library to its new folder in Nextcloud. Compare file counts and total sizes afterwards. Run the copy again just before the switch to pick up changes.",
+          "links": [
+            { "label": "rclone: OneDrive and SharePoint", "url": "https://rclone.org/onedrive/" },
+            { "label": "rclone: WebDAV (Nextcloud)", "url": "https://rclone.org/webdav/" }
+          ]
+        },
+        {
+          "id": "export-onenote",
+          "title": "Export OneNote notebooks",
+          "detail": "OneNote notebooks are not ordinary files and will not copy across. Export the ones that matter as PDF or Word documents from the OneNote desktop app.",
+          "optional": true
+        },
+        {
+          "id": "sync-mail",
+          "title": "Start copying mailboxes",
+          "detail": "Set up an IMAP sync job for every mailbox, shared mailboxes included. The first pass can take days for large mailboxes; later passes only copy what is new, so start early and let it repeat.",
+          "links": [{ "label": "imapsync", "url": "https://imapsync.lamiral.info/" }]
+        },
+        {
+          "id": "move-calendars",
+          "title": "Move calendars and contacts",
+          "detail": "Export each person's calendar as .ics and contacts as .csv or vCard, and import them into Nextcloud. Ask meeting organisers to note their recurring meetings: those will need sending again from the new calendar."
+        },
+        {
+          "id": "import-chat",
+          "title": "Import or archive Teams history",
+          "detail": "If the Teams export has arrived, run Zulip's importer on a test server first, then for real. If it has not, or you decide against importing, keep the export as a searchable archive and start fresh.",
+          "links": [
+            {
+              "label": "Zulip: migrating from other chat tools",
+              "url": "https://zulip.com/help/migrating-from-other-chat-tools"
+            }
+          ]
+        },
+        {
+          "id": "install-apps",
+          "title": "Install the new apps on every computer and phone",
+          "detail": "LibreOffice, Thunderbird, the Nextcloud sync client and the chat app. Install the Carlito and Caladea fonts so that existing documents keep their layout, and make LibreOffice the default for Office file types."
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "title": "Switch over",
+      "intro": "One planned day, ideally just before a weekend.",
+      "steps": [
+        {
+          "id": "announce",
+          "title": "Announce the date and hand out a cheat sheet",
+          "detail": "Tell everyone a week ahead what changes, when, and where to ask for help. One page is enough: where files are, how to get mail, where chat lives, how to start a meeting."
+        },
+        {
+          "id": "lower-ttl",
+          "title": "Lower the TTL on your mail DNS records",
+          "detail": "Two days before the switch, reduce the TTL of your MX and SPF records to five minutes so that the change takes effect quickly."
+        },
+        {
+          "id": "switch-mx",
+          "title": "Point mail at the new server",
+          "detail": "Change the MX records, update SPF to authorise the new server, and publish DMARC if you have not already. Then run the mailbox sync one last time to collect anything delivered to Microsoft in the meantime."
+        },
+        {
+          "id": "exchange-relay",
+          "title": "Stop Exchange keeping your mail to itself",
+          "detail": "While your domain is still an accepted domain in Exchange Online, mail sent from inside your old tenant never leaves it. Set the domain to internal relay or add forwarding on every old mailbox until the tenant is closed."
+        },
+        {
+          "id": "freeze-old",
+          "title": "Freeze the old systems",
+          "detail": "Run the final file copy, then make SharePoint and OneDrive read-only where you can. Post a last message in every Teams channel that points to the new chat."
+        },
+        {
+          "id": "replace-links",
+          "title": "Replace meeting links and signatures",
+          "detail": "Send recurring meetings again with the new meeting links, update email signatures, and fix links to shared files on your website and in templates."
+        }
+      ]
+    },
+    {
+      "id": "wind-down",
+      "title": "Wind down",
+      "intro": "Keep Microsoft 365 readable for a few weeks. Cancel only when nobody has needed it for a while.",
+      "steps": [
+        {
+          "id": "parallel-run",
+          "title": "Run in parallel for two to four weeks",
+          "detail": "Keep a list of everything people go back to the old system for. Each entry is either something to migrate or something to replace."
+        },
+        {
+          "id": "test-restore",
+          "title": "Restore something from backup",
+          "detail": "Pick a real file and a real mailbox and restore them from your new backups. A backup you have never restored is a hope, not a backup."
+        },
+        {
+          "id": "final-archive",
+          "title": "Take a final archive",
+          "detail": "Export mailboxes to .pst and take a last copy of all files. Store the archive somewhere other than your new servers. If you have legal retention duties, check that the archive satisfies them."
+        },
+        {
+          "id": "reduce-licences",
+          "title": "Reduce licences",
+          "detail": "Remove licences in stages rather than cancelling outright. If a few people genuinely need desktop Excel, keep those licences: an honest two-licence bill is better than a failed migration."
+        },
+        {
+          "id": "clean-dns",
+          "title": "Remove Microsoft's DNS records",
+          "detail": "Delete the autodiscover and other Microsoft-specific records for your domain, and raise the TTLs you lowered earlier."
+        },
+        {
+          "id": "close-tenant",
+          "title": "Close the tenant",
+          "detail": "Once the final archive is verified and the retention period you need has passed, cancel the remaining subscriptions. Microsoft deletes tenant data some weeks after a subscription ends, so there is no way back after that."
+        }
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

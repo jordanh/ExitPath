@@ -1,0 +1,89 @@
+{
+  "id": "element",
+  "name": "Element (Matrix)",
+  "tagline": "Federated, end-to-end encrypted chat on an open protocol",
+  "description": "Element is the flagship client for Matrix, an open standard for decentralised communication. You run a homeserver (usually Synapse); your users can talk to people on any other Matrix server, with end-to-end encryption for private conversations.",
+  "categories": ["chat"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "licenseNote": "Synapse and the Element apps are AGPL-3.0, with a commercial licence available. Element also sells ESS Pro, which adds proprietary components for large deployments; the community stack is complete without it.",
+  "backing": "Element (New Vector Ltd, UK) builds the apps and Synapse; the non-profit Matrix.org Foundation stewards the protocol",
+  "since": 2016,
+  "maturity": {
+    "score": 4,
+    "rationale": "Used at national scale in the French and German public sectors. The ecosystem is mid-way through its 'Matrix 2.0' transition (new mobile apps, new sign-in service, new calling), which makes self-hosting documentation a moving target."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://element.io",
+    "source": "https://github.com/element-hq/synapse",
+    "docs": "https://element-hq.github.io/synapse/latest/"
+  },
+  "selfHosting": {
+    "difficulty": 4,
+    "summary": "A homeserver, PostgreSQL, an authentication service, media relays for calls and DNS delegation records all have to agree with each other. Element's official community distribution packages them as Helm charts for Kubernetes; Docker and Ansible setups are community-maintained.",
+    "setupHours": [5, 14],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "Joining large public federated rooms raises memory and database needs sharply."
+    },
+    "deploy": [
+      {
+        "kind": "helm",
+        "label": "ESS Community (official Helm charts)",
+        "url": "https://github.com/element-hq/ess-helm"
+      },
+      {
+        "kind": "guide",
+        "label": "matrix-docker-ansible-deploy (community playbook)",
+        "url": "https://github.com/spantaleev/matrix-docker-ansible-deploy"
+      },
+      {
+        "kind": "guide",
+        "label": "Synapse installation",
+        "url": "https://element-hq.github.io/synapse/latest/setup/installation.html"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "etke.cc",
+      "url": "https://etke.cc",
+      "note": "Independent managed Matrix hosting built on the community playbook"
+    },
+    {
+      "label": "Hosting providers listed by Matrix.org",
+      "url": "https://matrix.org/ecosystem/hosting/"
+    }
+  ],
+  "strengths": [
+    "End-to-end encryption by default for private conversations",
+    "Federation: work with people on other organisations' servers without guest accounts",
+    "An open protocol with several independent clients and servers, so no single vendor can close it",
+    "Bridges connect rooms to Slack, Teams, IRC and others during a transition"
+  ],
+  "weaknesses": [
+    "The hardest of the chat options to self-host well",
+    "Threads and search are less polished than Slack's, and encryption limits server-side search",
+    "Device verification and key backup confuse non-technical users",
+    "Slack import relies on community tooling and loses more than Mattermost's or Zulip's importers"
+  ],
+  "features": {
+    "threads": "yes",
+    "mobile-apps": "yes",
+    "calls": "yes",
+    "free-sso": "yes",
+    "e2ee": "yes",
+    "federation": "yes",
+    "integrations": "yes",
+    "slack-import": "no",
+    "unlimited-history": "yes"
+  },
+  "featureNotes": {
+    "calls": "Element Call, which needs its own media server",
+    "slack-import": "Community migration scripts and bridges only"
+  },
+  "reviewed": "2026-11"
+}

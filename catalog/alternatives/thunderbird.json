@@ -1,0 +1,52 @@
+{
+  "id": "thunderbird",
+  "name": "Thunderbird",
+  "tagline": "The desktop mail client that outlived its rivals",
+  "description": "Mail, calendars, contacts and feeds in one desktop application, plus an Android app. It works with any standards-based mailbox and can also connect to Exchange, which makes it a useful first step before changing where your mail lives.",
+  "categories": ["email"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "MPL-2.0",
+  "backing": "MZLA Technologies, a subsidiary of the Mozilla Foundation, funded almost entirely by user donations",
+  "since": 2003,
+  "maturity": {
+    "score": 5,
+    "rationale": "More than twenty years old, with a donation-funded full-time team, monthly releases and a modernised interface."
+  },
+  "platforms": ["windows", "macos", "linux", "android"],
+  "links": {
+    "website": "https://www.thunderbird.net",
+    "source": "https://github.com/thunderbird/thunderbird-desktop",
+    "docs": "https://support.mozilla.org/products/thunderbird"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Works with any IMAP or POP mailbox, and with CalDAV and CardDAV for calendars and contacts",
+    "Built-in OpenPGP and S/MIME encryption",
+    "Connects to Exchange mailboxes, so you can change client first and server later",
+    "The same application on Windows, macOS and Linux, with a unified inbox across accounts"
+  ],
+  "weaknesses": [
+    "It is only a client: you still need a mailbox somewhere",
+    "Exchange support covers mail first; calendar and address-book sync with Exchange Online has been arriving in stages, so check the current release notes",
+    "No iOS app yet",
+    "Outlook .pst archives must be converted, or imported on a Windows machine that still has Outlook, before Thunderbird can read them"
+  ],
+  "features": {
+    "hosts-mailboxes": "no",
+    "desktop-app": "yes",
+    "webmail": "no",
+    "mobile-apps": "partial",
+    "calendar-contacts": "yes",
+    "spam-filtering": "partial",
+    "exchange-protocols": "partial",
+    "openpgp": "yes"
+  },
+  "featureNotes": {
+    "mobile-apps": "Android; iOS is in development",
+    "spam-filtering": "Trainable junk filter in the client",
+    "exchange-protocols": "Native Exchange mail; calendar and contacts still rolling out"
+  },
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,57 @@
+{
+  "id": "logseq",
+  "name": "Logseq",
+  "tagline": "A local-first outliner and personal knowledge graph",
+  "description": "A note-taking app built around bullet-point outlines, daily journals, backlinks and queries. Everything is stored on your own device. It is a personal knowledge tool first; team features are only beginning to arrive.",
+  "categories": ["notes"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "licenseNote": "The apps are free and open source. Hosted sync is an optional paid extra.",
+  "backing": "Logseq, Inc. (venture-backed), plus community donations",
+  "since": 2020,
+  "maturity": {
+    "score": 3,
+    "rationale": "Loved by its users, but in transition: in 2026 the project split into the original Markdown-file app (now 'Logseq OG', maintenance only) and a database-backed Logseq 2.0 that is still in beta. Choose knowingly."
+  },
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://logseq.com",
+    "source": "https://github.com/logseq/logseq",
+    "docs": "https://docs.logseq.com"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Your notes stay with you: plain Markdown files in Logseq OG, a local database in 2.0",
+    "Backlinks, block references and queries make a personal knowledge base genuinely useful",
+    "Works offline by design; the file-based version syncs with any file tool such as Syncthing or Git",
+    "A large plugin ecosystem"
+  ],
+  "weaknesses": [
+    "A personal tool, not a team wiki: no workspace permissions, and real-time collaboration is still alpha in the database version",
+    "The 2026 split means choosing between an app in maintenance mode and one in beta",
+    "An outliner does not map cleanly onto Notion pages, so imported notes need tidying",
+    "Mobile apps and sync have historically been the rough edges"
+  ],
+  "features": {
+    "realtime-collab": "partial",
+    "databases": "partial",
+    "offline": "yes",
+    "plain-files": "yes",
+    "public-sharing": "partial",
+    "mobile-apps": "yes",
+    "permissions": "no",
+    "notion-import": "partial",
+    "api": "partial"
+  },
+  "featureNotes": {
+    "realtime-collab": "Alpha, in the database version only",
+    "databases": "Properties, queries and tables; richer in the database version",
+    "plain-files": "In Logseq OG; version 2.0 uses a local database with Markdown export",
+    "public-sharing": "Publishes a graph as a static site",
+    "notion-import": "Via Notion's Markdown export, with manual clean-up",
+    "api": "Plugin API"
+  },
+  "reviewed": "2026-11"
+}

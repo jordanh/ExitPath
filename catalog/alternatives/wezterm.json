@@ -1,0 +1,50 @@
+{
+  "id": "wezterm",
+  "name": "WezTerm",
+  "tagline": "A cross-platform terminal and multiplexer you script in Lua",
+  "description": "A GPU-accelerated terminal with a built-in multiplexer: panes, tabs, workspaces and remote sessions without tmux. It behaves the same on Windows, macOS and Linux and is configured in Lua.",
+  "categories": ["terminal"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "MIT",
+  "backing": "Wez Furlong and contributors, funded by sponsors",
+  "since": 2018,
+  "maturity": {
+    "score": 4,
+    "rationale": "Feature-complete and dependable for years. Development is led by a single maintainer and tagged releases are infrequent, so many users run nightly builds."
+  },
+  "platforms": ["windows", "macos", "linux"],
+  "links": {
+    "website": "https://wezterm.org",
+    "source": "https://github.com/wezterm/wezterm",
+    "docs": "https://wezterm.org/config/files.html"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "The same terminal and the same config file on Windows, macOS and Linux",
+    "Built-in multiplexer with panes, tabs, workspaces and remote sessions over SSH",
+    "Configured in Lua, so its behaviour can be scripted",
+    "Ligatures, inline images and font fallback all work well"
+  ],
+  "weaknesses": [
+    "Effectively a one-maintainer project with rare stable releases",
+    "Lua configuration is powerful, but there is no settings window",
+    "Uses more memory and starts more slowly than Alacritty or Ghostty",
+    "The interface is drawn by the app and does not look native"
+  ],
+  "features": {
+    "gpu-rendering": "yes",
+    "tabs-splits": "yes",
+    "native-ui": "no",
+    "ligatures": "yes",
+    "inline-images": "yes",
+    "scriptable": "yes",
+    "ssh-multiplexing": "yes"
+  },
+  "featureNotes": {
+    "inline-images": "iTerm2, Kitty and Sixel protocols",
+    "scriptable": "Lua"
+  },
+  "reviewed": "2026-11"
+}

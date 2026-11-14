@@ -1,0 +1,105 @@
+{
+  "id": "notion",
+  "name": "Notion",
+  "vendor": "Notion Labs",
+  "category": "notes",
+  "summary": "An all-in-one workspace that mixes documents, wikis and databases in freely nested pages.",
+  "lockIn": {
+    "level": 4,
+    "factors": [
+      "Databases with relations, rollups, formulas and automations have no standard format",
+      "Pages nest arbitrarily and mix prose with live data",
+      "Public pages used as websites, forms and customer portals",
+      "Permissions and guest access built up page by page",
+      "Online-first: there is no complete local copy unless you export one"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "A workspace export produces Markdown and CSV, or HTML. Text survives well; databases flatten into CSV files and lose what made them databases.",
+    "methods": [
+      {
+        "name": "Workspace export",
+        "detail": "Settings → General → Export all workspace content, as Markdown & CSV or HTML, with subpages and files included. Only workspace owners can run it.",
+        "url": "https://www.notion.com/help/export-your-content"
+      },
+      {
+        "name": "API",
+        "detail": "The public API returns pages and databases as structured data, which is the only way to keep relations intact. You need a script or an importer that uses it.",
+        "url": "https://developers.notion.com"
+      }
+    ],
+    "caveats": [
+      "Relations, rollups and formulas export as static text",
+      "Comments, page history and permissions are not included",
+      "Exported file names carry long ID suffixes, and deep nesting can exceed path-length limits on Windows",
+      "Synced blocks, buttons and automations do not export"
+    ]
+  },
+  "paths": [
+    {
+      "to": "outline",
+      "fit": 3,
+      "verdict": "Best for teams whose Notion is mostly documents and wiki pages. Note that it is source-available rather than open source.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Outline has a built-in Notion importer that takes the export archive and rebuilds collections and nested documents, images included."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Pages and their hierarchy",
+        "Images and attachments",
+        "Formatting, tables and code blocks"
+      ],
+      "lost": [
+        "Databases, which arrive as static tables at best",
+        "Boards, calendars and timelines",
+        "Per-page permissions and comments",
+        "Public pages, which must be shared again"
+      ]
+    },
+    {
+      "to": "appflowy",
+      "fit": 4,
+      "verdict": "Closest in feel, databases included. Strong for one person; read the licence note before rolling it out to a team.",
+      "import": {
+        "difficulty": 3,
+        "summary": "AppFlowy imports a Notion export archive, turning pages into documents and simple databases into grids. Relations and formulas come through as plain values and need rebuilding."
+      },
+      "effortHours": [3, 8],
+      "transfers": [
+        "Pages and their hierarchy",
+        "Simple databases, as grids and boards",
+        "Images and attachments"
+      ],
+      "lost": [
+        "Relations, rollups and formulas",
+        "Automations, buttons and synced blocks",
+        "Comments and page history",
+        "Fine-grained sharing and public pages as you had them"
+      ]
+    },
+    {
+      "to": "logseq",
+      "fit": 2,
+      "verdict": "For individuals who used Notion as a personal notebook and would rather have local notes and backlinks.",
+      "import": {
+        "difficulty": 4,
+        "summary": "There is no dedicated importer. Export Notion as Markdown, add the files to a graph and clean up: Logseq is an outliner and treats every paragraph as a block, so long documents need restructuring."
+      },
+      "effortHours": [4, 12],
+      "transfers": [
+        "The text of your pages, as Markdown",
+        "Images and attachments, after fixing paths",
+        "Links between pages, with some repair"
+      ],
+      "lost": [
+        "Databases and all their views",
+        "Page layout: columns, callouts and toggles become plain blocks",
+        "Any form of team workspace",
+        "Publishing pages to the web as you did in Notion"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,109 @@
+{
+  "id": "google-drive",
+  "name": "Google Drive",
+  "vendor": "Google",
+  "category": "files",
+  "alsoCovers": ["Shared drives", "Google One storage"],
+  "summary": "Google's file storage for personal accounts and Workspace teams, shared with Gmail and Photos quota.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "Google-format documents are links, not files, until they are converted",
+      "Folders shared with you depend on other people's accounts and can vanish",
+      "Sharing links embedded in years of emails and documents will break",
+      "Storage quota is pooled with Gmail and Photos"
+    ]
+  },
+  "export": {
+    "difficulty": 2,
+    "summary": "Ordinary files copy out unchanged. Google-format documents are converted on the way, and anything you do not own needs copying first.",
+    "methods": [
+      {
+        "name": "Google Takeout",
+        "detail": "Exports your whole Drive as a set of archives, converting Google documents to the formats you choose.",
+        "url": "https://takeout.google.com"
+      },
+      {
+        "name": "rclone",
+        "detail": "Copies a Drive or a shared drive directly to another cloud or server, converting Google documents as it goes. Resumable, and it copes with rate limits.",
+        "url": "https://rclone.org/drive/"
+      },
+      {
+        "name": "Drive for desktop",
+        "detail": "Switch to 'Mirror files' so that everything is stored locally, then copy the folder. Google-format documents still arrive as link files, so convert those with Takeout or rclone."
+      }
+    ],
+    "caveats": [
+      "Files in 'Shared with me' are not exported unless you make your own copies",
+      "Several files can share one name in the same Drive folder; they are renamed on export",
+      "Sharing permissions and version history do not come along",
+      "Workspace administrators should export shared drives separately; they belong to the organisation, not to a user"
+    ]
+  },
+  "paths": [
+    {
+      "to": "nextcloud",
+      "fit": 4,
+      "verdict": "The like-for-like replacement, and with an office editor attached it covers Docs-style editing in the browser as well.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Use rclone to copy from Drive straight to Nextcloud over WebDAV, converting Google documents on the way, or unpack a Takeout archive into the sync folder.",
+        "links": [
+          { "label": "rclone WebDAV backend (works with Nextcloud)", "url": "https://rclone.org/webdav/" }
+        ]
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Files and folder structure",
+        "Google documents, converted to open or Office formats",
+        "Access from desktop, web and phone"
+      ],
+      "lost": [
+        "Existing share links and permissions",
+        "Version history",
+        "Files that were only shared with you",
+        "Drive's search inside images and scans"
+      ]
+    },
+    {
+      "to": "seafile",
+      "fit": 4,
+      "verdict": "Choose it for large volumes or huge numbers of files where sync speed matters most.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Create libraries that mirror your top-level folders, then copy with rclone from Drive to Seafile, converting Google documents on the way.",
+        "links": [{ "label": "rclone Seafile backend", "url": "https://rclone.org/seafile/" }]
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Files and folder structure",
+        "Google documents, converted to open or Office formats",
+        "Access from desktop, web and phone"
+      ],
+      "lost": [
+        "Existing share links and permissions",
+        "Version history",
+        "Files that were only shared with you",
+        "The surrounding apps that Nextcloud would give you"
+      ]
+    },
+    {
+      "to": "syncthing",
+      "fit": 2,
+      "verdict": "For one person or a household that only needs the same folders on several computers. It is not a cloud drive.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Download and unpack a Takeout export on one computer, share the folder in Syncthing and pair your other devices."
+      },
+      "effortHours": [1, 3],
+      "transfers": ["Files and folder structure", "Sync between your own computers"],
+      "lost": [
+        "Web access and share links",
+        "Browser editing of documents",
+        "Sharing with people outside your own devices",
+        "A proper mobile experience on iOS"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

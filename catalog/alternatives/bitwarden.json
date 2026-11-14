@@ -1,0 +1,80 @@
+{
+  "id": "bitwarden",
+  "name": "Bitwarden",
+  "tagline": "The mainstream open-source password manager",
+  "description": "A cloud-synced password manager with apps and browser extensions everywhere. Vaults are encrypted on your device before they sync. Use Bitwarden's own cloud or host the server yourself.",
+  "categories": ["passwords"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "GPL-3.0",
+  "licenseNote": "Clients are GPL-3.0 and the server is AGPL-3.0, with some enterprise server modules under the source-available Bitwarden License. Premium and organisation features need a paid plan even when you self-host.",
+  "backing": "Bitwarden, Inc. (US, venture-backed), funded by subscriptions",
+  "since": 2016,
+  "maturity": {
+    "score": 5,
+    "rationale": "Millions of users, published third-party security audits every year and a long, stable track record."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://bitwarden.com",
+    "source": "https://github.com/bitwarden/clients",
+    "docs": "https://bitwarden.com/help/"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "The standard deployment is a multi-container stack built around Microsoft SQL Server. For households and home labs, the official 'lite' deployment is a single container that works with SQLite, PostgreSQL or MySQL. Most people simply use Bitwarden's cloud, where the free plan is enough for one person.",
+    "setupHours": [2, 5],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "For the standard deployment. The single-container lite deployment runs in a few hundred megabytes."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Self-hosting overview",
+        "url": "https://bitwarden.com/help/self-host-bitwarden/"
+      },
+      {
+        "kind": "docker-compose",
+        "label": "Lite deployment (single container)",
+        "url": "https://bitwarden.com/help/install-and-deploy-lite/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Bitwarden Cloud",
+      "url": "https://bitwarden.com/pricing/",
+      "note": "Free for individuals; paid family and business plans, with US or EU data regions"
+    }
+  ],
+  "strengths": [
+    "Polished apps and browser extensions on every platform",
+    "Imports directly from 1Password, LastPass, Dashlane and dozens more",
+    "A free hosted plan with unlimited passwords and devices",
+    "Regular third-party security audits, published in full"
+  ],
+  "weaknesses": [
+    "Some features cost money wherever you host: integrated one-time codes, emergency access, advanced reports",
+    "Autofill is a little less smooth than 1Password's",
+    "The full self-hosted stack is heavy and built around SQL Server",
+    "Enterprise server modules are source-available rather than open source"
+  ],
+  "features": {
+    "browser-autofill": "yes",
+    "mobile-apps": "yes",
+    "built-in-sync": "yes",
+    "team-sharing": "yes",
+    "passkeys": "yes",
+    "totp": "partial",
+    "audited": "yes",
+    "offline-vault": "no"
+  },
+  "featureNotes": {
+    "team-sharing": "Organisations; the free tier covers two people",
+    "totp": "A Premium feature; a separate free authenticator app exists",
+    "offline-vault": "Encrypted exports, but the live vault syncs through a server"
+  },
+  "reviewed": "2026-11"
+}

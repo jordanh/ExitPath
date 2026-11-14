@@ -1,0 +1,200 @@
+[
+  {
+    "id": "office",
+    "name": "Office documents",
+    "description": "Word processing, spreadsheets and slides",
+    "features": [
+      {
+        "id": "ms-format-fidelity",
+        "name": "Faithful with Microsoft files",
+        "hint": "Complex .docx, .xlsx and .pptx files open and round-trip without layout damage"
+      },
+      { "id": "browser-coediting", "name": "Real-time co-editing in the browser" },
+      { "id": "desktop-apps", "name": "Desktop apps that work offline" },
+      { "id": "mobile-apps", "name": "Mobile apps" },
+      { "id": "track-changes", "name": "Track changes and comments" },
+      { "id": "vba-macros", "name": "Runs existing VBA macros" },
+      { "id": "odf-native", "name": "OpenDocument as native format" }
+    ]
+  },
+  {
+    "id": "files",
+    "name": "File sync and sharing",
+    "description": "Cloud drives and shared folders",
+    "features": [
+      { "id": "desktop-sync", "name": "Desktop sync client" },
+      {
+        "id": "on-demand-files",
+        "name": "On-demand (virtual) files",
+        "hint": "Files appear in your file manager but download only when opened"
+      },
+      { "id": "mobile-apps", "name": "Mobile apps" },
+      { "id": "share-links", "name": "Public share links" },
+      { "id": "browser-editing", "name": "Edit documents in the browser" },
+      { "id": "versioning", "name": "File version history" },
+      { "id": "e2ee", "name": "End-to-end encryption" },
+      { "id": "serverless", "name": "Works without a central server" }
+    ]
+  },
+  {
+    "id": "email",
+    "name": "Email and calendar",
+    "description": "Mailboxes, mail clients, calendars and contacts",
+    "features": [
+      {
+        "id": "hosts-mailboxes",
+        "name": "Hosts mailboxes",
+        "hint": "It is a mail server, not only a client"
+      },
+      { "id": "desktop-app", "name": "Desktop app" },
+      { "id": "webmail", "name": "Webmail" },
+      { "id": "mobile-apps", "name": "Mobile apps" },
+      { "id": "calendar-contacts", "name": "Calendar and contacts" },
+      { "id": "spam-filtering", "name": "Built-in spam filtering" },
+      {
+        "id": "exchange-protocols",
+        "name": "Speaks Exchange protocols",
+        "hint": "EWS, Graph or ActiveSync, for coexisting with Outlook and Exchange"
+      },
+      { "id": "openpgp", "name": "OpenPGP encryption" }
+    ]
+  },
+  {
+    "id": "chat",
+    "name": "Team chat",
+    "description": "Channels, direct messages and calls",
+    "features": [
+      { "id": "threads", "name": "Channels and threads" },
+      { "id": "mobile-apps", "name": "Mobile apps with push" },
+      { "id": "calls", "name": "Built-in voice and video calls" },
+      {
+        "id": "free-sso",
+        "name": "SSO in the free edition",
+        "hint": "SAML or OpenID Connect without a paid licence"
+      },
+      { "id": "e2ee", "name": "End-to-end encryption" },
+      { "id": "federation", "name": "Federates with other servers" },
+      { "id": "integrations", "name": "Webhooks, bots and integrations" },
+      { "id": "slack-import", "name": "Official Slack importer" },
+      { "id": "unlimited-history", "name": "Unlimited message history" }
+    ]
+  },
+  {
+    "id": "video",
+    "name": "Video meetings",
+    "description": "Calls, screen sharing and webinars",
+    "features": [
+      { "id": "guest-join", "name": "Guests join from a browser, no account" },
+      { "id": "screen-sharing", "name": "Screen sharing" },
+      { "id": "recording", "name": "Recording" },
+      { "id": "breakout-rooms", "name": "Breakout rooms" },
+      { "id": "whiteboard", "name": "Shared whiteboard" },
+      { "id": "e2ee", "name": "End-to-end encryption" },
+      { "id": "dial-in", "name": "Phone dial-in" },
+      { "id": "large-meetings", "name": "Comfortable with 100+ people" },
+      { "id": "mobile-apps", "name": "Mobile apps" }
+    ]
+  },
+  {
+    "id": "notes",
+    "name": "Notes and wikis",
+    "description": "Team knowledge bases and personal notes",
+    "features": [
+      { "id": "realtime-collab", "name": "Real-time collaboration" },
+      { "id": "databases", "name": "Databases, tables and boards" },
+      { "id": "offline", "name": "Works fully offline" },
+      {
+        "id": "plain-files",
+        "name": "Stores notes as plain files",
+        "hint": "Your notes are readable Markdown on disk, not rows in a database"
+      },
+      { "id": "public-sharing", "name": "Publish pages to the web" },
+      { "id": "mobile-apps", "name": "Mobile apps" },
+      { "id": "permissions", "name": "Per-page team permissions" },
+      { "id": "notion-import", "name": "Notion importer" },
+      { "id": "api", "name": "API" }
+    ]
+  },
+  {
+    "id": "photos",
+    "name": "Photos",
+    "description": "Photo backup, libraries and sharing",
+    "features": [
+      { "id": "auto-backup", "name": "Automatic phone backup" },
+      { "id": "face-recognition", "name": "Face recognition" },
+      { "id": "smart-search", "name": "Search by what is in the photo" },
+      { "id": "shared-albums", "name": "Shared albums and links" },
+      { "id": "multi-user", "name": "Multiple users and libraries" },
+      { "id": "e2ee", "name": "End-to-end encryption" },
+      { "id": "map-view", "name": "Map view" },
+      { "id": "takeout-import", "name": "Imports Google Takeout with metadata" }
+    ]
+  },
+  {
+    "id": "passwords",
+    "name": "Password managers",
+    "description": "Passwords, passkeys and shared vaults",
+    "features": [
+      { "id": "browser-autofill", "name": "Browser extension with autofill" },
+      { "id": "mobile-apps", "name": "Mobile apps" },
+      { "id": "built-in-sync", "name": "Sync between devices built in" },
+      { "id": "team-sharing", "name": "Shared vaults for teams" },
+      { "id": "passkeys", "name": "Stores passkeys" },
+      { "id": "totp", "name": "Generates one-time codes" },
+      { "id": "audited", "name": "Published independent audits" },
+      { "id": "offline-vault", "name": "Vault is a file you hold" }
+    ]
+  },
+  {
+    "id": "code-hosting",
+    "name": "Code hosting",
+    "description": "Git hosting, code review and CI",
+    "features": [
+      { "id": "pull-requests", "name": "Pull requests and code review" },
+      { "id": "ci-cd", "name": "Built-in CI/CD" },
+      {
+        "id": "actions-compat",
+        "name": "Runs GitHub Actions workflows",
+        "hint": "Existing workflow files run with few or no changes"
+      },
+      { "id": "packages", "name": "Package and container registry" },
+      { "id": "issues-boards", "name": "Issues and project boards" },
+      { "id": "github-import", "name": "Imports issues and pull requests from GitHub" },
+      { "id": "pages", "name": "Static site hosting" },
+      { "id": "lightweight", "name": "Runs on a small server", "hint": "Comfortable in about 1 GB of RAM" }
+    ]
+  },
+  {
+    "id": "editor",
+    "name": "Code editors",
+    "description": "Editors and IDEs",
+    "features": [
+      { "id": "vscode-extensions", "name": "Runs VS Code extensions" },
+      { "id": "language-servers", "name": "Language server support" },
+      { "id": "debugger", "name": "Integrated debugger" },
+      { "id": "remote-dev", "name": "Remote development over SSH" },
+      { "id": "settings-import", "name": "Imports VS Code settings and keys" },
+      { "id": "no-telemetry", "name": "No telemetry by default" },
+      { "id": "ai-optional", "name": "AI features are opt-in or absent" },
+      { "id": "live-collab", "name": "Real-time collaboration" }
+    ]
+  },
+  {
+    "id": "terminal",
+    "name": "Terminals",
+    "description": "Terminal emulators",
+    "features": [
+      { "id": "gpu-rendering", "name": "GPU-accelerated rendering" },
+      { "id": "tabs-splits", "name": "Built-in tabs and splits" },
+      { "id": "native-ui", "name": "Platform-native interface" },
+      { "id": "ligatures", "name": "Font ligatures" },
+      {
+        "id": "inline-images",
+        "name": "Inline images",
+        "hint": "Kitty graphics protocol, Sixel or iTerm2 image protocol"
+      },
+      { "id": "scriptable", "name": "Scriptable configuration" },
+      { "id": "ssh-multiplexing", "name": "Built-in multiplexing over SSH" }
+    ]
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "id": "ente",
+  "name": "Ente Photos",
+  "tagline": "End-to-end encrypted photo backup, hosted or self-hosted",
+  "description": "A photo service in which everything is encrypted on your device before upload, so the server never sees your pictures. Most people use Ente's paid cloud; the same server software can be self-hosted.",
+  "categories": ["photos"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "backing": "Ente Technologies, funded by storage subscriptions",
+  "since": 2020,
+  "maturity": {
+    "score": 4,
+    "rationale": "The apps have been open and externally audited for years; the server was opened in 2024. The hosted service is well proven, while self-hosting is supported but less travelled."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://ente.io",
+    "source": "https://github.com/ente-io/ente",
+    "docs": "https://help.ente.io"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "The server runs with Docker Compose alongside PostgreSQL and S3-compatible object storage. The quick-start is easy; configuring storage properly and pointing the mobile apps at your own endpoint takes more care.",
+    "setupHours": [3, 7],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "1 core",
+      "notes": "Light, because search and face recognition run on your devices rather than on the server."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Self-hosting guide",
+        "url": "https://help.ente.io/self-hosting/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Ente Cloud",
+      "url": "https://ente.io",
+      "note": "10 GB free; paid plans beyond that, with data replicated in three locations"
+    }
+  ],
+  "strengths": [
+    "End-to-end encrypted: the server, and whoever runs it, cannot see your photos",
+    "The hosted plan is a genuine drop-in for people who do not want to run a server",
+    "Face recognition and search run on your own devices, so privacy is not traded for features",
+    "The desktop app imports Google Takeout directly, keeping dates, locations and albums"
+  ],
+  "weaknesses": [
+    "On-device indexing is slower and uses phone battery at first",
+    "Self-hosting works, but the paid cloud is clearly the main path",
+    "The web app is plainer than Immich's or Google's",
+    "Encrypted storage means you cannot browse the files on the server's disk"
+  ],
+  "features": {
+    "auto-backup": "yes",
+    "face-recognition": "yes",
+    "smart-search": "yes",
+    "shared-albums": "yes",
+    "multi-user": "yes",
+    "e2ee": "yes",
+    "map-view": "yes",
+    "takeout-import": "yes"
+  },
+  "featureNotes": {
+    "face-recognition": "Computed on your devices",
+    "smart-search": "Computed on your devices",
+    "multi-user": "Family plans and multiple accounts"
+  },
+  "reviewed": "2026-11"
+}

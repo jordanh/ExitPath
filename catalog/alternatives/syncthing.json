@@ -1,0 +1,52 @@
+{
+  "id": "syncthing",
+  "name": "Syncthing",
+  "tagline": "Device-to-device sync with no server and no account",
+  "description": "Continuous file synchronisation directly between your own devices. Folders stay identical on every machine you pair; data travels encrypted between them and is never stored on anyone else's computer.",
+  "categories": ["files"],
+  "kind": "peer-to-peer",
+  "openness": "open-source",
+  "license": "MPL-2.0",
+  "backing": "A community project supported by the non-profit Syncthing Foundation and donations",
+  "since": 2013,
+  "maturity": {
+    "score": 5,
+    "rationale": "Over a decade old, with a famously dependable sync protocol and a 2.0 release in 2025. The mobile story is the weak point."
+  },
+  "platforms": ["windows", "macos", "linux", "android"],
+  "links": {
+    "website": "https://syncthing.net",
+    "source": "https://github.com/syncthing/syncthing",
+    "docs": "https://docs.syncthing.net"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Nothing to host: your devices talk to each other directly, encrypted with keys only they hold",
+    "No storage limit beyond your own disks, and no subscription",
+    "Untrusted (encrypted) devices let you keep an off-site copy on hardware you do not fully control",
+    "Very little to go wrong; it has quietly worked for years on millions of machines"
+  ],
+  "weaknesses": [
+    "It is sync, not a cloud drive: no web interface, no share links, no browser editing",
+    "Two devices must be online at the same time to sync, unless you keep an always-on machine in the mix",
+    "The official Android app was discontinued in 2024; the community Syncthing-Fork continues under new maintainers, and iOS depends on a paid third-party app",
+    "Conflicting edits surface as duplicate files that you resolve by hand"
+  ],
+  "features": {
+    "desktop-sync": "yes",
+    "on-demand-files": "no",
+    "mobile-apps": "partial",
+    "share-links": "no",
+    "browser-editing": "no",
+    "versioning": "yes",
+    "e2ee": "yes",
+    "serverless": "yes"
+  },
+  "featureNotes": {
+    "mobile-apps": "Android through the community Syncthing-Fork; iOS only through a paid third-party app",
+    "versioning": "Optional per folder, several strategies",
+    "e2ee": "Only your paired devices ever hold the keys"
+  },
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,109 @@
+{
+  "id": "google-docs",
+  "name": "Google Docs, Sheets & Slides",
+  "vendor": "Google",
+  "category": "office",
+  "alsoCovers": ["Google Workspace editors", "Google Forms"],
+  "summary": "Google's browser-based editors. Documents live in Google's own format inside Drive; the .gdoc files in a synced folder are only links to them.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "Documents exist only as records in Google's cloud until you export them",
+      "Sharing links and comment threads scattered through years of email",
+      "Apps Script automations, and Forms that feed Sheets",
+      "Effortless real-time collaboration that everyone already knows how to use"
+    ]
+  },
+  "export": {
+    "difficulty": 2,
+    "summary": "Google Takeout converts everything to Office or OpenDocument formats in one go. Conversion is good for ordinary documents and loses the Google-only parts.",
+    "methods": [
+      {
+        "name": "Google Takeout",
+        "detail": "Select Drive, choose the export formats (.docx, .xlsx and .pptx, or OpenDocument), and download the archives. Folder structure is preserved.",
+        "url": "https://takeout.google.com"
+      },
+      {
+        "name": "Data export for Workspace administrators",
+        "detail": "An administrator can export every user's data for the whole organisation in one operation.",
+        "url": "https://support.google.com/a/answer/100458"
+      },
+      {
+        "name": "rclone",
+        "detail": "Copies a Drive to any destination and converts Google documents to the format you choose on the way. Scriptable and resumable, which matters for large Drives.",
+        "url": "https://rclone.org/drive/"
+      }
+    ],
+    "caveats": [
+      "Version history is not exported",
+      "Files shared with you but owned by someone else are not included; make copies of the ones you need",
+      "Apps Script, Forms logic and connected sheets do not survive",
+      "Sharing permissions are not carried over"
+    ]
+  },
+  "paths": [
+    {
+      "to": "collabora",
+      "fit": 4,
+      "verdict": "With Nextcloud, this is the closest open equivalent of documents that live in the browser and are shared by link.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Export from Google as OpenDocument or Office formats, upload the folders to your file platform and open them in the browser. Check spreadsheets that use Google-specific functions such as QUERY, IMPORTRANGE or GOOGLEFINANCE."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Documents, spreadsheets and presentations",
+        "Comments and suggestions (as tracked changes)",
+        "Folder structure"
+      ],
+      "lost": [
+        "Google-only spreadsheet functions",
+        "Apps Script automations and Forms",
+        "Existing share links, which all have to be recreated",
+        "Version history"
+      ]
+    },
+    {
+      "to": "onlyoffice",
+      "fit": 4,
+      "verdict": "Choose it if most of what you exchange with the outside world is Office files.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Export from Google in Office formats, which ONLYOFFICE uses natively, and upload them to your file platform. Check spreadsheets that use Google-specific functions."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Documents, spreadsheets and presentations",
+        "Comments and suggestions (as tracked changes)",
+        "Folder structure"
+      ],
+      "lost": [
+        "Google-only spreadsheet functions",
+        "Apps Script automations and Forms",
+        "Existing share links",
+        "Version history"
+      ]
+    },
+    {
+      "to": "libreoffice",
+      "fit": 3,
+      "verdict": "Fine if you mostly write alone and can give up editing together in a browser.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Export from Google as OpenDocument and open the files locally. The files then live wherever you keep them: a synced folder, a server, a USB stick."
+      },
+      "effortHours": [2, 5],
+      "transfers": [
+        "Documents, spreadsheets and presentations",
+        "Comments and suggestions (as tracked changes)",
+        "Folder structure"
+      ],
+      "lost": [
+        "Real-time collaboration and link sharing",
+        "Editing from any browser",
+        "Google-only spreadsheet functions, Apps Script and Forms"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

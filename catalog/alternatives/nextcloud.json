@@ -1,0 +1,84 @@
+{
+  "id": "nextcloud",
+  "name": "Nextcloud",
+  "tagline": "A self-hosted cloud drive that grows into a workspace",
+  "description": "File sync and sharing with a web interface, desktop sync clients and mobile apps. Optional apps add calendars, contacts, tasks, notes, chat and video (Talk) and browser-based office editing, all behind one login.",
+  "categories": ["files"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "backing": "Nextcloud GmbH (Germany), funded by enterprise subscriptions rather than venture capital",
+  "since": 2016,
+  "maturity": {
+    "score": 5,
+    "rationale": "The default answer for self-hosted files for a decade, with a large app ecosystem and many hosting providers. Major upgrades still deserve a backup and a quiet afternoon."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://nextcloud.com",
+    "source": "https://github.com/nextcloud/server",
+    "docs": "https://docs.nextcloud.com"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "All-in-One (AIO) gets a complete instance with backups and office editing running from a single Docker command. The work is in what follows: staying on supported upgrade paths, tuning background jobs, and keeping it fast as apps accumulate.",
+    "setupHours": [3, 8],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "Add 2 GB or more if the office editor and Talk run on the same machine. Storage is whatever your files need, plus room for versions and the trash bin."
+    },
+    "deploy": [
+      {
+        "kind": "one-click",
+        "label": "Nextcloud All-in-One (Docker)",
+        "url": "https://github.com/nextcloud/all-in-one"
+      },
+      {
+        "kind": "guide",
+        "label": "Administration manual",
+        "url": "https://docs.nextcloud.com/server/latest/admin_manual/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Providers listed by Nextcloud",
+      "url": "https://nextcloud.com/sign-up/",
+      "note": "Free and paid accounts from independent hosts in many countries"
+    },
+    {
+      "label": "Hetzner Storage Share",
+      "url": "https://www.hetzner.com/storage/storage-share/",
+      "note": "Managed Nextcloud instances hosted in Germany and Finland"
+    }
+  ],
+  "strengths": [
+    "One login covers files, calendars, contacts, tasks, notes, chat and video",
+    "Mature desktop and mobile clients, with automatic photo upload on phones",
+    "Plenty of managed hosts if you would rather not run it yourself",
+    "Open standards throughout: WebDAV, CalDAV and CardDAV"
+  ],
+  "weaknesses": [
+    "A PHP application that turns slow when under-provisioned or overloaded with apps",
+    "Major versions cannot be skipped when upgrading, and third-party apps occasionally break",
+    "Sync is reliable for documents but slower than Dropbox or Seafile on huge trees of small files",
+    "End-to-end encryption exists but is limited and awkward; most installs rely on server-side encryption"
+  ],
+  "features": {
+    "desktop-sync": "yes",
+    "on-demand-files": "partial",
+    "mobile-apps": "yes",
+    "share-links": "yes",
+    "browser-editing": "addon",
+    "versioning": "yes",
+    "e2ee": "partial",
+    "serverless": "no"
+  },
+  "featureNotes": {
+    "on-demand-files": "Windows and macOS clients; not Linux",
+    "browser-editing": "With Nextcloud Office (Collabora) or another editor connected",
+    "e2ee": "Per-folder, with feature restrictions"
+  },
+  "reviewed": "2026-11"
+}

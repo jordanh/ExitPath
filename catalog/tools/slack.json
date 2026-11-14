@@ -1,0 +1,113 @@
+{
+  "id": "slack",
+  "name": "Slack",
+  "vendor": "Salesforce",
+  "category": "chat",
+  "summary": "The team chat that defined the category: channels, threads, huddles and a very large catalogue of integrations.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "Years of searchable history that the team treats as its memory",
+      "Integrations, bots and workflows wired into daily routines",
+      "Slack Connect channels shared with customers and partners",
+      "Exporting private channels and direct messages depends on your plan"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "Any workspace owner can export public channels as JSON. Private channels and direct messages need a higher plan or an application to Slack, and files are exported as links rather than as files.",
+    "methods": [
+      {
+        "name": "Workspace export",
+        "detail": "Settings → Import/Export Data → Export. On Free and Pro plans it contains public channels only; Business+ and Enterprise owners can also export private channels and direct messages.",
+        "url": "https://slack.com/help/articles/201658943-Export-your-workspace-data"
+      },
+      {
+        "name": "Fetching the files",
+        "detail": "The export contains links to uploaded files, not the files themselves. Tools such as slack-advanced-exporter download them into the archive; do this promptly, because the links stop working once the workspace is closed.",
+        "url": "https://github.com/grundleborg/slack-advanced-exporter"
+      }
+    ],
+    "caveats": [
+      "On the free plan, history older than 90 days is hidden and older data is eventually deleted, so export before it ages out",
+      "Workflows, canvases and app configurations are not exported",
+      "Slack Connect channels belong to both organisations and export only partially",
+      "Tell people before exporting direct messages: where it is possible at all, it is also a privacy decision"
+    ]
+  },
+  "paths": [
+    {
+      "to": "mattermost",
+      "fit": 5,
+      "verdict": "The least retraining: people find everything where they expect it. Read the licence note before you install.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Mattermost's mmetl tool converts a Slack export into a bulk-import file, bringing users, channels, messages, threads and (with the files fetched) attachments. Run a trial import on a test server first.",
+        "links": [{ "label": "mmetl: Slack export converter", "url": "https://github.com/mattermost/mmetl" }]
+      },
+      "effortHours": [1, 3],
+      "transfers": [
+        "Users, channels and membership",
+        "Message history with threads and reactions",
+        "Uploaded files, once fetched into the export",
+        "Incoming webhooks, which are Slack-compatible"
+      ],
+      "lost": [
+        "Slack apps, workflows and canvases",
+        "Huddles: free-edition calls are one-to-one only",
+        "Slack Connect channels with other organisations",
+        "Private channels and direct messages, unless your Slack plan exported them"
+      ]
+    },
+    {
+      "to": "zulip",
+      "fit": 4,
+      "verdict": "Pick it if the real problem with Slack was the noise. Expect a week of adjustment to topics.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Zulip's official importer reads a Slack export and recreates users, channels, messages, threads, files and reactions. Slack threads become Zulip topics.",
+        "links": [
+          {
+            "label": "Zulip: migrating from other chat tools",
+            "url": "https://zulip.com/help/migrating-from-other-chat-tools"
+          }
+        ]
+      },
+      "effortHours": [2, 5],
+      "transfers": [
+        "Users, channels and membership",
+        "Message history, files and reactions",
+        "Threads, converted to topics",
+        "Many integrations, through Zulip's Slack-compatible webhook endpoint"
+      ],
+      "lost": [
+        "Slack apps, workflows and canvases",
+        "Built-in huddles (calls open in Jitsi or BigBlueButton)",
+        "Slack Connect channels with other organisations",
+        "The familiar layout: topics are a different way of working"
+      ]
+    },
+    {
+      "to": "element",
+      "fit": 3,
+      "verdict": "For teams that need end-to-end encryption or federation, and have the appetite to run Matrix.",
+      "import": {
+        "difficulty": 4,
+        "summary": "No official importer. Community scripts can replay a Slack export into Matrix rooms with mixed results. Many teams run a Slack bridge for a few weeks instead, then archive the Slack export for reference."
+      },
+      "effortHours": [2, 5],
+      "transfers": [
+        "Channel structure, as rooms in a space",
+        "Live conversation during the transition, through a bridge",
+        "History only partially, and only with community tooling"
+      ],
+      "lost": [
+        "Most message history, in practice",
+        "Slack apps, workflows and canvases",
+        "Slack's search quality, particularly in encrypted rooms",
+        "Simple onboarding: users must learn about key backup"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

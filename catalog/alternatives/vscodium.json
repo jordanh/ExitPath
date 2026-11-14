@@ -1,0 +1,53 @@
+{
+  "id": "vscodium",
+  "name": "VSCodium",
+  "tagline": "VS Code without Microsoft's build, branding or telemetry",
+  "description": "Community-built binaries of the open-source code that VS Code is made from. It is the same editor, with telemetry disabled and the vendor-neutral Open VSX registry in place of Microsoft's Marketplace.",
+  "categories": ["editor"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "MIT",
+  "backing": "Community volunteers, building from Microsoft's MIT-licensed source",
+  "since": 2018,
+  "maturity": {
+    "score": 5,
+    "rationale": "It is VS Code: the same codebase, rebuilt by a community project that has tracked upstream releases since 2018."
+  },
+  "platforms": ["windows", "macos", "linux"],
+  "links": {
+    "website": "https://vscodium.com",
+    "source": "https://github.com/VSCodium/vscodium",
+    "docs": "https://github.com/VSCodium/vscodium/blob/master/docs/index.md"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "The identical editor: same interface, settings format, keybindings and extension API",
+    "Telemetry disabled and no Microsoft account prompts",
+    "Your settings.json, keybindings and most extensions carry straight over",
+    "Uses the vendor-neutral Open VSX extension registry"
+  ],
+  "weaknesses": [
+    "Microsoft's proprietary extensions are not licensed for it: Pylance, C# Dev Kit, the Remote Development pack and Live Share are unavailable or do not work",
+    "Open VSX has fewer extensions than Microsoft's Marketplace, and some lag behind",
+    "Settings Sync through a Microsoft or GitHub account is not available",
+    "Still downstream of Microsoft: the roadmap is theirs"
+  ],
+  "features": {
+    "vscode-extensions": "yes",
+    "language-servers": "yes",
+    "debugger": "yes",
+    "remote-dev": "partial",
+    "settings-import": "yes",
+    "no-telemetry": "yes",
+    "ai-optional": "yes",
+    "live-collab": "no"
+  },
+  "featureNotes": {
+    "vscode-extensions": "From Open VSX; Microsoft-proprietary extensions excluded",
+    "remote-dev": "Through community remote extensions rather than Microsoft's",
+    "settings-import": "Same files, copied across",
+    "live-collab": "Live Share is proprietary"
+  },
+  "reviewed": "2026-11"
+}

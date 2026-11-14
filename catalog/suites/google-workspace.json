@@ -1,0 +1,14 @@
+{
+  "id": "google-workspace",
+  "name": "Google Workspace",
+  "vendor": "Google",
+  "summary": "Gmail, Drive, Docs, Calendar, Meet and Photos behind one Google account. The account itself is the lock-in: plan what replaces it as your login before you start.",
+  "components": [
+    { "label": "Gmail, Calendar, Contacts", "tool": "gmail" },
+    { "label": "Drive", "tool": "google-drive" },
+    { "label": "Docs, Sheets, Slides", "tool": "google-docs" },
+    { "label": "Meet", "tool": "zoom" },
+    { "label": "Photos", "tool": "google-photos" }
+  ],
+  "guide": "leaving-google-workspace"
+}

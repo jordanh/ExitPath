@@ -1,0 +1,52 @@
+{
+  "id": "keepassxc",
+  "name": "KeePassXC",
+  "tagline": "An offline password vault in a single encrypted file",
+  "description": "A desktop password manager that keeps everything in one encrypted database file in the open KDBX format. There is no account and no server; how, and whether, the file reaches your other devices is up to you.",
+  "categories": ["passwords"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "GPL-3.0",
+  "backing": "A volunteer team funded by donations",
+  "since": 2016,
+  "maturity": {
+    "score": 5,
+    "rationale": "A conservative, widely trusted codebase that has passed independent security reviews, built on the KeePass format that has been in use since 2003."
+  },
+  "platforms": ["windows", "macos", "linux"],
+  "links": {
+    "website": "https://keepassxc.org",
+    "source": "https://github.com/keepassxreboot/keepassxc",
+    "docs": "https://keepassxc.org/docs/"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "No server, no account and no network connection required",
+    "The vault is one encrypted file in an open format that many other apps can read",
+    "Imports 1Password, Bitwarden and CSV exports",
+    "Passkeys, one-time codes, SSH agent integration and browser autofill are included"
+  ],
+  "weaknesses": [
+    "Sync is up to you: put the file in Syncthing or Nextcloud and deal with the occasional conflict",
+    "Sharing with a team means sharing a file and its password; there are no per-user permissions",
+    "Phones need separate compatible apps",
+    "Browser integration takes a few minutes to set up and is less seamless than cloud managers"
+  ],
+  "features": {
+    "browser-autofill": "yes",
+    "mobile-apps": "addon",
+    "built-in-sync": "no",
+    "team-sharing": "partial",
+    "passkeys": "yes",
+    "totp": "yes",
+    "audited": "yes",
+    "offline-vault": "yes"
+  },
+  "featureNotes": {
+    "mobile-apps": "Compatible apps such as KeePassDX (Android) and KeePassium (iOS)",
+    "built-in-sync": "Sync the vault file with a tool of your choice",
+    "team-sharing": "Shared database files"
+  },
+  "reviewed": "2026-11"
+}
