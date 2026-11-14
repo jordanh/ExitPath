@@ -17,8 +17,21 @@ const KIND_STYLE: Record<ResultKind, string> = {
   guide: 'bg-level-3/10 text-level-3 border-level-3/30',
 }
 
-/** Catalog search with a keyboard-navigable result list (ARIA combobox pattern). */
-export function SearchBox() {
+/**
+ * Catalog search with a keyboard-navigable result list (ARIA combobox pattern).
+ *
+ * `hero` is the large field on the home page, with results in a dropdown.
+ * `dialog` is the same search inside the header's search dialog, where the
+ * results sit in the normal flow and Escape is left for the dialog to handle.
+ */
+export function SearchBox({
+  variant = 'hero',
+  onNavigate,
+}: {
+  variant?: 'hero' | 'dialog'
+  onNavigate?: () => void
+}) {
+  const inDialog = variant === 'dialog'
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const [open, setOpen] = useState(false)
@@ -26,12 +39,13 @@ export function SearchBox() {
   const listId = useId()
 
   const results = useMemo(() => search(query, 8), [query])
-  const showList = open && query.trim().length > 0
+  const showList = (open || inDialog) && query.trim().length > 0
   const activeResult = results[Math.min(active, results.length - 1)]
 
   function go(href: string) {
     setOpen(false)
     setQuery('')
+    onNavigate?.()
     navigate(href)
   }
 
@@ -46,7 +60,7 @@ export function SearchBox() {
     } else if (event.key === 'Enter' && activeResult && showList) {
       event.preventDefault()
       go(activeResult.href)
-    } else if (event.key === 'Escape') {
+    } else if (event.key === 'Escape' && !inDialog) {
       if (showList) setOpen(false)
       else setQuery('')
     }
@@ -57,7 +71,9 @@ export function SearchBox() {
       <label htmlFor={`${listId}-input`} className="sr-only">
         Search for a tool you want to leave, or an alternative
       </label>
-      <IconSearch className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-xl text-muted" />
+      <IconSearch
+        className={`pointer-events-none absolute left-4 -translate-y-1/2 text-xl text-muted ${inDialog ? 'top-6' : 'top-7'}`}
+      />
       <input
         id={`${listId}-input`}
         type="search"
@@ -81,7 +97,7 @@ export function SearchBox() {
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={onKeyDown}
-        className="h-14 w-full rounded-xl border border-line-strong bg-surface pr-4 pl-12 text-base shadow-sm placeholder:text-faint focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15 sm:text-lg [&::-webkit-search-cancel-button]:hidden"
+        className={`w-full rounded-xl border border-line-strong bg-surface pr-4 pl-12 text-base placeholder:text-faint focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15 [&::-webkit-search-cancel-button]:hidden ${inDialog ? 'h-12' : 'h-14 shadow-sm sm:text-lg'}`}
       />
 
       {/* Kept in the DOM while closed so that aria-controls always points at something. */}
@@ -90,7 +106,11 @@ export function SearchBox() {
         role="listbox"
         aria-label="Search results"
         hidden={!showList}
-        className="absolute inset-x-0 top-full z-20 mt-2 max-h-[min(26rem,60vh)] overflow-auto rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl"
+        className={
+          inDialog
+            ? 'mt-2 max-h-[min(24rem,55vh)] overflow-auto'
+            : 'absolute inset-x-0 top-full z-20 mt-2 max-h-[min(26rem,60vh)] overflow-auto rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl'
+        }
       >
         {results.map((result, index) => {
           const selected = result === activeResult

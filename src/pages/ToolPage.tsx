@@ -4,6 +4,7 @@ import { getCategory, getTool, guidesForTool, suitesForTool } from '../catalog/i
 import type { Tool } from '../catalog/schema.ts'
 import { CompareTable } from '../components/CompareTable.tsx'
 import { ContextBar } from '../components/ContextBar.tsx'
+import { EntryFooter } from '../components/EntryFooter.tsx'
 import { IconArrowRight } from '../components/icons.tsx'
 import { PathCard } from '../components/PathCard.tsx'
 import { ExternalLink, MarkedList, Meter, Page, Section, Tag } from '../components/ui.tsx'
@@ -179,7 +180,7 @@ function ToolView({ tool }: { tool: Tool }) {
         </Section>
       )}
 
-      <p className="mt-10 text-sm text-muted">Entry last reviewed {tool.reviewed}.</p>
+      <EntryFooter folder="tools" id={tool.id} name={tool.name} reviewed={tool.reviewed} />
     </Page>
   )
 }

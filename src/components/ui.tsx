@@ -172,7 +172,7 @@ export function ExternalLink({
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
       {children}
-      <IconExternal className="ml-1 inline-block align-[-0.1em] text-[0.9em] opacity-70" />
+      <IconExternal className="ml-1 inline-block align-[-0.1em] text-[0.9em] opacity-70 print:hidden" />
       <span className="sr-only"> (opens in a new tab)</span>
     </a>
   )
@@ -222,22 +222,20 @@ export function Callout({
 export function ProgressBar({ done, total, label }: { done: number; total: number; label: string }) {
   const percent = total === 0 ? 0 : Math.round((done / total) * 100)
   return (
-    <div>
-      <div
-        className="h-2 overflow-hidden rounded-full bg-line"
-        role="progressbar"
-        aria-label={label}
-        aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={done}
-        aria-valuetext={`${done} of ${total} steps done`}
-      >
-        <div
-          className="h-full rounded-full bg-accent transition-[width] duration-300"
-          style={{ width: `${percent}%` }}
-        />
-      </div>
-    </div>
+    // Drawn as SVG so the fill is an attribute, not an inline style: the site's
+    // content security policy allows no inline styles at all.
+    <svg
+      className="block h-2 w-full overflow-hidden rounded-full"
+      role="progressbar"
+      aria-label={label}
+      aria-valuemin={0}
+      aria-valuemax={total}
+      aria-valuenow={done}
+      aria-valuetext={`${done} of ${total} steps done`}
+    >
+      <rect width="100%" height="100%" className="fill-line" />
+      <rect width={`${percent}%`} height="100%" className="fill-accent transition-[width] duration-300" />
+    </svg>
   )
 }
 

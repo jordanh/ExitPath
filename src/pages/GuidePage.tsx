@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getAlternative, getGuide, getTool } from '../catalog/index.ts'
 import type { Guide, GuideStep } from '../catalog/schema.ts'
 import { ConfirmButton } from '../components/ConfirmButton.tsx'
+import { EntryFooter } from '../components/EntryFooter.tsx'
 import { IconArrowRight, IconCheck } from '../components/icons.tsx'
 import { ExternalLink, Page, ProgressBar, Section, Tag } from '../components/ui.tsx'
 import { guideStatus } from '../lib/guides.ts'
@@ -18,7 +19,7 @@ export function GuidePage() {
 function Step({ guideId, step, done }: { guideId: string; step: GuideStep; done: boolean }) {
   const inputId = `step-${step.id}`
   return (
-    <li className="flex gap-3 px-4 py-4 sm:gap-4 sm:px-5">
+    <li className="flex break-inside-avoid gap-3 px-4 py-4 sm:gap-4 sm:px-5">
       <span className="relative mt-0.5 flex size-6 shrink-0">
         <input
           id={inputId}
@@ -143,15 +144,22 @@ function GuideView({ guide }: { guide: Guide }) {
               </>
             ) : null}
           </p>
-          <p className="mt-3 border-t border-line pt-3 text-xs text-muted">
+          <p className="mt-3 border-t border-line pt-3 text-xs text-muted print:hidden">
             Saved in this browser only. Export it from the{' '}
             <Link to="/guides" className="link">
               guides page
             </Link>
             .
           </p>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="mt-2 block cursor-pointer text-xs font-semibold text-accent hover:underline print:hidden"
+          >
+            Print this checklist
+          </button>
           {hasAnything && (
-            <div className="mt-2">
+            <div className="mt-2 print:hidden">
               <ConfirmButton
                 className="cursor-pointer text-xs font-semibold text-level-5 hover:underline"
                 label="Clear my progress"
@@ -241,8 +249,8 @@ function GuideView({ guide }: { guide: Guide }) {
             </label>
           </Section>
 
-          <p className="mt-10 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
-            <span>Guide last reviewed {guide.reviewed}.</span>
+          <EntryFooter folder="guides" id={guide.id} name={guide.title} reviewed={guide.reviewed} />
+          <p className="mt-4 text-sm print:hidden">
             <Link to="/guides" className="link inline-flex items-center gap-1">
               All guides <IconArrowRight />
             </Link>

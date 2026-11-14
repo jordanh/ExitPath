@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import type { ScoredPath } from '../lib/paths.ts'
 import { formatEffort } from '../lib/scoring.ts'
-import { IconArrowRight } from './icons.tsx'
+import { removeFromPlan, setPlanChoice, usePlan } from '../lib/storage.ts'
+import { IconArrowRight, IconCheck, IconPlus } from './icons.tsx'
 import { ExternalLink, MarkedList, Meter, OpennessBadge, ScoreBadge, Tag } from './ui.tsx'
 
 const HOSTING_WORD = {
@@ -15,6 +16,9 @@ const HOSTING_WORD = {
 export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) {
   const { tool, path, alternative, result } = scored
   const headingId = `path-${alternative.id}`
+  const plan = usePlan()
+  const planned = plan[tool.id] === alternative.id
+  const toolInPlan = Object.hasOwn(plan, tool.id)
 
   return (
     <article className="card overflow-hidden" aria-labelledby={headingId}>
@@ -99,13 +103,24 @@ export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boo
                   ? 'Runs on your own device; a server is only needed for syncing with others.'
                   : 'Runs on your own devices; there is no server to set up.'}
         </p>
-        <Link
-          to={`/alternatives/${alternative.id}`}
-          className="link inline-flex items-center gap-1 whitespace-nowrap"
-        >
-          Full profile of {alternative.name}
-          <IconArrowRight />
-        </Link>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <button
+            type="button"
+            aria-pressed={planned}
+            onClick={() => (planned ? removeFromPlan(tool.id) : setPlanChoice(tool.id, alternative.id))}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 font-semibold whitespace-nowrap hover:border-accent hover:text-accent aria-pressed:border-accent aria-pressed:bg-accent-soft aria-pressed:text-accent"
+          >
+            {planned ? <IconCheck /> : <IconPlus />}
+            {planned ? 'In your plan' : toolInPlan ? 'Use this path in my plan' : 'Add to my plan'}
+          </button>
+          <Link
+            to={`/alternatives/${alternative.id}`}
+            className="link inline-flex items-center gap-1 whitespace-nowrap"
+          >
+            Full profile of {alternative.name}
+            <IconArrowRight />
+          </Link>
+        </div>
       </div>
     </article>
   )

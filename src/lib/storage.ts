@@ -1,6 +1,6 @@
 /**
  * Everything the app remembers lives in this browser's localStorage, under
- * two keys. Nothing is sent anywhere. "Export my data" hands the same JSON to
+ * three keys. Nothing is sent anywhere. "Export my data" hands the same JSON to
  * the user as a file; "Import" reads it back.
  */
 import { useCallback, useSyncExternalStore } from 'react'
@@ -22,13 +22,22 @@ export interface GuideProgress {
 
 export type Progress = Record<string, GuideProgress>
 
+/**
+ * The tools someone wants to leave, and where to. The value is the chosen
+ * alternative's id, or null for "whichever is easiest for my situation",
+ * which follows the team-size and hosting answers as they change.
+ */
+export type Plan = Record<string, string | null>
+
 export const PREFS_KEY = 'exitpath:prefs'
 export const PROGRESS_KEY = 'exitpath:progress'
+export const PLAN_KEY = 'exitpath:plan'
 export const EXPORT_FORMAT = 'exitpath-export'
 export const EXPORT_VERSION = 1
 
 const DEFAULT_PREFS: Prefs = { ...DEFAULT_CONTEXT, theme: 'system' }
 const EMPTY_PROGRESS: Progress = {}
+const EMPTY_PLAN: Plan = {}
 const EMPTY_GUIDE: GuideProgress = { done: [], notes: '', updatedAt: '' }
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -68,7 +77,19 @@ export function sanitizeProgress(value: unknown): Progress {
   return out
 }
 
+/** Accepts anything and returns a valid plan, dropping what it cannot read. */
+export function sanitizePlan(value: unknown): Plan {
+  if (!isRecord(value)) return EMPTY_PLAN
+  const out: Plan = {}
+  for (const [toolId, choice] of Object.entries(value)) {
+    if (typeof choice === 'string' || choice === null) out[toolId] = choice
+  }
+  return out
+}
+
 // --- a tiny external store, so every component sees the same values ---------
+
+const KEYS = [PREFS_KEY, PROGRESS_KEY, PLAN_KEY]
 
 const listeners = new Set<() => void>()
 const cache = new Map<string, { raw: string | null; value: unknown }>()
@@ -113,7 +134,7 @@ function subscribe(listener: () => void) {
   listeners.add(listener)
   // Another tab changed something: re-read.
   const onStorage = (event: StorageEvent) => {
-    if (event.key === null || event.key === PREFS_KEY || event.key === PROGRESS_KEY) listener()
+    if (event.key === null || KEYS.includes(event.key)) listener()
   }
   window.addEventListener('storage', onStorage)
   return () => {
@@ -124,6 +145,7 @@ function subscribe(listener: () => void) {
 
 export const getPrefs = () => read(PREFS_KEY, sanitizePrefs)
 export const getProgress = () => read(PROGRESS_KEY, sanitizeProgress)
+export const getPlan = () => read(PLAN_KEY, sanitizePlan)
 
 export function setPrefs(patch: Partial<Prefs>) {
   write(PREFS_KEY, { ...getPrefs(), ...patch })
@@ -153,8 +175,26 @@ export function resetGuide(guideId: string) {
   write(PROGRESS_KEY, rest)
 }
 
+/** Adds a tool to the plan, or changes where it is headed. */
+export function setPlanChoice(toolId: string, alternativeId: string | null) {
+  write(PLAN_KEY, { ...getPlan(), [toolId]: alternativeId })
+}
+
+export function setPlanChoices(choices: Plan) {
+  write(PLAN_KEY, { ...getPlan(), ...choices })
+}
+
+export function removeFromPlan(toolId: string) {
+  const { [toolId]: _removed, ...rest } = getPlan()
+  write(PLAN_KEY, rest)
+}
+
+export function clearPlan() {
+  write(PLAN_KEY, {})
+}
+
 export function clearEverything() {
-  for (const key of [PREFS_KEY, PROGRESS_KEY]) {
+  for (const key of KEYS) {
     try {
       localStorage.removeItem(key)
     } catch {
@@ -173,6 +213,7 @@ export interface ExportFile {
   exportedAt: string
   prefs: Prefs
   progress: Progress
+  plan: Plan
 }
 
 export function exportData(): ExportFile {
@@ -182,6 +223,7 @@ export function exportData(): ExportFile {
     exportedAt: new Date().toISOString(),
     prefs: getPrefs(),
     progress: getProgress(),
+    plan: getPlan(),
   }
 }
 
@@ -189,7 +231,7 @@ export function exportData(): ExportFile {
  * Replaces stored data with the contents of an export file.
  * Throws with a readable message when the file is not one of ours.
  */
-export function importData(text: string): { guides: number } {
+export function importData(text: string): { guides: number; planned: number } {
   let parsed: unknown
   try {
     parsed = JSON.parse(text)
@@ -203,9 +245,12 @@ export function importData(text: string): { guides: number } {
     throw new Error('That export was made by a newer version of ExitPath.')
   }
   const progress = sanitizeProgress(parsed.progress)
+  // Exports made before plans existed have no `plan`; that imports as an empty one.
+  const plan = sanitizePlan(parsed.plan)
   write(PREFS_KEY, sanitizePrefs(parsed.prefs))
   write(PROGRESS_KEY, progress)
-  return { guides: Object.keys(progress).length }
+  write(PLAN_KEY, plan)
+  return { guides: Object.keys(progress).length, planned: Object.keys(plan).length }
 }
 
 // --- hooks -------------------------------------------------------------------
@@ -216,6 +261,10 @@ export function usePrefs(): Prefs {
 
 export function useAllProgress(): Progress {
   return useSyncExternalStore(subscribe, getProgress, () => EMPTY_PROGRESS)
+}
+
+export function usePlan(): Plan {
+  return useSyncExternalStore(subscribe, getPlan, () => EMPTY_PLAN)
 }
 
 export function useGuideProgress(guideId: string): GuideProgress {
