@@ -6,7 +6,8 @@ import { IconArrowRight } from '../components/icons.tsx'
 import { Meter, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { scoredPathsFrom } from '../lib/paths.ts'
 import { formatEffort } from '../lib/scoring.ts'
-import { usePrefs } from '../lib/storage.ts'
+import { planTotals } from '../lib/plan.ts'
+import { setPlanChoices, usePlan, usePrefs } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 import { NotFound } from './NotFound.tsx'
 
@@ -29,10 +30,17 @@ function SuiteView({ suite }: { suite: Suite }) {
     return easiest ? [{ component, tool, easiest, others }] : []
   })
 
-  const total = parts.reduce<[number, number]>(
-    (sum, { easiest }) => [sum[0] + easiest.result.hours[0], sum[1] + easiest.result.hours[1]],
-    [0, 0],
-  )
+  // Counted the way a plan is: a destination shared by two parts is set up once.
+  const total = planTotals(
+    parts.map(({ tool, easiest, others }) => ({
+      tool,
+      chosen: easiest,
+      auto: true,
+      options: [easiest, ...others],
+    })),
+  ).hours
+  const plan = usePlan()
+  const missing = parts.filter(({ tool }) => !Object.hasOwn(plan, tool.id))
   const hardest = parts.reduce(
     (worst, part) => (part.easiest.result.score > worst.easiest.result.score ? part : worst),
     parts[0]!,
@@ -54,6 +62,25 @@ function SuiteView({ suite }: { suite: Suite }) {
             Open the step-by-step checklist <IconArrowRight />
           </Link>
         )}
+        <p className="mt-4 text-sm">
+          {missing.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => setPlanChoices(Object.fromEntries(missing.map(({ tool }) => [tool.id, null])))}
+              className="link cursor-pointer"
+            >
+              Add{' '}
+              {missing.length === parts.length
+                ? `all ${parts.length} parts`
+                : `the remaining ${missing.length}`}{' '}
+              to my plan
+            </button>
+          ) : (
+            <Link to="/plan" className="link inline-flex items-center gap-1">
+              Every part is in your plan <IconArrowRight />
+            </Link>
+          )}
+        </p>
       </header>
 
       <Section

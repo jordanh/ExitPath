@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getAlternative, getCategory, guidesForAlternative } from '../catalog/index.ts'
 import type { Alternative } from '../catalog/schema.ts'
+import { EntryFooter } from '../components/EntryFooter.tsx'
 import { IconArrowRight } from '../components/icons.tsx'
 import {
   Callout,
@@ -268,7 +269,12 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         </Section>
       )}
 
-      <p className="mt-10 text-sm text-muted">Entry last reviewed {alternative.reviewed}.</p>
+      <EntryFooter
+        folder="alternatives"
+        id={alternative.id}
+        name={alternative.name}
+        reviewed={alternative.reviewed}
+      />
     </Page>
   )
 }

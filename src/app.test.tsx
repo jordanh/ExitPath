@@ -4,7 +4,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import { alternatives, guides, suites, tools } from './catalog/index.ts'
 import { stepIds } from './lib/guides.ts'
-import { PROGRESS_KEY, getPrefs } from './lib/storage.ts'
+import { PROGRESS_KEY, getPlan, getPrefs, setPlanChoice, setPlanChoices, setStepDone } from './lib/storage.ts'
 import { routes } from './routes.tsx'
 
 function renderAt(path: string) {
@@ -187,6 +187,118 @@ describe('interactions', () => {
     expect(localStorage.getItem(PROGRESS_KEY)).toBeNull()
     expect(screen.getByRole('status')).toHaveTextContent(/has been erased/)
     expect(screen.queryByLabelText('Your data as text')).toBeNull()
+  })
+
+  it('builds a plan from the tools you tick', async () => {
+    const user = userEvent.setup()
+    renderAt('/plan')
+    expect(screen.getByText('Nothing in your plan yet')).toBeDefined()
+
+    await user.click(screen.getByRole('button', { name: 'Slack' }))
+    await user.click(screen.getByRole('button', { name: 'Visual Studio Code' }))
+    expect(heading()).toHaveTextContent('Everything you want to leave')
+    expect(screen.getByRole('heading', { name: '2 moves, easiest first' })).toBeDefined()
+    expect(getPlan()).toEqual({ slack: null, vscode: null })
+
+    // Easiest first: swapping an editor is easier than moving a team's chat.
+    const moves = screen.getAllByRole('listitem').filter((item) => within(item).queryByRole('combobox'))
+    expect(moves).toHaveLength(2)
+    expect(within(moves[0]!).getByRole('heading')).toHaveTextContent('VSCodium')
+
+    // Choosing a specific destination is remembered.
+    await user.selectOptions(within(moves[1]!).getByRole('combobox'), 'zulip')
+    expect(getPlan().slack).toBe('zulip')
+    expect(
+      within(
+        screen.getAllByRole('listitem').filter((item) => within(item).queryByRole('combobox'))[1]!,
+      ).getByRole('heading'),
+    ).toHaveTextContent('Zulip')
+
+    await user.click(screen.getByRole('button', { name: 'Remove Slack from the plan' }))
+    expect(getPlan()).toEqual({ vscode: null })
+    expect(screen.getByRole('heading', { name: '1 move, easiest first' })).toBeDefined()
+  })
+
+  it('adds a whole suite to the plan without overriding earlier picks', async () => {
+    const user = userEvent.setup()
+    setPlanChoice('onedrive', 'seafile')
+    renderAt('/plan')
+    await user.click(screen.getByRole('button', { name: 'Add all of Microsoft 365' }))
+    const plan = getPlan()
+    expect(Object.keys(plan).sort()).toEqual([
+      'microsoft-office',
+      'microsoft-teams',
+      'onedrive',
+      'outlook-exchange',
+      'zoom',
+    ])
+    expect(plan.onedrive).toBe('seafile')
+  })
+
+  it('adds a path to the plan from a tool page and counts it in the header', async () => {
+    const user = userEvent.setup()
+    renderAt('/tools/notion')
+    const outline = screen.getByRole('article', { name: 'Outline' })
+    await user.click(within(outline).getByRole('button', { name: 'Add to my plan' }))
+    expect(getPlan()).toEqual({ notion: 'outline' })
+    expect(within(outline).getByRole('button', { name: 'In your plan' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    expect(screen.getByRole('link', { name: 'Plan, 1 move planned' })).toBeDefined()
+
+    // Another path for the same tool offers to switch rather than add.
+    const appflowy = screen.getByRole('article', { name: 'AppFlowy' })
+    await user.click(within(appflowy).getByRole('button', { name: 'Use this path in my plan' }))
+    expect(getPlan()).toEqual({ notion: 'appflowy' })
+  })
+
+  it('opens search from any page with the slash key', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/about')
+    expect(screen.queryByRole('combobox')).toBeNull()
+
+    await user.keyboard('/')
+    const input = screen.getByRole('combobox')
+    expect(input).toHaveFocus()
+    await user.type(input, 'immich')
+    await user.keyboard('{Enter}')
+    expect(router.state.location.pathname).toBe('/alternatives/immich')
+    expect(screen.queryByRole('combobox')).toBeNull()
+  })
+
+  it('does not hijack the slash key while typing', async () => {
+    const user = userEvent.setup()
+    renderAt('/browse')
+    await user.type(screen.getByRole('searchbox'), 'a/b')
+    expect(screen.getByRole('searchbox')).toHaveValue('a/b')
+    expect(screen.queryByRole('combobox')).toBeNull()
+  })
+
+  it('shows returning visitors where they left off', async () => {
+    const guide = guides[0]!
+    setStepDone(guide.id, stepIds(guide)[0]!, true)
+    setPlanChoices({ slack: 'mattermost', notion: null })
+    renderAt('/')
+    const pickUp = screen.getByRole('region', { name: 'Pick up where you left off' })
+    expect(within(pickUp).getByRole('link', { name: new RegExp(guide.title) })).toHaveAttribute(
+      'href',
+      `/guides/${guide.id}`,
+    )
+    expect(within(pickUp).getByRole('link', { name: /2 moves/ })).toHaveAttribute('href', '/plan')
+  })
+
+  it('says nothing about picking up to a newcomer', () => {
+    renderAt('/')
+    expect(screen.queryByRole('region', { name: 'Pick up where you left off' })).toBeNull()
+  })
+
+  it('links every entry to its file in the repository', () => {
+    renderAt('/tools/slack')
+    expect(screen.getByRole('link', { name: /Edit this entry/ })).toHaveAttribute(
+      'href',
+      'https://github.com/noobmaster69/ExitPath/edit/main/catalog/tools/slack.json',
+    )
   })
 
   it('browse filters by category and by name', async () => {

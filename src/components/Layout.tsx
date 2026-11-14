@@ -1,15 +1,18 @@
-import { useEffect } from 'react'
-import { Link, NavLink, Outlet, ScrollRestoration } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { lastReviewed } from '../catalog/index.ts'
 import { REPO_URL } from '../lib/site.ts'
-import { setPrefs, usePrefs, type Theme } from '../lib/storage.ts'
+import { setPrefs, usePlan, usePrefs, type Theme } from '../lib/storage.ts'
 import { IconMoon, IconSun, IconSystem, Logo } from './icons.tsx'
+import { SearchDialog } from './SearchDialog.tsx'
 import { ExternalLink } from './ui.tsx'
 
+// "How it works" is also linked from the footer, so it gives way first on a narrow phone.
 const NAV = [
   { to: '/browse', label: 'Browse' },
+  { to: '/plan', label: 'Plan' },
   { to: '/guides', label: 'Guides' },
-  { to: '/about', label: 'How it works', short: 'About' },
+  { to: '/about', label: 'How it works', wideOnly: true },
 ]
 
 const THEME_ORDER: Theme[] = ['system', 'light', 'dark']
@@ -40,6 +43,18 @@ function ThemeToggle() {
 }
 
 export function Layout() {
+  const { pathname } = useLocation()
+  const planned = Object.keys(usePlan()).length
+
+  // Moving to another page puts keyboard and screen-reader focus at the top of
+  // the new content, as a full page load would. Not on first load, and not
+  // when only the query string changes (filters on the browse page).
+  const firstRender = useRef(true)
+  useEffect(() => {
+    if (firstRender.current) firstRender.current = false
+    else document.getElementById('main')?.focus({ preventScroll: true })
+  }, [pathname])
+
   return (
     <div className="flex min-h-dvh flex-col">
       {/* A button, not an anchor: "#main" would be read as a route by the hash router. */}
@@ -51,35 +66,42 @@ export function Layout() {
         Skip to content
       </button>
 
-      <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 border-b border-line bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4 sm:gap-4 sm:px-6">
+      <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 border-b border-line bg-bg/90 backdrop-blur print:hidden">
+        <div className="mx-auto flex h-14 max-w-6xl items-center gap-1 px-4 sm:gap-3 sm:px-6">
           <Link
             to="/"
             className="flex shrink-0 items-center gap-2 rounded-md text-[1.05rem] font-bold tracking-tight"
           >
             <Logo className="size-7" />
-            ExitPath
+            <span className="max-sm:sr-only">ExitPath</span>
           </Link>
           <nav aria-label="Main" className="ml-auto flex items-center text-sm font-medium">
-            {NAV.map(({ to, label, short }) => (
+            {NAV.map(({ to, label, wideOnly }) => (
               <NavLink
                 key={to}
                 to={to}
+                aria-label={
+                  to === '/plan' && planned > 0
+                    ? `${label}, ${planned} ${planned === 1 ? 'move' : 'moves'} planned`
+                    : undefined
+                }
                 className={({ isActive }) =>
-                  `rounded-md px-2 py-1.5 whitespace-nowrap sm:px-3 ${isActive ? 'text-accent' : 'text-muted hover:text-ink'}`
+                  `items-center gap-1.5 rounded-md px-1.5 py-1.5 whitespace-nowrap sm:px-3 ${wideOnly ? 'hidden sm:inline-flex' : 'inline-flex'} ${isActive ? 'text-accent' : 'text-muted hover:text-ink'}`
                 }
               >
-                {short ? (
-                  <>
-                    <span className="sm:hidden">{short}</span>
-                    <span className="max-sm:hidden">{label}</span>
-                  </>
-                ) : (
-                  label
+                {label}
+                {to === '/plan' && planned > 0 && (
+                  <span
+                    aria-hidden="true"
+                    className="rounded-full bg-accent px-1.5 text-[0.6875rem] leading-[1.125rem] font-bold text-on-accent tabular-nums max-sm:hidden"
+                  >
+                    {planned}
+                  </span>
                 )}
               </NavLink>
             ))}
           </nav>
+          <SearchDialog />
           <ThemeToggle />
         </div>
       </header>
@@ -88,13 +110,13 @@ export function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-line bg-sunken">
+      <footer className="border-t border-line bg-sunken print:hidden">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-muted sm:flex-row sm:items-start sm:justify-between sm:px-6">
           <div className="max-w-md">
             <p className="font-semibold text-ink">Nothing you do here leaves your browser.</p>
             <p className="mt-1">
-              No account, no analytics, no web fonts, no network requests after the page loads. Your checklist
-              progress is stored on this device only.
+              No account, no analytics, no web fonts, no network requests after the page loads. Your plan and
+              checklist progress are stored on this device only.
             </p>
           </div>
           <div className="flex flex-col gap-1.5 sm:items-end">

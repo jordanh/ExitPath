@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { alternatives, categories, guides, suites, tools, totalPaths } from '../catalog/index.ts'
 import { GuideCard, SuiteCard, ToolCard } from '../components/cards.tsx'
 import { IconArrowRight } from '../components/icons.tsx'
+import { PickUp } from '../components/PickUp.tsx'
 import { SearchBox } from '../components/SearchBox.tsx'
 import { Page, Section } from '../components/ui.tsx'
 import { useTitle } from '../lib/use-title.ts'
@@ -56,6 +57,11 @@ export function Home() {
               </li>
             ))}
           </ul>
+          <p className="mt-5 text-sm">
+            <Link to="/plan" className="link inline-flex items-center gap-1">
+              Leaving several things? Build one plan for all of them <IconArrowRight />
+            </Link>
+          </p>
           <p className="mt-8 font-mono text-xs text-muted">
             {tools.length} tools · {alternatives.length} alternatives · {totalPaths} migration paths ·{' '}
             {guides.length} checklists
@@ -64,6 +70,8 @@ export function Home() {
       </div>
 
       <Page>
+        <PickUp />
+
         <Section
           eyebrow="Whole suites"
           title="Leaving everything at once?"

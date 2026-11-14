@@ -1,17 +1,24 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   EXPORT_FORMAT,
+  PLAN_KEY,
   PREFS_KEY,
   PROGRESS_KEY,
   clearEverything,
+  clearPlan,
   exportData,
+  getPlan,
   getPrefs,
   getProgress,
   importData,
+  removeFromPlan,
   resetGuide,
+  sanitizePlan,
   sanitizePrefs,
   sanitizeProgress,
   setGuideNotes,
+  setPlanChoice,
+  setPlanChoices,
   setPrefs,
   setStepDone,
 } from './storage.ts'
@@ -105,20 +112,67 @@ describe('guide progress', () => {
   })
 })
 
+describe('plan', () => {
+  it('starts empty', () => {
+    expect(getPlan()).toEqual({})
+  })
+
+  it('adds tools with a chosen destination, or with "easiest"', () => {
+    setPlanChoice('slack', 'mattermost')
+    setPlanChoice('notion', null)
+    expect(getPlan()).toEqual({ slack: 'mattermost', notion: null })
+    expect(JSON.parse(localStorage.getItem(PLAN_KEY)!)).toEqual(getPlan())
+  })
+
+  it('changes a destination without touching the rest', () => {
+    setPlanChoices({ slack: null, notion: null })
+    setPlanChoice('slack', 'zulip')
+    expect(getPlan()).toEqual({ slack: 'zulip', notion: null })
+  })
+
+  it('removes one tool, and clears all of them', () => {
+    setPlanChoices({ slack: null, notion: 'outline' })
+    removeFromPlan('slack')
+    expect(getPlan()).toEqual({ notion: 'outline' })
+    clearPlan()
+    expect(getPlan()).toEqual({})
+  })
+
+  it('ignores malformed entries', () => {
+    expect(sanitizePlan({ slack: 'zulip', notion: null, github: 7, vscode: { to: 'zed' } })).toEqual({
+      slack: 'zulip',
+      notion: null,
+    })
+    expect(sanitizePlan('nope')).toEqual({})
+    expect(sanitizePlan(['slack'])).toEqual({})
+  })
+})
+
 describe('export and import', () => {
   it('round-trips everything', () => {
     setPrefs({ teamSize: 'large', hosting: 'managed' })
     setStepDone('leaving-slack', 'export', true)
     setGuideNotes('leaving-slack', 'note')
+    setPlanChoices({ slack: 'mattermost', notion: null })
     const file = JSON.stringify(exportData())
 
     clearEverything()
     expect(getProgress()).toEqual({})
+    expect(getPlan()).toEqual({})
     expect(localStorage.getItem(PROGRESS_KEY)).toBeNull()
+    expect(localStorage.getItem(PLAN_KEY)).toBeNull()
 
-    expect(importData(file)).toEqual({ guides: 1 })
+    expect(importData(file)).toEqual({ guides: 1, planned: 2 })
     expect(getPrefs()).toMatchObject({ teamSize: 'large', hosting: 'managed' })
     expect(getProgress()['leaving-slack']).toMatchObject({ done: ['export'], notes: 'note' })
+    expect(getPlan()).toEqual({ slack: 'mattermost', notion: null })
+  })
+
+  it('reads exports made before plans existed', () => {
+    setPlanChoice('slack', null)
+    const old = { format: EXPORT_FORMAT, version: 1, prefs: {}, progress: { g: { done: ['a'] } } }
+    expect(importData(JSON.stringify(old))).toEqual({ guides: 1, planned: 0 })
+    expect(getPlan()).toEqual({})
   })
 
   it('labels its files', () => {

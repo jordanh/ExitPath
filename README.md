@@ -11,7 +11,7 @@ moves across, what does not, how hard the switch is, and the order to do it in.
 
 ## What it does
 
-- **Searchable catalog.** 15 proprietary tools, 30 alternatives and 42 migration paths between them. Each
+- **Searchable catalog.** 16 proprietary tools, 30 alternatives and 45 migration paths between them. Each
   alternative carries its real licence, who funds it, a maturity rating with a written rationale, and a list
   of weaknesses as well as strengths. Open-core and source-available projects are labelled as such.
 - **Side-by-side comparison.** For any tool, compare its alternatives on features, licence, maturity,
@@ -19,16 +19,23 @@ moves across, what does not, how hard the switch is, and the order to do it in.
 - **Migration difficulty score and effort estimate.** A 0–100 score and an hours-to-weeks estimate for
   every path, adjusted for how many people are moving and whether you self-host. The arithmetic is simple
   and shown in full on the "How it works" page.
+- **Your plan.** Tick everything you use and get one combined exit plan: a path for each tool, the total
+  hands-on work (counting a shared destination only once) and an order to do it in, easiest first.
 - **Guided checklists.** Step-by-step plans for leaving Microsoft 365, Google Workspace, Slack and Notion,
-  with progress and notes saved as you go.
+  with progress and notes saved as you go, and a print layout for paper.
+- **Search from anywhere.** Press `/` or Ctrl+K on any page; it forgives a typo.
 - **Links that matter.** Official docs, Docker Compose files, installers and one-click deploys for
   self-hosting, plus managed hosting options where they exist.
 
 ## Local-first
 
 The whole catalog is bundled with the app. After the page loads it makes no network requests: no
-analytics, no accounts, no web fonts, no API. Your situation and checklist progress live in your browser's
-local storage and can be exported to a JSON file, imported on another device, or erased.
+analytics, no accounts, no web fonts, no API. Your situation, plan and checklist progress live in your
+browser's local storage and can be exported to a JSON file, imported on another device, or erased.
+
+On Vercel that promise is enforced rather than merely kept: [`vercel.json`](vercel.json) sends a content
+security policy with `connect-src 'none'` and no inline scripts or styles, so the page could not phone home
+even if a dependency tried to. If you host it elsewhere, send the same headers.
 
 ## Run it
 
@@ -56,6 +63,13 @@ npm run dev        # http://localhost:5173
 `npm run build` produces a fully static site in `dist/`. It uses relative asset paths and hash-based
 routing, so it works from any path on any static host with no rewrite rules: copy the folder to a web
 server, GitHub Pages or Codeberg Pages, or open it inside a desktop shell.
+
+Link previews (the card shown when the site is shared) need absolute URLs. Set `SITE_URL` when building,
+for example `SITE_URL=https://exit.example.org npm run build`; on Vercel the production domain is picked
+up automatically. Without either, those tags are left out and everything else works.
+
+Every catalog page ends with "Edit this entry" and "Report a problem" links. If you fork the project,
+point them at your repository in [`src/lib/site.ts`](src/lib/site.ts).
 
 ## The catalog
 
@@ -119,9 +133,8 @@ nothing else ships to the browser.
 Ideas that fit, roughly in the order they seem useful:
 
 - Export and import helper scripts for the common paths (Takeout to Immich, OneDrive to Nextcloud, IMAP to IMAP)
-- "My stack": pick everything you use and get one combined plan
 - Community notes on what actually worked, moderated through pull requests
-- A desktop build that can check which services you already run
+- Offline use after the first visit, and a desktop build that can check which services you already run
 - Translations, and JSON Schema files for editor autocompletion in the catalog
 
 ## Licence

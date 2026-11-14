@@ -269,7 +269,7 @@ export function About() {
       <Section
         eyebrow="Your data"
         title="Stored here, and only here"
-        intro="Two things are saved in this browser’s local storage: your answers to “Who is moving?” and “Who runs the servers?”, and your checklist progress and notes. There is no server to send them to."
+        intro="Three things are saved in this browser’s local storage: your answers to “Who is moving?” and “Who runs the servers?”, your plan, and your checklist progress and notes. There is no server to send them to."
       >
         <DataControls />
         <p className="mt-4 text-sm text-muted">
