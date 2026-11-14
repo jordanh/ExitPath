@@ -2,21 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>ExitPath — find your way out of big-platform lock-in</title>
     <meta
       name="description"
-      content="Find, compare and switch to open-source alternatives for the tools you depend on. Local-first: nothing you do here leaves your browser."
+      content="Find, compare and switch to open-source alternatives for the tools you depend on. Honest ratings, migration difficulty scores and step-by-step checklists. Nothing you do here leaves your browser."
     />
-    <title>ExitPath — find your way out of big-platform lock-in</title>
-    <script>
-      // Apply the saved theme before first paint to avoid a flash.
-      try {
-        var t = JSON.parse(localStorage.getItem('exitpath:prefs') || '{}').theme
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
-      } catch (e) {}
-    </script>
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f5f4ef" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1110" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
+    <!-- Link previews. The absolute image and page addresses are added at build time when the site's URL is known (see vite.config.ts). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ExitPath" />
+    <meta property="og:title" content="ExitPath — find your way out of big-platform lock-in" />
+    <meta
+      property="og:description"
+      content="Which open-source alternatives really hold up, what moves across, what does not, and how much work the switch is."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Applies the saved theme before first paint. A file, not inline, so inline scripts can be forbidden. -->
+    <script src="./theme.js" vite-ignore></script>
   </head>
   <body>
     <div id="root"></div>
