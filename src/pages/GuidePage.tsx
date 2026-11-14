@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getAlternative, getGuide, getTool } from '../catalog/index.ts'
 import type { Guide, GuideStep } from '../catalog/schema.ts'
+import { ConfirmButton } from '../components/ConfirmButton.tsx'
 import { IconArrowRight, IconCheck } from '../components/icons.tsx'
 import { ExternalLink, Page, ProgressBar, Section, Tag } from '../components/ui.tsx'
 import { guideStatus } from '../lib/guides.ts'
@@ -72,10 +73,6 @@ function GuideView({ guide }: { guide: Guide }) {
   const next = guide.phases
     .flatMap((phase) => phase.steps.map((step) => ({ phase, step })))
     .find(({ step }) => !doneIds.has(step.id))
-
-  function reset() {
-    if (window.confirm(`Clear all progress and notes for “${guide.title}”?`)) resetGuide(guide.id)
-  }
 
   return (
     <Page>
@@ -154,13 +151,15 @@ function GuideView({ guide }: { guide: Guide }) {
             .
           </p>
           {hasAnything && (
-            <button
-              type="button"
-              onClick={reset}
-              className="mt-2 text-xs font-semibold text-level-5 hover:underline"
-            >
-              Clear my progress
-            </button>
+            <div className="mt-2">
+              <ConfirmButton
+                className="cursor-pointer text-xs font-semibold text-level-5 hover:underline"
+                label="Clear my progress"
+                question="Clear progress and notes for this guide?"
+                confirmLabel="Yes, clear"
+                onConfirm={() => resetGuide(guide.id)}
+              />
+            </div>
           )}
         </aside>
 

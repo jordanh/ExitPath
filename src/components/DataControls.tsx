@@ -1,23 +1,49 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { clearEverything, exportData, importData } from '../lib/storage.ts'
+import { ConfirmButton } from './ConfirmButton.tsx'
 
 const button =
-  'inline-flex items-center justify-center rounded-lg border border-line-strong bg-surface px-3.5 py-2 text-sm font-semibold hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-50'
+  'inline-flex cursor-pointer items-center justify-center rounded-lg border border-line-strong bg-surface px-3.5 py-2 text-sm font-semibold hover:border-accent hover:text-accent'
 
 /** Export, import and erase what the app has stored in this browser. */
 export function DataControls() {
   const fileInput = useRef<HTMLInputElement>(null)
+  const exportBox = useRef<HTMLTextAreaElement>(null)
+  const exportId = useId()
   const [message, setMessage] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null)
+  // The export as text, shown after exporting. A download cannot be confirmed
+  // from script and is blocked outright in sandboxed frames and some webviews,
+  // so the text is always offered as a second way to take the data away.
+  const [exported, setExported] = useState<string | null>(null)
 
   function download() {
-    const blob = new Blob([JSON.stringify(exportData(), null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `exitpath-${new Date().toISOString().slice(0, 10)}.json`
-    link.click()
-    URL.revokeObjectURL(url)
-    setMessage({ tone: 'ok', text: 'Saved a copy of your progress and settings.' })
+    const text = JSON.stringify(exportData(), null, 2)
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `exitpath-${new Date().toISOString().slice(0, 10)}.json`
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      // No download here; the text below is the export.
+    }
+    setExported(text)
+    setMessage({
+      tone: 'ok',
+      text: 'A download should have started. If no file was saved, copy the text below and keep it in a .json file.',
+    })
+  }
+
+  async function copy() {
+    if (exported === null) return
+    try {
+      await navigator.clipboard.writeText(exported)
+      setMessage({ tone: 'ok', text: 'Copied to the clipboard.' })
+    } catch {
+      exportBox.current?.select()
+      setMessage({ tone: 'ok', text: 'The text is selected. Copy it with Ctrl+C, or ⌘C on a Mac.' })
+    }
   }
 
   async function upload(file: File) {
@@ -36,23 +62,27 @@ export function DataControls() {
   }
 
   function erase() {
-    if (!window.confirm('Erase all checklist progress, notes and settings stored in this browser?')) return
     clearEverything()
+    setExported(null)
     setMessage({ tone: 'ok', text: 'Everything stored by ExitPath in this browser has been erased.' })
   }
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button type="button" className={button} onClick={download}>
           Export my data
         </button>
         <button type="button" className={button} onClick={() => fileInput.current?.click()}>
           Import from a file
         </button>
-        <button type="button" className={button} onClick={erase}>
-          Erase everything
-        </button>
+        <ConfirmButton
+          className={button}
+          label="Erase everything"
+          question="Erase all progress, notes and settings?"
+          confirmLabel="Yes, erase"
+          onConfirm={erase}
+        />
         <input
           ref={fileInput}
           type="file"
@@ -73,6 +103,31 @@ export function DataControls() {
       >
         {message?.text}
       </p>
+      {exported !== null && (
+        <div className="mt-3">
+          <label htmlFor={exportId} className="eyebrow">
+            Your data as text
+          </label>
+          <textarea
+            ref={exportBox}
+            id={exportId}
+            readOnly
+            value={exported}
+            rows={6}
+            spellCheck={false}
+            onFocus={(event) => event.target.select()}
+            className="mt-1.5 block w-full rounded-lg border border-line-strong bg-surface p-3 font-mono text-xs focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15"
+          />
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button type="button" className={button} onClick={() => void copy()}>
+              Copy the text
+            </button>
+            <button type="button" className={button} onClick={() => setExported(null)}>
+              Hide
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

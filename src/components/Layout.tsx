@@ -51,7 +51,7 @@ export function Layout() {
         Skip to content
       </button>
 
-      <header className="sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur">
+      <header className="sticky top-[env(safe-area-inset-top,0px)] z-30 border-b border-line bg-bg/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-2 px-4 sm:gap-4 sm:px-6">
           <Link
             to="/"

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
@@ -139,6 +139,54 @@ describe('interactions', () => {
 
     const stored = JSON.parse(localStorage.getItem(PROGRESS_KEY)!)
     expect(stored[guide.id].done).toEqual([stepIds(guide)[1]])
+  })
+
+  it('asks before clearing a guide, in the page rather than a browser dialog', async () => {
+    const user = userEvent.setup()
+    const guide = guides[0]!
+    const total = stepIds(guide).length
+    renderAt(`/guides/${guide.id}`)
+    const progress = screen.getByRole('complementary', { name: 'Your progress' })
+
+    await user.click(screen.getAllByRole('checkbox')[0]!)
+    expect(progress).toHaveTextContent(`1 / ${total} steps`)
+
+    // Cancelling keeps everything.
+    await user.click(screen.getByRole('button', { name: 'Clear my progress' }))
+    expect(screen.getByRole('button', { name: 'Cancel' })).toHaveFocus()
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
+    expect(progress).toHaveTextContent(`1 / ${total} steps`)
+
+    // Confirming clears it.
+    await user.click(screen.getByRole('button', { name: 'Clear my progress' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, clear' }))
+    expect(progress).toHaveTextContent(`0 / ${total} steps`)
+    expect(localStorage.getItem(PROGRESS_KEY)).toBe('{}')
+  })
+
+  it('export always offers the data as text, and erase asks first', async () => {
+    const user = userEvent.setup()
+    const guide = guides[0]!
+    renderAt(`/guides/${guide.id}`)
+    await user.click(screen.getAllByRole('checkbox')[0]!)
+    cleanup()
+
+    renderAt('/guides')
+    await user.click(screen.getByRole('button', { name: 'Export my data' }))
+    const exported = JSON.parse((screen.getByLabelText('Your data as text') as HTMLTextAreaElement).value)
+    expect(exported.format).toBe('exitpath-export')
+    expect(exported.progress[guide.id].done).toEqual([stepIds(guide)[0]])
+
+    await user.click(screen.getByRole('button', { name: 'Erase everything' }))
+    expect(localStorage.getItem(PROGRESS_KEY)).not.toBeNull()
+    await user.keyboard('{Escape}')
+    expect(screen.getByRole('button', { name: 'Erase everything' })).toHaveFocus()
+
+    await user.click(screen.getByRole('button', { name: 'Erase everything' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, erase' }))
+    expect(localStorage.getItem(PROGRESS_KEY)).toBeNull()
+    expect(screen.getByRole('status')).toHaveTextContent(/has been erased/)
+    expect(screen.queryByLabelText('Your data as text')).toBeNull()
   })
 
   it('browse filters by category and by name', async () => {
