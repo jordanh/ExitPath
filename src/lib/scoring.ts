@@ -17,6 +17,15 @@ export interface Context {
 
 export const DEFAULT_CONTEXT: Context = { teamSize: 'solo', hosting: 'self' }
 
+/**
+ * The context plus the reader's filter: with `openOnly`, alternatives that
+ * are open core or source-available are left out of the paths offered.
+ * Scores themselves do not depend on it.
+ */
+export interface Situation extends Context {
+  openOnly?: boolean
+}
+
 export const TEAM_SIZES: Record<
   TeamSize,
   { label: string; hint: string; level: number; multiplier: number }
@@ -183,6 +192,22 @@ export function scorePath(tool: Tool, path: Path, alternative: Alternative, cont
   ]
 
   return { score, band: bandFor(score), factors, hosting, hours, migrationHours }
+}
+
+/**
+ * How many calendar weeks an amount of work takes at a steady pace, [low, high].
+ * Rounded up: a week you have started is a week you need.
+ */
+export function weeksAtPace([low, high]: [number, number], hoursPerWeek: number): [number, number] {
+  const pace = Math.max(1, hoursPerWeek)
+  return [Math.ceil(low / pace), Math.ceil(high / pace)]
+}
+
+/** "within a week", "about 3 weeks", "3–9 weeks" */
+export function formatWeeks([low, high]: [number, number]): string {
+  if (high <= 1) return 'within a week'
+  if (low === high) return `about ${high} weeks`
+  return `${Math.max(1, low)}–${high} weeks`
 }
 
 const HOURS_PER_DAY = 6

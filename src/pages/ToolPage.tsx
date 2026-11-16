@@ -1,15 +1,17 @@
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useId, useState } from 'react'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { getCategory, getTool, guidesForTool, suitesForTool } from '../catalog/index.ts'
 import type { Tool } from '../catalog/schema.ts'
 import { CompareTable } from '../components/CompareTable.tsx'
-import { ContextBar } from '../components/ContextBar.tsx'
+import { Disclosure } from '../components/Disclosure.tsx'
 import { EntryFooter } from '../components/EntryFooter.tsx'
 import { IconArrowRight } from '../components/icons.tsx'
 import { PathCard } from '../components/PathCard.tsx'
-import { ExternalLink, MarkedList, Meter, Page, Section, Tag } from '../components/ui.tsx'
-import { scoredPathsFrom } from '../lib/paths.ts'
-import { usePrefs } from '../lib/storage.ts'
+import { SituationLine } from '../components/Situation.tsx'
+import { ExternalLink, MarkedList, Meter, Page, Section } from '../components/ui.tsx'
+import { PATH_ORDERS, allPathsFrom, orderPaths, scoredPathsFrom, type PathOrder } from '../lib/paths.ts'
+import { SCALES } from '../lib/scales.ts'
+import { useSituation } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 import { NotFound } from './NotFound.tsx'
 
@@ -20,13 +22,23 @@ export function ToolPage() {
   return tool ? <ToolView key={tool.id} tool={tool} /> : <NotFound what="tool" />
 }
 
+const isOrder = (value: string | null): value is PathOrder =>
+  value !== null && Object.hasOwn(PATH_ORDERS, value)
+
 function ToolView({ tool }: { tool: Tool }) {
   useTitle(`Leaving ${tool.name}`)
-  const { teamSize, hosting } = usePrefs()
+  const situation = useSituation()
+  const [params, setParams] = useSearchParams()
   const [hidden, setHidden] = useState<ReadonlySet<string>>(new Set())
+  const sortId = useId()
 
   const category = getCategory(tool.category)
-  const paths = scoredPathsFrom(tool, { teamSize, hosting })
+  const sort = params.get('sort')
+  const order: PathOrder = isOrder(sort) ? sort : 'easiest'
+  const suitable = scoredPathsFrom(tool, situation)
+  const filteredOut = allPathsFrom(tool, situation).length - suitable.length
+  const easiestId = suitable[0]?.alternative.id
+  const paths = orderPaths(suitable, order)
   const compared = paths.filter(({ alternative }) => !hidden.has(alternative.id))
   const guides = guidesForTool(tool.id)
   const suites = suitesForTool(tool.id)
@@ -41,7 +53,7 @@ function ToolView({ tool }: { tool: Tool }) {
 
   return (
     <Page>
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-muted">
+      <nav aria-label="Breadcrumb" className="mb-3 text-muted">
         <Link to="/browse" className="hover:text-ink">
           Browse
         </Link>
@@ -53,107 +65,123 @@ function ToolView({ tool }: { tool: Tool }) {
         </Link>
       </nav>
 
-      <header className="max-w-3xl">
-        <p className="eyebrow">Leaving · {tool.vendor}</p>
-        <h1 className="mt-1 text-[2.6rem] leading-[1.02] font-black tracking-tight sm:text-[4rem]">
+      <header className="max-w-2xl">
+        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
+          <span className="font-extrabold text-muted italic">Leaving </span>
           {tool.name}
         </h1>
-        {tool.alsoCovers && (
-          <p className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-muted">
-            Also covers
-            {tool.alsoCovers.map((name) => (
-              <Tag key={name}>{name}</Tag>
-            ))}
-          </p>
-        )}
-        <p className="mt-4 text-xl text-muted">{tool.summary}</p>
+        <p className="mt-1 text-muted">
+          {tool.vendor}
+          {tool.alsoCovers && <> · also covers {tool.alsoCovers.join(', ')}</>}
+        </p>
+        <p className="mt-4 text-xl">{tool.summary}</p>
       </header>
 
       {(guides.length > 0 || suites.length > 0) && (
-        <ul className="mt-5 flex flex-wrap gap-2 text-sm">
+        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
           {guides.map((guide) => (
             <li key={guide.id}>
-              <Link to={`/guides/${guide.id}`} className="chip">
-                Checklist: {guide.title} <IconArrowRight />
+              <Link to={`/guides/${guide.id}`} className="link inline-flex items-center gap-1">
+                Checklist: {guide.title} <IconArrowRight className="text-accent" />
               </Link>
             </li>
           ))}
           {suites.map((suite) => (
             <li key={suite.id}>
-              <Link to={`/suites/${suite.id}`} className="chip">
-                Part of {suite.name} <IconArrowRight />
+              <Link to={`/suites/${suite.id}`} className="link inline-flex items-center gap-1">
+                Part of {suite.name} <IconArrowRight className="text-accent" />
               </Link>
             </li>
           ))}
         </ul>
       )}
 
-      <div className="mt-10 grid gap-5 lg:grid-cols-5">
-        <section className="rounded-pebble bg-sunken p-5 sm:p-7 lg:col-span-2" aria-labelledby="lock-in">
-          <h2 id="lock-in" className="text-[1.4rem] leading-tight font-extrabold">
-            What keeps you here
-          </h2>
-          <div className="mt-2">
-            <Meter label="Lock-in" scale="lockIn" level={tool.lockIn.level} />
-          </div>
-          <div className="mt-4">
-            <MarkedList kind="neutral" items={tool.lockIn.factors} />
-          </div>
-        </section>
-
-        <section className="card p-5 sm:p-7 lg:col-span-3" aria-labelledby="export">
-          <h2 id="export" className="text-[1.4rem] leading-tight font-extrabold">
-            Getting your data out
-          </h2>
-          <div className="mt-2">
-            <Meter label="Export difficulty" scale="difficulty" level={tool.export.difficulty} />
-          </div>
-          <p className="mt-3 text-sm">{tool.export.summary}</p>
-          <dl className="mt-4 space-y-3 text-sm">
-            {tool.export.methods.map((method) => (
-              <div key={method.name}>
-                <dt className="font-semibold">
-                  {method.url ? <ExternalLink href={method.url}>{method.name}</ExternalLink> : method.name}
-                </dt>
-                <dd className="mt-0.5 text-muted">{method.detail}</dd>
-              </div>
-            ))}
-          </dl>
-          {tool.export.caveats.length > 0 && (
-            <div className="mt-5 border-t border-dashed border-line-strong pt-4">
-              <h3 className="eyebrow mb-2">Watch out for</h3>
-              <MarkedList kind="neutral" items={tool.export.caveats} />
-            </div>
-          )}
-        </section>
-      </div>
-
       <Section
-        eyebrow="Paths out"
-        title={`${paths.length} ${paths.length === 1 ? 'way' : 'ways'} forward, easiest first`}
-        intro="Difficulty runs from 0 to 100 and combines export, import, hosting, the feature gap and how many people have to move."
+        title={`${paths.length} ${paths.length === 1 ? 'way' : 'ways'} out`}
+        aside={
+          paths.length > 1 && (
+            <div className="flex items-baseline gap-2 print:hidden">
+              <label htmlFor={sortId} className="eyebrow">
+                Order
+              </label>
+              <select
+                id={sortId}
+                value={order}
+                onChange={(event) => {
+                  const next = new URLSearchParams(params)
+                  if (event.target.value === 'easiest') next.delete('sort')
+                  else next.set('sort', event.target.value)
+                  setParams(next, { replace: true })
+                }}
+                className="field h-9 cursor-pointer px-2.5 font-medium"
+              >
+                {(Object.keys(PATH_ORDERS) as PathOrder[]).map((id) => (
+                  <option key={id} value={id}>
+                    {PATH_ORDERS[id]} first
+                  </option>
+                ))}
+              </select>
+            </div>
+          )
+        }
       >
-        <ContextBar />
-        <div className="mt-5 space-y-6">
-          {paths.map((scored, index) => (
-            <PathCard key={scored.alternative.id} scored={scored} easiest={index === 0 && paths.length > 1} />
+        <SituationLine hidden={filteredOut} />
+        <div className="mt-2">
+          {paths.map((scored) => (
+            <PathCard
+              key={scored.alternative.id}
+              scored={scored}
+              easiest={scored.alternative.id === easiestId && paths.length > 1}
+            />
           ))}
         </div>
-        <p className="mt-3 text-sm text-muted">
-          <Link to="/about" className="link">
-            How these scores are calculated
-          </Link>
-        </p>
       </Section>
 
-      {paths.length > 1 && (
-        <Section
-          eyebrow="Side by side"
-          title="Compare the alternatives"
-          aside={
-            paths.length > 2 && (
+      <Section title="Before you go">
+        <Disclosure
+          summary="What keeps you here"
+          hint={`Lock-in: ${SCALES.lockIn.labels[tool.lockIn.level - 1]}`}
+        >
+          <Meter label="Lock-in" scale="lockIn" level={tool.lockIn.level} />
+          <div className="mt-3 max-w-2xl">
+            <MarkedList kind="neutral" items={tool.lockIn.factors} />
+          </div>
+        </Disclosure>
+
+        <Disclosure
+          summary="Getting your data out"
+          hint={`Export: ${SCALES.difficulty.labels[tool.export.difficulty - 1]}`}
+        >
+          <div className="max-w-2xl">
+            <Meter label="Export difficulty" scale="difficulty" level={tool.export.difficulty} />
+            <p className="mt-3">{tool.export.summary}</p>
+            <dl className="mt-4 space-y-3">
+              {tool.export.methods.map((method) => (
+                <div key={method.name}>
+                  <dt className="font-bold">
+                    {method.url ? <ExternalLink href={method.url}>{method.name}</ExternalLink> : method.name}
+                  </dt>
+                  <dd className="mt-0.5 text-muted">{method.detail}</dd>
+                </div>
+              ))}
+            </dl>
+            {tool.export.caveats.length > 0 && (
+              <>
+                <h3 className="eyebrow mt-5 mb-2">Watch out for</h3>
+                <MarkedList kind="neutral" items={tool.export.caveats} />
+              </>
+            )}
+          </div>
+        </Disclosure>
+
+        {paths.length > 1 && (
+          <Disclosure
+            summary="Compare side by side"
+            hint={`${compared.length} alternatives, feature by feature`}
+          >
+            {paths.length > 2 && (
               <div
-                className="flex flex-wrap gap-2"
+                className="mb-3 flex flex-wrap gap-2 print:hidden"
                 role="group"
                 aria-label="Choose which alternatives to compare"
               >
@@ -169,12 +197,11 @@ function ToolView({ tool }: { tool: Tool }) {
                   </button>
                 ))}
               </div>
-            )
-          }
-        >
-          <CompareTable paths={compared} category={category} />
-        </Section>
-      )}
+            )}
+            <CompareTable paths={compared} category={category} />
+          </Disclosure>
+        )}
+      </Section>
 
       <EntryFooter folder="tools" id={tool.id} name={tool.name} reviewed={tool.reviewed} />
     </Page>

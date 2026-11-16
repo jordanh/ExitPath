@@ -2,11 +2,14 @@ import type { ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getAlternative, getCategory, guidesForAlternative } from '../catalog/index.ts'
 import type { Alternative } from '../catalog/schema.ts'
+import { Disclosure } from '../components/Disclosure.tsx'
 import { EntryFooter } from '../components/EntryFooter.tsx'
 import { IconArrowRight } from '../components/icons.tsx'
+import { SituationLine } from '../components/Situation.tsx'
 import {
   Callout,
   ExternalLink,
+  IndexRow,
   MarkedList,
   Meter,
   OpennessBadge,
@@ -19,7 +22,7 @@ import {
 import { scoredPathsTo } from '../lib/paths.ts'
 import { DEPLOY_LABELS, KIND_LABELS, OPENNESS_LABELS, PLATFORM_LABELS } from '../lib/scales.ts'
 import { formatEffort } from '../lib/scoring.ts'
-import { usePrefs } from '../lib/storage.ts'
+import { useSituation } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 import { NotFound } from './NotFound.tsx'
 
@@ -31,24 +34,24 @@ export function AlternativePage() {
 
 function Fact({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div>
-      <dt className="eyebrow">{label}</dt>
-      <dd className="mt-1 text-sm">{children}</dd>
+    <div className="grid gap-x-6 py-1.5 sm:grid-cols-[11rem_minmax(0,1fr)]">
+      <dt className="eyebrow sm:pt-0.5">{label}</dt>
+      <dd>{children}</dd>
     </div>
   )
 }
 
 function AlternativeView({ alternative }: { alternative: Alternative }) {
   useTitle(alternative.name)
-  const { teamSize, hosting } = usePrefs()
-  const replaces = scoredPathsTo(alternative, { teamSize, hosting })
+  const situation = useSituation()
+  const replaces = scoredPathsTo(alternative, situation)
   const guides = guidesForAlternative(alternative.id)
   const selfHosting = alternative.selfHosting
   const categoryList = alternative.categories.flatMap((id) => getCategory(id) ?? [])
 
   return (
     <Page>
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-muted">
+      <nav aria-label="Breadcrumb" className="mb-3 text-muted">
         <Link to="/browse?view=alternatives" className="hover:text-ink">
           Alternatives
         </Link>
@@ -64,19 +67,21 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         ))}
       </nav>
 
-      <header className="max-w-3xl">
-        <p className="eyebrow">Alternative · {KIND_LABELS[alternative.kind]}</p>
-        <h1 className="mt-1 text-[2.6rem] leading-[1.02] font-black tracking-tight sm:text-[4rem]">
+      <header className="max-w-2xl">
+        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
           {alternative.name}
         </h1>
-        <p className="mt-2 font-display text-2xl text-muted italic">{alternative.tagline}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-1.5">
+        <p className="mt-1 font-display text-[1.35rem] leading-snug text-muted italic">
+          {alternative.tagline}
+        </p>
+        <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-0.5">
           <OpennessBadge openness={alternative.openness} />
           <Tag title="Licence">{alternative.license}</Tag>
-          <Tag>Since {alternative.since}</Tag>
-        </div>
-        <p className="mt-5 text-lg">{alternative.description}</p>
-        <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <Tag>since {alternative.since}</Tag>
+          <Tag>{KIND_LABELS[alternative.kind].toLowerCase()}</Tag>
+        </p>
+        <p className="mt-4 text-lg">{alternative.description}</p>
+        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
           <li>
             <ExternalLink href={alternative.links.website}>Website</ExternalLink>
           </li>
@@ -89,34 +94,29 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         </ul>
       </header>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <section className="card p-5 sm:p-7" aria-labelledby="strengths">
-          <h2 id="strengths" className="mb-3 text-[1.4rem] leading-tight font-extrabold">
+      <div className="mt-10 grid gap-x-14 gap-y-8 md:grid-cols-2">
+        <section aria-labelledby="strengths">
+          <h2 id="strengths" className="mb-3 text-[1.3rem] leading-tight font-extrabold">
             Where it is strong
           </h2>
           <MarkedList kind="good" items={alternative.strengths} />
         </section>
-        <section className="card p-5 sm:p-7" aria-labelledby="weaknesses">
-          <h2 id="weaknesses" className="mb-3 text-[1.4rem] leading-tight font-extrabold">
+        <section aria-labelledby="weaknesses">
+          <h2 id="weaknesses" className="mb-3 text-[1.3rem] leading-tight font-extrabold">
             Where it falls short
           </h2>
           <MarkedList kind="bad" items={alternative.weaknesses} />
         </section>
       </div>
 
-      <Section eyebrow="Can you rely on it?" title="The project">
-        <div className="card p-5 sm:p-7">
-          <dl className="grid gap-x-8 gap-y-5 md:grid-cols-2">
-            <div>
-              <dt className="sr-only">Maturity</dt>
-              <dd>
-                <Meter label="Maturity" scale="maturity" level={alternative.maturity.score} />
-                <p className="mt-2 text-sm">{alternative.maturity.rationale}</p>
-              </dd>
-            </div>
+      <Section title="Can you rely on it?">
+        <div className="max-w-2xl">
+          <Meter label="Maturity" scale="maturity" level={alternative.maturity.score} />
+          <p className="mt-2">{alternative.maturity.rationale}</p>
+          <dl className="mt-4">
             <Fact label="Who is behind it">{alternative.backing}</Fact>
             <Fact label="Licence">
-              <span className="font-semibold">{alternative.license}</span> ·{' '}
+              <span className="font-bold">{alternative.license}</span>.{' '}
               {OPENNESS_LABELS[alternative.openness].meaning}
             </Fact>
             <Fact label="Where you use it">
@@ -125,20 +125,14 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
           </dl>
           {alternative.licenseNote && (
             <div className="mt-5">
-              <Callout
-                title="Read this before you commit"
-                tone={alternative.openness === 'open-source' ? 2 : 3}
-              >
-                {alternative.licenseNote}
-              </Callout>
+              <Callout title="Read this before you commit">{alternative.licenseNote}</Callout>
             </div>
           )}
         </div>
       </Section>
 
       <Section
-        eyebrow="Running it"
-        title={selfHosting ? 'Hosting it yourself, or not' : 'Nothing to host'}
+        title={selfHosting ? 'Running it' : 'Nothing to host'}
         intro={
           selfHosting
             ? undefined
@@ -146,16 +140,16 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         }
       >
         {selfHosting && (
-          <div className="grid gap-4 lg:grid-cols-5">
-            <div className="card p-5 sm:p-7 lg:col-span-3">
-              <h3 className="font-display text-xl font-extrabold">
-                Self-hosting{selfHosting.optional ? ' (optional)' : ''}
+          <div className="grid gap-x-14 gap-y-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <div>
+              <h3 className="font-display text-[1.3rem] font-extrabold">
+                Hosting it yourself{selfHosting.optional ? ' (optional)' : ''}
               </h3>
               <div className="mt-2">
                 <Meter label="Difficulty" scale="difficulty" level={selfHosting.difficulty} />
               </div>
-              <p className="mt-3 text-sm">{selfHosting.summary}</p>
-              <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-dashed border-line-strong pt-4 sm:grid-cols-3">
+              <p className="mt-3">{selfHosting.summary}</p>
+              <dl className="mt-3">
                 <Fact label="Memory">{selfHosting.requirements.ram}</Fact>
                 {selfHosting.requirements.cpu && (
                   <Fact label="Processor">{selfHosting.requirements.cpu}</Fact>
@@ -163,22 +157,22 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
                 <Fact label="Setup time">{formatEffort(selfHosting.setupHours)}</Fact>
               </dl>
               {selfHosting.requirements.notes && (
-                <p className="mt-3 text-sm text-muted">{selfHosting.requirements.notes}</p>
+                <p className="mt-2 text-muted">{selfHosting.requirements.notes}</p>
               )}
-              <h4 className="eyebrow mt-5 mb-2">Official ways to install</h4>
-              <ul className="space-y-2 text-sm">
+              <h4 className="eyebrow mt-5 mb-1.5">Official ways to install</h4>
+              <ul className="space-y-1">
                 {selfHosting.deploy.map((link) => (
-                  <li key={link.url + link.label} className="flex flex-wrap items-center gap-2">
-                    <Tag>{DEPLOY_LABELS[link.kind]}</Tag>
+                  <li key={link.url + link.label}>
                     <ExternalLink href={link.url}>{link.label}</ExternalLink>
+                    <span className="text-muted"> · {DEPLOY_LABELS[link.kind]}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="card p-5 sm:p-7 lg:col-span-2">
-              <h3 className="font-display text-xl font-extrabold">Managed hosting</h3>
+            <div>
+              <h3 className="font-display text-[1.3rem] font-extrabold">Having it hosted</h3>
               {alternative.managedHosting.length > 0 ? (
-                <ul className="mt-3 space-y-3 text-sm">
+                <ul className="mt-2 space-y-3">
                   {alternative.managedHosting.map((host) => (
                     <li key={host.url + host.label}>
                       <ExternalLink href={host.url}>{host.label}</ExternalLink>
@@ -187,7 +181,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
                   ))}
                 </ul>
               ) : (
-                <p className="mt-3 text-sm text-muted">
+                <p className="mt-2 text-muted">
                   No hosted option is listed in the catalog. If you know a reputable one, add it.
                 </p>
               )}
@@ -196,18 +190,23 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         )}
       </Section>
 
-      {categoryList.map((category) => (
-        <Section key={category.id} eyebrow="Features" title={category.name}>
-          <div className="card">
-            <dl className="grid sm:grid-cols-2 lg:grid-cols-3">
+      <Section title="What it does">
+        {categoryList.map((category) => (
+          <Disclosure
+            key={category.id}
+            summary={category.name}
+            hint={`${category.features.length} features`}
+            defaultOpen={categoryList.length === 1}
+          >
+            <dl className="grid gap-x-10 sm:grid-cols-2">
               {category.features.map((feature) => {
                 const support = alternative.features[feature.id]
                 return (
-                  <div key={feature.id} className="border-b border-line px-5 py-3.5 sm:px-7">
-                    <dt className="text-sm font-medium" title={feature.hint}>
+                  <div key={feature.id} className="border-b border-line py-2.5">
+                    <dt className="text-muted" title={feature.hint}>
                       {feature.name}
                     </dt>
-                    <dd className="mt-1">
+                    <dd className="mt-0.5">
                       {support ? (
                         <SupportMark support={support} note={alternative.featureNotes?.[feature.id]} />
                       ) : (
@@ -218,46 +217,33 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
                 )
               })}
             </dl>
-          </div>
-        </Section>
-      ))}
+          </Disclosure>
+        ))}
+      </Section>
 
-      <Section
-        eyebrow="What it replaces"
-        title={`${replaces.length} ${replaces.length === 1 ? 'path leads' : 'paths lead'} here`}
-        intro="Fit is specific to what you are leaving. Scores follow the situation you set on any tool page."
-      >
-        <ul className="grid gap-4 md:grid-cols-2">
+      <Section title={`${replaces.length} ${replaces.length === 1 ? 'path leads' : 'paths lead'} here`}>
+        <SituationLine />
+        <ul className="mt-2 max-w-2xl">
           {replaces.map(({ tool, path, result }) => (
             <li key={tool.id}>
-              <Link to={`/tools/${tool.id}`} className="card group flex h-full flex-col p-5 sm:p-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <h3 className="flex items-center gap-2 text-lg font-bold">
-                    {tool.name}
-                    <IconArrowRight className="text-accent" />
-                  </h3>
-                  <ScoreBadge score={result.score} band={result.band} size="sm" />
-                </div>
-                <p className="mt-2 text-sm text-muted">{path.verdict}</p>
-                <div className="mt-auto flex flex-wrap items-end justify-between gap-3 pt-4">
-                  <Meter label="Fit" scale="fit" level={path.fit} />
-                  <p className="text-sm text-muted">
-                    <span className="font-semibold text-ink">{formatEffort(result.hours)}</span> of work
-                  </p>
-                </div>
-              </Link>
+              <IndexRow
+                to={`/tools/${tool.id}`}
+                title={<>From {tool.name}</>}
+                end={<ScoreBadge score={result.score} band={result.band} size="sm" />}
+                detail={path.verdict}
+              />
             </li>
           ))}
         </ul>
       </Section>
 
       {guides.length > 0 && (
-        <Section eyebrow="Guided migrations" title="Checklists that use it">
-          <ul className="flex flex-wrap gap-2 text-sm">
+        <Section title="Checklists that use it">
+          <ul className="flex flex-wrap gap-x-6 gap-y-1">
             {guides.map((guide) => (
               <li key={guide.id}>
-                <Link to={`/guides/${guide.id}`} className="chip">
-                  {guide.title} <IconArrowRight />
+                <Link to={`/guides/${guide.id}`} className="link inline-flex items-center gap-1">
+                  {guide.title} <IconArrowRight className="text-accent" />
                 </Link>
               </li>
             ))}

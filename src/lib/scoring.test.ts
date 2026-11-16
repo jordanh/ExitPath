@@ -8,8 +8,10 @@ import {
   WEIGHTS,
   bandFor,
   formatEffort,
+  formatWeeks,
   hostingPlan,
   scorePath,
+  weeksAtPace,
   type Context,
 } from './scoring.ts'
 
@@ -161,6 +163,31 @@ describe('formatEffort', () => {
     [[120, 120], '4 weeks'],
   ])('formats %j as %s', (hours, expected) => {
     expect(formatEffort(hours)).toBe(expected)
+  })
+})
+
+describe('weeksAtPace', () => {
+  it('spreads the hours over whole weeks', () => {
+    expect(weeksAtPace([10, 30], 5)).toEqual([2, 6])
+    expect(weeksAtPace([1, 4], 5)).toEqual([1, 1])
+    expect(weeksAtPace([11, 21], 10)).toEqual([2, 3])
+    expect(weeksAtPace([0, 0], 5)).toEqual([0, 0])
+  })
+
+  it('never divides by nothing', () => {
+    expect(weeksAtPace([4, 8], 0)).toEqual([4, 8])
+  })
+})
+
+describe('formatWeeks', () => {
+  it.each<[[number, number], string]>([
+    [[0, 0], 'within a week'],
+    [[1, 1], 'within a week'],
+    [[0, 3], '1–3 weeks'],
+    [[2, 2], 'about 2 weeks'],
+    [[3, 8], '3–8 weeks'],
+  ])('formats %j as %s', (weeks, expected) => {
+    expect(formatWeeks(weeks)).toBe(expected)
   })
 })
 

@@ -1,15 +1,24 @@
 /**
  * Everything the app remembers lives in this browser's localStorage, under
- * three keys. Nothing is sent anywhere. "Export my data" hands the same JSON to
+ * a handful of keys. Nothing is sent anywhere. "Export my data" hands the same JSON to
  * the user as a file; "Import" reads it back.
  */
 import { useCallback, useSyncExternalStore } from 'react'
-import { DEFAULT_CONTEXT, HOSTING, TEAM_SIZES, type Context } from './scoring.ts'
+import { DEFAULT_CONTEXT, HOSTING, TEAM_SIZES, type Context, type Situation } from './scoring.ts'
 
 export type Theme = 'system' | 'light' | 'dark'
+/** "open" hides alternatives that are open core or source-available. */
+export type Licences = 'any' | 'open'
+export type TextSize = 'normal' | 'large'
+
+/** How many hours a week someone can give to moving; used for the plan's timeline. */
+export const HOURS_PER_WEEK = [2, 5, 10, 20] as const
 
 export interface Prefs extends Context {
   theme: Theme
+  licences: Licences
+  hoursPerWeek: number
+  textSize: TextSize
 }
 
 export interface GuideProgress {
@@ -32,10 +41,18 @@ export type Plan = Record<string, string | null>
 export const PREFS_KEY = 'exitpath:prefs'
 export const PROGRESS_KEY = 'exitpath:progress'
 export const PLAN_KEY = 'exitpath:plan'
+export const PLAN_DONE_KEY = 'exitpath:plan-done'
 export const EXPORT_FORMAT = 'exitpath-export'
 export const EXPORT_VERSION = 1
 
-const DEFAULT_PREFS: Prefs = { ...DEFAULT_CONTEXT, theme: 'system' }
+const DEFAULT_PREFS: Prefs = {
+  ...DEFAULT_CONTEXT,
+  theme: 'system',
+  licences: 'any',
+  hoursPerWeek: 5,
+  textSize: 'normal',
+}
+const EMPTY_LIST: string[] = []
 const EMPTY_PROGRESS: Progress = {}
 const EMPTY_PLAN: Plan = {}
 const EMPTY_GUIDE: GuideProgress = { done: [], notes: '', updatedAt: '' }
@@ -46,7 +63,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 /** Accepts anything and returns valid prefs, falling back field by field. */
 export function sanitizePrefs(value: unknown): Prefs {
   if (!isRecord(value)) return DEFAULT_PREFS
-  const { teamSize, hosting, theme } = value
+  const { teamSize, hosting, theme, licences, hoursPerWeek, textSize } = value
   // Object.hasOwn, not `in`: "toString" is not a team size.
   return {
     teamSize:
@@ -58,6 +75,11 @@ export function sanitizePrefs(value: unknown): Prefs {
         ? (hosting as Prefs['hosting'])
         : DEFAULT_PREFS.hosting,
     theme: theme === 'light' || theme === 'dark' || theme === 'system' ? theme : DEFAULT_PREFS.theme,
+    licences: licences === 'open' || licences === 'any' ? licences : DEFAULT_PREFS.licences,
+    hoursPerWeek: (HOURS_PER_WEEK as readonly unknown[]).includes(hoursPerWeek)
+      ? (hoursPerWeek as number)
+      : DEFAULT_PREFS.hoursPerWeek,
+    textSize: textSize === 'large' || textSize === 'normal' ? textSize : DEFAULT_PREFS.textSize,
   }
 }
 
@@ -87,9 +109,15 @@ export function sanitizePlan(value: unknown): Plan {
   return out
 }
 
+/** Accepts anything and returns a list of distinct strings. */
+export function sanitizeIds(value: unknown): string[] {
+  if (!Array.isArray(value)) return EMPTY_LIST
+  return [...new Set(value.filter((id): id is string => typeof id === 'string'))]
+}
+
 // --- a tiny external store, so every component sees the same values ---------
 
-const KEYS = [PREFS_KEY, PROGRESS_KEY, PLAN_KEY]
+const KEYS = [PREFS_KEY, PROGRESS_KEY, PLAN_KEY, PLAN_DONE_KEY]
 
 const listeners = new Set<() => void>()
 const cache = new Map<string, { raw: string | null; value: unknown }>()
@@ -146,6 +174,8 @@ function subscribe(listener: () => void) {
 export const getPrefs = () => read(PREFS_KEY, sanitizePrefs)
 export const getProgress = () => read(PROGRESS_KEY, sanitizeProgress)
 export const getPlan = () => read(PLAN_KEY, sanitizePlan)
+/** Tool ids of the moves in the plan that have been finished. */
+export const getPlanDone = () => read(PLAN_DONE_KEY, sanitizeIds)
 
 export function setPrefs(patch: Partial<Prefs>) {
   write(PREFS_KEY, { ...getPrefs(), ...patch })
@@ -187,10 +217,23 @@ export function setPlanChoices(choices: Plan) {
 export function removeFromPlan(toolId: string) {
   const { [toolId]: _removed, ...rest } = getPlan()
   write(PLAN_KEY, rest)
+  if (getPlanDone().includes(toolId)) setMoveDone(toolId, false)
 }
 
 export function clearPlan() {
   write(PLAN_KEY, {})
+  write(PLAN_DONE_KEY, [])
+}
+
+/** Replaces the whole plan, for example with one opened from a shared link. */
+export function replacePlan(plan: Plan) {
+  write(PLAN_KEY, plan)
+  write(PLAN_DONE_KEY, [])
+}
+
+export function setMoveDone(toolId: string, done: boolean) {
+  const current = getPlanDone()
+  write(PLAN_DONE_KEY, done ? [...new Set([...current, toolId])] : current.filter((id) => id !== toolId))
 }
 
 export function clearEverything() {
@@ -214,6 +257,7 @@ export interface ExportFile {
   prefs: Prefs
   progress: Progress
   plan: Plan
+  planDone: string[]
 }
 
 export function exportData(): ExportFile {
@@ -224,6 +268,7 @@ export function exportData(): ExportFile {
     prefs: getPrefs(),
     progress: getProgress(),
     plan: getPlan(),
+    planDone: getPlanDone(),
   }
 }
 
@@ -250,6 +295,10 @@ export function importData(text: string): { guides: number; planned: number } {
   write(PREFS_KEY, sanitizePrefs(parsed.prefs))
   write(PROGRESS_KEY, progress)
   write(PLAN_KEY, plan)
+  write(
+    PLAN_DONE_KEY,
+    sanitizeIds(parsed.planDone).filter((id) => Object.hasOwn(plan, id)),
+  )
   return { guides: Object.keys(progress).length, planned: Object.keys(plan).length }
 }
 
@@ -265,6 +314,16 @@ export function useAllProgress(): Progress {
 
 export function usePlan(): Plan {
   return useSyncExternalStore(subscribe, getPlan, () => EMPTY_PLAN)
+}
+
+export function usePlanDone(): string[] {
+  return useSyncExternalStore(subscribe, getPlanDone, () => EMPTY_LIST)
+}
+
+/** The reader's situation, as the scoring and filtering code wants it. */
+export function useSituation(): Situation {
+  const { teamSize, hosting, licences } = usePrefs()
+  return { teamSize, hosting, openOnly: licences === 'open' }
 }
 
 export function useGuideProgress(guideId: string): GuideProgress {

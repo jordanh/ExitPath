@@ -4,8 +4,8 @@
  */
 import { getTool } from '../catalog/index.ts'
 import type { Tool } from '../catalog/schema.ts'
-import { scoredPathsFrom, type ScoredPath } from './paths.ts'
-import type { Context } from './scoring.ts'
+import { allPathsFrom, scoredPathsFrom, type ScoredPath } from './paths.ts'
+import type { Situation } from './scoring.ts'
 import type { Plan } from './storage.ts'
 
 export interface PlanItem {
@@ -23,15 +23,23 @@ export interface PlanItem {
  * dropped, and a pick that no longer exists falls back to the easiest path,
  * so an old saved plan never breaks the page. Easiest move first.
  */
-export function resolvePlan(plan: Plan, context: Context): PlanItem[] {
+export function resolvePlan(plan: Plan, situation: Situation): PlanItem[] {
   const items: PlanItem[] = []
   for (const [toolId, choice] of Object.entries(plan)) {
     const tool = getTool(toolId)
     if (!tool) continue
-    const options = scoredPathsFrom(tool, context)
-    const easiest = options[0]
+    const suitable = scoredPathsFrom(tool, situation)
+    const easiest = suitable[0]
     if (!easiest) continue
-    const picked = choice === null ? undefined : options.find((option) => option.alternative.id === choice)
+    // A destination someone picked by hand is kept even when the licence
+    // filter would not have offered it: it was their decision.
+    const offered = choice === null ? undefined : suitable.find((option) => option.alternative.id === choice)
+    const picked =
+      offered ??
+      (choice === null
+        ? undefined
+        : allPathsFrom(tool, situation).find((option) => option.alternative.id === choice))
+    const options = picked && !offered ? [...suitable, picked] : suitable
     items.push({ tool, chosen: picked ?? easiest, auto: picked === undefined, options })
   }
   return items.sort(

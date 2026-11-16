@@ -1,5 +1,4 @@
 import type { SVGProps } from 'react'
-import { windingPath } from '../lib/contours.ts'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -70,22 +69,20 @@ export const IconSearch = (props: IconProps) => (
   </Svg>
 )
 
-export const IconSun = (props: IconProps) => (
+/** Three sliders: the options. */
+export const IconOptions = (props: IconProps) => (
   <Svg {...props}>
-    <circle cx="8" cy="8" r="2.7" />
-    <path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" />
+    <path d="M2.4 4.4c3.7-.2 7.5-.2 11.2 0M2.4 8c3.7-.2 7.5-.2 11.2 0M2.4 11.6c3.7-.2 7.5-.2 11.2 0" />
+    <circle cx="10.4" cy="4.4" r="1.5" fill="var(--bg)" />
+    <circle cx="5.6" cy="8" r="1.5" fill="var(--bg)" />
+    <circle cx="9" cy="11.6" r="1.5" fill="var(--bg)" />
   </Svg>
 )
 
-export const IconMoon = (props: IconProps) => (
+/** A small chevron; it turns when the section it belongs to is open. */
+export const IconChevron = (props: IconProps) => (
   <Svg {...props}>
-    <path d="M13.2 9.7A5.6 5.6 0 0 1 6.3 2.8a5.6 5.6 0 1 0 6.9 6.9Z" />
-  </Svg>
-)
-
-export const IconSystem = (props: IconProps) => (
-  <Svg {...props}>
-    <path d="M2.3 3.3c3.8-.2 7.6-.2 11.4 0 .1 2.5.1 5 0 7.5-3.8.2-7.6.2-11.4 0-.1-2.5-.1-5 0-7.5ZM5.8 13.4c1.5-.1 2.9-.1 4.4 0" />
+    <path d="M6 3.6c1.5 1.4 2.9 2.8 4.2 4.4-1.3 1.5-2.7 3-4.2 4.4" />
   </Svg>
 )
 
@@ -156,31 +153,6 @@ export function GradeMark({ level, className }: { level: number; className?: str
       ) : (
         <path d="M8 1.3 14.7 8 8 14.7 1.3 8Z" className={fill} strokeLinejoin="round" />
       )}
-    </svg>
-  )
-}
-
-/**
- * A stretch of trail drawn between a tool and where it leads. Purely
- * decorative: it winds more as the grade rises, and the grade is always
- * stated in words beside it.
- */
-export function RouteLine({ grade, className }: { grade: number; className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 16"
-      width="4em"
-      height="1em"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path d={windingPath(55, 8, grade)} strokeWidth="1.6" strokeDasharray="3.5 3" />
-      <path d="M53.5 4.2c1.5 1.5 2.9 2.7 4.6 3.8-1.7 1-3.1 2.3-4.4 3.9" strokeWidth="1.7" />
     </svg>
   )
 }
