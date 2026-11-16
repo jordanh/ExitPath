@@ -2,8 +2,7 @@ import { useId, useRef, useState } from 'react'
 import { clearEverything, exportData, importData } from '../lib/storage.ts'
 import { ConfirmButton } from './ConfirmButton.tsx'
 
-const button =
-  'inline-flex cursor-pointer items-center justify-center rounded-lg border border-line-strong bg-surface px-3.5 py-2 text-sm font-semibold hover:border-accent hover:text-accent'
+const button = 'btn'
 
 /** Export, import and erase what the app has stored in this browser. */
 export function DataControls() {
@@ -99,7 +98,7 @@ export function DataControls() {
       </div>
       <p
         role="status"
-        className={`mt-2 min-h-5 text-sm ${message?.tone === 'error' ? 'text-level-5' : 'text-muted'}`}
+        className={`mt-2 min-h-5 text-sm ${message?.tone === 'error' ? 'text-danger' : 'text-muted'}`}
       >
         {message?.text}
       </p>
@@ -116,7 +115,7 @@ export function DataControls() {
             rows={6}
             spellCheck={false}
             onFocus={(event) => event.target.select()}
-            className="mt-1.5 block w-full rounded-lg border border-line-strong bg-surface p-3 font-mono text-xs focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15"
+            className="field mt-1.5 block w-full p-3 font-mono text-xs"
           />
           <div className="mt-2 flex flex-wrap gap-2">
             <button type="button" className={button} onClick={() => void copy()}>

@@ -7,8 +7,7 @@ import { useAllProgress, usePlan, usePrefs } from '../lib/storage.ts'
 import { IconArrowRight } from './icons.tsx'
 import { ProgressBar } from './ui.tsx'
 
-const card =
-  'card group flex h-full flex-col p-4 transition-[border-color,box-shadow] hover:border-accent hover:shadow-md sm:p-5'
+const card = 'card group flex h-full flex-col p-5 sm:p-6'
 
 /**
  * Shown on the home page to someone who has been here before: the checklists

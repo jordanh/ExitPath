@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 
-const choice = 'cursor-pointer rounded-md border px-2.5 py-1 text-sm font-semibold'
+const choice = 'cursor-pointer rounded-leaf border-[1.5px] px-3 py-0.5 font-bold'
 
 /**
  * A destructive action that asks "are you sure?" inside the page.
@@ -51,12 +51,12 @@ export function ConfirmButton({
     <span
       role="group"
       aria-label={question}
-      className="inline-flex flex-wrap items-center gap-2 rounded-lg border border-level-5/30 bg-level-5/10 px-3 py-1.5 text-sm"
+      className="inline-flex flex-wrap items-center gap-2 rounded-stone border-[1.5px] border-dashed border-danger px-3 py-1.5"
     >
       <span className="font-medium">{question}</span>
       <button
         type="button"
-        className={`${choice} border-level-5 bg-level-5 text-surface hover:opacity-90`}
+        className={`${choice} border-danger bg-danger text-surface hover:opacity-90`}
         onKeyDown={closeOnEscape}
         onClick={() => {
           setAsking(false)
@@ -68,7 +68,7 @@ export function ConfirmButton({
       <button
         ref={cancel}
         type="button"
-        className={`${choice} border-line-strong bg-surface hover:border-accent hover:text-accent`}
+        className={`${choice} border-ink hover:bg-ink hover:text-bg`}
         onKeyDown={closeOnEscape}
         onClick={() => setAsking(false)}
       >

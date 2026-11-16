@@ -66,10 +66,10 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
 
       <header className="max-w-3xl">
         <p className="eyebrow">Alternative · {KIND_LABELS[alternative.kind]}</p>
-        <h1 className="mt-2 text-3xl leading-tight font-extrabold tracking-tight sm:text-5xl">
+        <h1 className="mt-1 text-[2.6rem] leading-[1.02] font-black tracking-tight sm:text-[4rem]">
           {alternative.name}
         </h1>
-        <p className="mt-2 text-xl text-muted">{alternative.tagline}</p>
+        <p className="mt-2 font-display text-2xl text-muted italic">{alternative.tagline}</p>
         <div className="mt-4 flex flex-wrap items-center gap-1.5">
           <OpennessBadge openness={alternative.openness} />
           <Tag title="Licence">{alternative.license}</Tag>
@@ -90,14 +90,14 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
       </header>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <section className="card p-4 sm:p-5" aria-labelledby="strengths">
-          <h2 id="strengths" className="mb-3 text-lg font-bold">
+        <section className="card p-5 sm:p-7" aria-labelledby="strengths">
+          <h2 id="strengths" className="mb-3 text-[1.4rem] leading-tight font-extrabold">
             Where it is strong
           </h2>
           <MarkedList kind="good" items={alternative.strengths} />
         </section>
-        <section className="card p-4 sm:p-5" aria-labelledby="weaknesses">
-          <h2 id="weaknesses" className="mb-3 text-lg font-bold">
+        <section className="card p-5 sm:p-7" aria-labelledby="weaknesses">
+          <h2 id="weaknesses" className="mb-3 text-[1.4rem] leading-tight font-extrabold">
             Where it falls short
           </h2>
           <MarkedList kind="bad" items={alternative.weaknesses} />
@@ -105,7 +105,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
       </div>
 
       <Section eyebrow="Can you rely on it?" title="The project">
-        <div className="card p-4 sm:p-5">
+        <div className="card p-5 sm:p-7">
           <dl className="grid gap-x-8 gap-y-5 md:grid-cols-2">
             <div>
               <dt className="sr-only">Maturity</dt>
@@ -147,13 +147,15 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
       >
         {selfHosting && (
           <div className="grid gap-4 lg:grid-cols-5">
-            <div className="card p-4 sm:p-5 lg:col-span-3">
-              <h3 className="font-bold">Self-hosting{selfHosting.optional ? ' (optional)' : ''}</h3>
+            <div className="card p-5 sm:p-7 lg:col-span-3">
+              <h3 className="font-display text-xl font-extrabold">
+                Self-hosting{selfHosting.optional ? ' (optional)' : ''}
+              </h3>
               <div className="mt-2">
                 <Meter label="Difficulty" scale="difficulty" level={selfHosting.difficulty} />
               </div>
               <p className="mt-3 text-sm">{selfHosting.summary}</p>
-              <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-line pt-4 sm:grid-cols-3">
+              <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-dashed border-line-strong pt-4 sm:grid-cols-3">
                 <Fact label="Memory">{selfHosting.requirements.ram}</Fact>
                 {selfHosting.requirements.cpu && (
                   <Fact label="Processor">{selfHosting.requirements.cpu}</Fact>
@@ -173,8 +175,8 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
                 ))}
               </ul>
             </div>
-            <div className="card p-4 sm:p-5 lg:col-span-2">
-              <h3 className="font-bold">Managed hosting</h3>
+            <div className="card p-5 sm:p-7 lg:col-span-2">
+              <h3 className="font-display text-xl font-extrabold">Managed hosting</h3>
               {alternative.managedHosting.length > 0 ? (
                 <ul className="mt-3 space-y-3 text-sm">
                   {alternative.managedHosting.map((host) => (
@@ -201,7 +203,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
               {category.features.map((feature) => {
                 const support = alternative.features[feature.id]
                 return (
-                  <div key={feature.id} className="border-b border-line px-4 py-3 sm:px-5">
+                  <div key={feature.id} className="border-b border-line px-5 py-3.5 sm:px-7">
                     <dt className="text-sm font-medium" title={feature.hint}>
                       {feature.name}
                     </dt>
@@ -228,10 +230,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         <ul className="grid gap-4 md:grid-cols-2">
           {replaces.map(({ tool, path, result }) => (
             <li key={tool.id}>
-              <Link
-                to={`/tools/${tool.id}`}
-                className="card group flex h-full flex-col p-4 transition-[border-color,box-shadow] hover:border-accent hover:shadow-md sm:p-5"
-              >
+              <Link to={`/tools/${tool.id}`} className="card group flex h-full flex-col p-5 sm:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <h3 className="flex items-center gap-2 text-lg font-bold">
                     {tool.name}
@@ -257,10 +256,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
           <ul className="flex flex-wrap gap-2 text-sm">
             {guides.map((guide) => (
               <li key={guide.id}>
-                <Link
-                  to={`/guides/${guide.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent-soft px-3 py-1 font-semibold text-accent hover:border-accent"
-                >
+                <Link to={`/guides/${guide.id}`} className="chip">
                   {guide.title} <IconArrowRight />
                 </Link>
               </li>

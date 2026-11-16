@@ -55,7 +55,9 @@ function ToolView({ tool }: { tool: Tool }) {
 
       <header className="max-w-3xl">
         <p className="eyebrow">Leaving · {tool.vendor}</p>
-        <h1 className="mt-2 text-3xl leading-tight font-extrabold tracking-tight sm:text-5xl">{tool.name}</h1>
+        <h1 className="mt-1 text-[2.6rem] leading-[1.02] font-black tracking-tight sm:text-[4rem]">
+          {tool.name}
+        </h1>
         {tool.alsoCovers && (
           <p className="mt-3 flex flex-wrap items-center gap-1.5 text-sm text-muted">
             Also covers
@@ -64,27 +66,21 @@ function ToolView({ tool }: { tool: Tool }) {
             ))}
           </p>
         )}
-        <p className="mt-4 text-lg text-muted">{tool.summary}</p>
+        <p className="mt-4 text-xl text-muted">{tool.summary}</p>
       </header>
 
       {(guides.length > 0 || suites.length > 0) && (
         <ul className="mt-5 flex flex-wrap gap-2 text-sm">
           {guides.map((guide) => (
             <li key={guide.id}>
-              <Link
-                to={`/guides/${guide.id}`}
-                className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent-soft px-3 py-1 font-semibold text-accent hover:border-accent"
-              >
+              <Link to={`/guides/${guide.id}`} className="chip">
                 Checklist: {guide.title} <IconArrowRight />
               </Link>
             </li>
           ))}
           {suites.map((suite) => (
             <li key={suite.id}>
-              <Link
-                to={`/suites/${suite.id}`}
-                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 font-medium hover:border-accent hover:text-accent"
-              >
+              <Link to={`/suites/${suite.id}`} className="chip">
                 Part of {suite.name} <IconArrowRight />
               </Link>
             </li>
@@ -92,9 +88,9 @@ function ToolView({ tool }: { tool: Tool }) {
         </ul>
       )}
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-5">
-        <section className="card p-4 sm:p-5 lg:col-span-2" aria-labelledby="lock-in">
-          <h2 id="lock-in" className="text-lg font-bold">
+      <div className="mt-10 grid gap-5 lg:grid-cols-5">
+        <section className="rounded-pebble bg-sunken p-5 sm:p-7 lg:col-span-2" aria-labelledby="lock-in">
+          <h2 id="lock-in" className="text-[1.4rem] leading-tight font-extrabold">
             What keeps you here
           </h2>
           <div className="mt-2">
@@ -105,8 +101,8 @@ function ToolView({ tool }: { tool: Tool }) {
           </div>
         </section>
 
-        <section className="card p-4 sm:p-5 lg:col-span-3" aria-labelledby="export">
-          <h2 id="export" className="text-lg font-bold">
+        <section className="card p-5 sm:p-7 lg:col-span-3" aria-labelledby="export">
+          <h2 id="export" className="text-[1.4rem] leading-tight font-extrabold">
             Getting your data out
           </h2>
           <div className="mt-2">
@@ -124,7 +120,7 @@ function ToolView({ tool }: { tool: Tool }) {
             ))}
           </dl>
           {tool.export.caveats.length > 0 && (
-            <div className="mt-5 border-t border-line pt-4">
+            <div className="mt-5 border-t border-dashed border-line-strong pt-4">
               <h3 className="eyebrow mb-2">Watch out for</h3>
               <MarkedList kind="neutral" items={tool.export.caveats} />
             </div>
@@ -138,7 +134,7 @@ function ToolView({ tool }: { tool: Tool }) {
         intro="Difficulty runs from 0 to 100 and combines export, import, hosting, the feature gap and how many people have to move."
       >
         <ContextBar />
-        <div className="mt-4 space-y-4">
+        <div className="mt-5 space-y-6">
           {paths.map((scored, index) => (
             <PathCard key={scored.alternative.id} scored={scored} easiest={index === 0 && paths.length > 1} />
           ))}
@@ -167,7 +163,7 @@ function ToolView({ tool }: { tool: Tool }) {
                     type="button"
                     aria-pressed={!hidden.has(alternative.id)}
                     onClick={() => toggle(alternative.id)}
-                    className="cursor-pointer rounded-full border border-line bg-surface px-3 py-1 text-sm font-medium text-muted hover:border-line-strong aria-pressed:border-accent aria-pressed:bg-accent-soft aria-pressed:text-accent"
+                    className="chip"
                   >
                     {alternative.name}
                   </button>

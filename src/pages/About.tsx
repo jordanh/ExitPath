@@ -52,7 +52,7 @@ function WorkedExample() {
 
   return (
     <div className="card overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-sunken px-4 py-3 sm:px-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-sunken px-5 py-3.5 sm:px-7">
         <p className="font-semibold">
           Worked example: {tool.name} to {alternative.name}
         </p>
@@ -79,7 +79,7 @@ function WorkedExample() {
               </th>
             </tr>
           </thead>
-          <tbody className="font-mono tabular-nums">
+          <tbody className="figures ">
             {result.factors.map((factor) => (
               <tr key={factor.key} className="border-b border-line">
                 <th scope="row" className="px-4 py-2 font-sans font-medium sm:px-5">
@@ -97,7 +97,7 @@ function WorkedExample() {
           </tbody>
         </table>
       </div>
-      <p className="px-4 py-3 font-mono text-sm sm:px-5">
+      <p className="px-4 py-3 figures text-sm sm:px-5">
         100 × ({percent(1 - HARDEST_FACTOR_SHARE)} × {average.toFixed(3)} + {percent(HARDEST_FACTOR_SHARE)} ×{' '}
         {hardest.toFixed(2)}) = <strong>{result.score}</strong>
         <span className="font-sans text-muted">
@@ -114,10 +114,10 @@ export function About() {
   return (
     <Page narrow>
       <p className="eyebrow">How it works</p>
-      <h1 className="mt-2 text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl">
+      <h1 className="mt-1 text-[2.4rem] leading-[1.05] font-black tracking-tight sm:text-[3.4rem]">
         A map of the exits, with the distances marked honestly
       </h1>
-      <p className="mt-4 text-lg text-muted">
+      <p className="mt-4 text-xl text-muted">
         ExitPath is not another software suite. It is a guide to the open-source projects that already exist:
         which of them can really replace the tool you depend on, what the move costs, and the order in which
         to do it.
@@ -135,11 +135,9 @@ export function About() {
           </p>
           <dl className="card divide-y divide-line">
             {(Object.keys(WEIGHTS) as (keyof typeof WEIGHTS)[]).map((key) => (
-              <div key={key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 px-4 py-3 sm:px-5">
+              <div key={key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 px-5 py-3.5 sm:px-7">
                 <dt className="font-semibold">{FACTOR_SOURCES[key].name}</dt>
-                <dd className="row-span-2 self-center font-mono text-lg font-bold tabular-nums">
-                  {percent(WEIGHTS[key])}
-                </dd>
+                <dd className="row-span-2 self-center figures text-lg font-bold ">{percent(WEIGHTS[key])}</dd>
                 <dd className="text-sm text-muted">{FACTOR_SOURCES[key].source}</dd>
               </div>
             ))}
@@ -174,12 +172,12 @@ export function About() {
           </p>
           <dl className="card divide-y divide-line">
             {(Object.keys(TEAM_SIZES) as TeamSize[]).map((key) => (
-              <div key={key} className="flex items-baseline justify-between gap-4 px-4 py-3 sm:px-5">
+              <div key={key} className="flex items-baseline justify-between gap-4 px-5 py-3.5 sm:px-7">
                 <dt>
                   <span className="font-semibold">{TEAM_SIZES[key].label}</span>{' '}
                   <span className="text-sm text-muted">({TEAM_SIZES[key].hint})</span>
                 </dt>
-                <dd className="font-mono font-bold tabular-nums">× {TEAM_SIZES[key].multiplier}</dd>
+                <dd className="figures font-bold ">× {TEAM_SIZES[key].multiplier}</dd>
               </div>
             ))}
           </dl>
@@ -195,8 +193,8 @@ export function About() {
       <Section eyebrow="The ratings" title="What the 1–5 scales mean">
         <dl className="space-y-4">
           {(Object.keys(SCALES) as ScaleId[]).map((id) => (
-            <div key={id} className="card p-4 sm:p-5">
-              <dt className="text-lg font-bold">{SCALES[id].title}</dt>
+            <div key={id} className="card p-5 sm:p-7">
+              <dt className="text-[1.4rem] leading-tight font-extrabold">{SCALES[id].title}</dt>
               <dd>
                 <p className="mt-1 text-sm text-muted">{SCALES[id].meaning}</p>
                 <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
@@ -219,7 +217,7 @@ export function About() {
       >
         <dl className="card divide-y divide-line">
           {(Object.keys(OPENNESS_LABELS) as Openness[]).map((id) => (
-            <div key={id} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-3 sm:px-5">
+            <div key={id} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-3.5 sm:px-7">
               <dt className="w-36 shrink-0">
                 <OpennessBadge openness={id} />
               </dt>
@@ -256,10 +254,9 @@ export function About() {
         intro="The whole catalog is plain JSON in the repository, validated against a schema. No build tooling knowledge is needed to edit it."
       >
         <p>
-          Every tool, alternative and checklist is one file under{' '}
-          <code className="font-mono text-sm">catalog/</code>. Change a file, run{' '}
-          <code className="font-mono text-sm">npm run validate</code> and open a pull request. Entries need
-          honest weaknesses and a source for anything surprising.
+          Every tool, alternative and checklist is one file under <code>catalog/</code>. Change a file, run{' '}
+          <code>npm run validate</code> and open a pull request. Entries need honest weaknesses and a source
+          for anything surprising.
         </p>
         <p className="mt-3">
           <ExternalLink href={REPO_URL}>Source code and catalog</ExternalLink>

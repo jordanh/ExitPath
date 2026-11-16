@@ -8,7 +8,9 @@ export function Guides() {
   useTitle('Guides')
   return (
     <Page>
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Guided migrations</h1>
+      <h1 className="text-[2.4rem] leading-[1.05] font-black tracking-tight sm:text-[3.4rem]">
+        Guided migrations
+      </h1>
       <p className="mt-2 max-w-2xl text-muted">
         Checklists for the common moves, written in the order things actually have to happen. Tick steps off
         as you go and come back whenever: your place is kept on this device.

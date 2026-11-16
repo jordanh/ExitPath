@@ -7,7 +7,9 @@ export function NotFound({ what = 'page' }: { what?: string }) {
   return (
     <Page narrow>
       <p className="eyebrow">Dead end</p>
-      <h1 className="mt-2 text-3xl font-extrabold tracking-tight">This {what} is not in the catalog.</h1>
+      <h1 className="mt-1 text-[2.4rem] leading-[1.05] font-black tracking-tight">
+        This {what} is not in the catalog.
+      </h1>
       <p className="mt-3 text-muted">
         The link may be out of date, or the entry may have been renamed. Everything that exists is listed on
         the browse page.

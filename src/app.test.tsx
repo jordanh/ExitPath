@@ -127,15 +127,15 @@ describe('interactions', () => {
     renderAt(`/guides/${guide.id}`)
 
     const progress = screen.getByRole('complementary', { name: 'Your progress' })
-    expect(progress).toHaveTextContent(`0 / ${total} steps`)
+    expect(progress).toHaveTextContent(`0 of ${total} steps`)
 
     const [first, second] = screen.getAllByRole('checkbox')
     await user.click(first!)
     await user.click(second!)
-    expect(progress).toHaveTextContent(`2 / ${total} steps`)
+    expect(progress).toHaveTextContent(`2 of ${total} steps`)
 
     await user.click(first!)
-    expect(progress).toHaveTextContent(`1 / ${total} steps`)
+    expect(progress).toHaveTextContent(`1 of ${total} steps`)
 
     const stored = JSON.parse(localStorage.getItem(PROGRESS_KEY)!)
     expect(stored[guide.id].done).toEqual([stepIds(guide)[1]])
@@ -149,18 +149,18 @@ describe('interactions', () => {
     const progress = screen.getByRole('complementary', { name: 'Your progress' })
 
     await user.click(screen.getAllByRole('checkbox')[0]!)
-    expect(progress).toHaveTextContent(`1 / ${total} steps`)
+    expect(progress).toHaveTextContent(`1 of ${total} steps`)
 
     // Cancelling keeps everything.
     await user.click(screen.getByRole('button', { name: 'Clear my progress' }))
     expect(screen.getByRole('button', { name: 'Cancel' })).toHaveFocus()
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
-    expect(progress).toHaveTextContent(`1 / ${total} steps`)
+    expect(progress).toHaveTextContent(`1 of ${total} steps`)
 
     // Confirming clears it.
     await user.click(screen.getByRole('button', { name: 'Clear my progress' }))
     await user.click(screen.getByRole('button', { name: 'Yes, clear' }))
-    expect(progress).toHaveTextContent(`0 / ${total} steps`)
+    expect(progress).toHaveTextContent(`0 of ${total} steps`)
     expect(localStorage.getItem(PROGRESS_KEY)).toBe('{}')
   })
 

@@ -64,7 +64,7 @@ function groupsFor(category: Category | undefined): Group[] {
         },
         {
           label: 'First released',
-          cell: ({ alternative }) => <span className="text-sm tabular-nums">{alternative.since}</span>,
+          cell: ({ alternative }) => <span className="text-sm figures">{alternative.since}</span>,
         },
         {
           label: 'Where you use it',
@@ -92,7 +92,7 @@ function groupsFor(category: Category | undefined): Group[] {
           label: 'Server memory',
           hint: 'A sensible minimum',
           cell: ({ alternative }) => (
-            <span className="text-sm tabular-nums">{alternative.selfHosting?.requirements.ram ?? '—'}</span>
+            <span className="text-sm figures">{alternative.selfHosting?.requirements.ram ?? '—'}</span>
           ),
         },
         {
@@ -169,7 +169,7 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
               <th key={alternative.id} scope="col" className="w-56 min-w-52 px-4 py-3 align-bottom">
                 <Link
                   to={`/alternatives/${alternative.id}`}
-                  className="text-base font-bold hover:text-accent"
+                  className="font-display text-[1.35rem] leading-tight font-extrabold decoration-accent decoration-[1.5px] underline-offset-4 hover:underline hover:decoration-wavy"
                 >
                   {alternative.name}
                 </Link>
