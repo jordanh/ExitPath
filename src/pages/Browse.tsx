@@ -9,8 +9,7 @@ import { useTitle } from '../lib/use-title.ts'
 
 type View = 'tools' | 'alternatives'
 
-const chip =
-  'cursor-pointer rounded-full border px-3 py-1 text-sm font-medium whitespace-nowrap transition-colors border-line bg-surface text-muted hover:border-line-strong hover:text-ink aria-pressed:border-accent aria-pressed:bg-accent-soft aria-pressed:text-accent'
+const chip = 'chip'
 
 /** Every word of the filter must appear at the start of some word in the text. */
 function matches(filter: string[], ...texts: (string | undefined)[]) {
@@ -52,17 +51,19 @@ export function Browse() {
 
   return (
     <Page>
-      <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Browse the catalog</h1>
+      <h1 className="text-[2.4rem] leading-[1.05] font-black tracking-tight sm:text-[3.4rem]">
+        Browse the catalog
+      </h1>
       <p className="mt-2 max-w-2xl text-muted">
         Start from the proprietary tool you want to leave, or look through the open-source projects directly.
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         {/* Two views of one list, not tabs with separate panels: plain toggle buttons. */}
         <div
           role="group"
           aria-label="What to browse"
-          className="inline-flex rounded-lg border border-line bg-sunken p-0.5"
+          className="flex flex-wrap gap-x-7 gap-y-1 font-display text-[1.45rem] leading-tight font-extrabold"
         >
           {(
             [
@@ -75,7 +76,7 @@ export function Browse() {
               type="button"
               aria-pressed={view === id}
               onClick={() => update({ view: id === 'tools' ? '' : id, openness: '' })}
-              className="cursor-pointer rounded-md px-3.5 py-1.5 text-sm font-semibold text-muted hover:text-ink aria-pressed:bg-surface aria-pressed:text-ink aria-pressed:shadow-sm"
+              className="cursor-pointer text-faint decoration-accent decoration-2 underline-offset-[7px] hover:text-ink aria-pressed:text-ink aria-pressed:underline aria-pressed:decoration-wavy"
             >
               {label}
             </button>
@@ -88,7 +89,7 @@ export function Browse() {
             value={query}
             onChange={(event) => update({ q: event.target.value })}
             placeholder="Filter by name…"
-            className="h-10 w-full rounded-lg border border-line-strong bg-surface px-3 text-sm placeholder:text-faint focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15"
+            className="field h-10 w-full px-3.5"
           />
         </label>
       </div>

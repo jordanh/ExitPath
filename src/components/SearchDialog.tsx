@@ -51,13 +51,11 @@ export function SearchDialog() {
         aria-label="Search the catalog"
         aria-keyshortcuts="/"
         title="Search (press /)"
-        className="inline-flex h-9 shrink-0 cursor-pointer items-center gap-2 rounded-lg border border-line bg-surface px-2.5 text-sm text-muted hover:border-line-strong hover:text-ink max-md:w-9 max-md:justify-center max-md:px-0"
+        className="chip h-9 shrink-0 max-md:w-9 max-md:justify-center max-md:px-0"
       >
         <IconSearch className="text-base" />
         <span className="max-md:hidden">Search</span>
-        <kbd className="rounded border border-line bg-sunken px-1.5 font-mono text-[0.6875rem] leading-5 max-md:hidden">
-          /
-        </kbd>
+        <kbd className="rounded-md bg-sunken px-1.5 leading-5 max-md:hidden">/</kbd>
       </button>
 
       {/* A click on the dialog element itself is a click on the backdrop: the panel inside covers the rest. */}
@@ -69,14 +67,13 @@ export function SearchDialog() {
         onClick={(event) => {
           if (event.target === event.currentTarget) setOpen(false)
         }}
-        className="mx-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] max-w-none rounded-2xl border border-line-strong bg-surface p-0 text-ink shadow-2xl backdrop:bg-black/50"
+        className="mx-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] max-w-none rounded-pebble border-[1.5px] border-ink bg-bg p-0 text-ink backdrop:bg-black/45"
       >
-        <div className="p-2">
+        <div className="p-3">
           {/* Mounted only while open, so each opening starts with an empty, focused field. */}
           {open && <SearchBox variant="dialog" onNavigate={() => setOpen(false)} />}
-          <p className="px-2 pt-2 pb-1 text-xs text-muted">
-            <kbd className="font-mono">↑</kbd> <kbd className="font-mono">↓</kbd> to move,{' '}
-            <kbd className="font-mono">Enter</kbd> to open, <kbd className="font-mono">Esc</kbd> to close
+          <p className="px-2 pt-2.5 pb-0.5 text-sm text-muted">
+            <kbd>↑</kbd> <kbd>↓</kbd> to move, <kbd>Enter</kbd> to open, <kbd>Esc</kbd> to close
           </p>
         </div>
       </dialog>

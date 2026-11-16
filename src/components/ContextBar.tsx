@@ -2,7 +2,7 @@ import { useId } from 'react'
 import { HOSTING, TEAM_SIZES, type HostingPreference, type TeamSize } from '../lib/scoring.ts'
 import { setPrefs, usePrefs } from '../lib/storage.ts'
 
-function Segmented<T extends string>({
+function Choice<T extends string>({
   legend,
   value,
   options,
@@ -17,13 +17,9 @@ function Segmented<T extends string>({
   return (
     <fieldset className="min-w-0">
       <legend className="eyebrow mb-1.5">{legend}</legend>
-      <div className="inline-flex max-w-full rounded-lg border border-line bg-sunken p-0.5">
+      <div className="flex flex-wrap gap-1.5">
         {options.map((option) => (
-          <label
-            key={option.value}
-            title={option.hint}
-            className="cursor-pointer rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap text-muted transition-colors hover:text-ink has-checked:bg-surface has-checked:text-ink has-checked:shadow-sm has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent"
-          >
+          <label key={option.value} title={option.hint} className="chip">
             <input
               type="radio"
               name={name}
@@ -48,14 +44,14 @@ function Segmented<T extends string>({
 export function ContextBar() {
   const { teamSize, hosting } = usePrefs()
   return (
-    <div className="card flex flex-wrap items-end gap-x-8 gap-y-4 px-4 py-3.5 sm:px-5">
-      <Segmented<TeamSize>
+    <div className="flex flex-wrap items-end gap-x-10 gap-y-4 rounded-pebble bg-sunken px-5 py-4 sm:px-7">
+      <Choice<TeamSize>
         legend="Who is moving?"
         value={teamSize}
         onChange={(value) => setPrefs({ teamSize: value })}
         options={(Object.keys(TEAM_SIZES) as TeamSize[]).map((key) => ({ value: key, ...TEAM_SIZES[key] }))}
       />
-      <Segmented<HostingPreference>
+      <Choice<HostingPreference>
         legend="Who runs the servers?"
         value={hosting}
         onChange={(value) => setPrefs({ hosting: value })}
@@ -64,8 +60,8 @@ export function ContextBar() {
           ...HOSTING[key],
         }))}
       />
-      <p className="min-w-[14rem] flex-1 text-sm text-muted">
-        Scores and time estimates below follow these two answers. They are remembered on this device.
+      <p className="min-w-[14rem] flex-1 text-muted">
+        Grades and time estimates follow these two answers. They are remembered on this device.
       </p>
     </div>
   )

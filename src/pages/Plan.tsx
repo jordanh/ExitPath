@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { categories, guidesForTool, suites, tools } from '../catalog/index.ts'
 import { ConfirmButton } from '../components/ConfirmButton.tsx'
 import { ContextBar } from '../components/ContextBar.tsx'
-import { IconArrowRight, IconCheck, IconX } from '../components/icons.tsx'
+import { IconArrowRight, IconCheck, IconX, RouteLine } from '../components/icons.tsx'
 import { EmptyState, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { planTotals, resolvePlan, type PlanItem } from '../lib/plan.ts'
 import { formatEffort } from '../lib/scoring.ts'
@@ -18,8 +18,7 @@ import {
 } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 
-const chip =
-  'inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-medium whitespace-nowrap transition-colors border-line bg-surface text-muted hover:border-line-strong hover:text-ink aria-pressed:border-accent aria-pressed:bg-accent-soft aria-pressed:text-accent'
+const chip = 'chip'
 
 function ToolPicker({ plan }: { plan: Plan }) {
   return (
@@ -32,7 +31,7 @@ function ToolPicker({ plan }: { plan: Plan }) {
             key={category.id}
             role="group"
             aria-label={category.name}
-            className="grid gap-x-6 gap-y-2 px-4 py-3 sm:grid-cols-[11rem_minmax(0,1fr)] sm:px-5"
+            className="grid gap-x-6 gap-y-2 px-5 py-3 sm:grid-cols-[12rem_minmax(0,1fr)] sm:px-7"
           >
             <p className="eyebrow pt-1.5">{category.name}</p>
             <div className="flex flex-wrap gap-2">
@@ -66,33 +65,42 @@ function Move({ item, position }: { item: PlanItem; position: number }) {
   const easiest = options[0]!
 
   return (
-    <li className="card p-4 sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+    <li className="relative pb-12 pl-10 last:pb-2 sm:pl-12">
+      {/* The move's number sits on the trail line as a waypoint. */}
+      <span
+        aria-hidden="true"
+        className="figures absolute top-0 left-[-1.5px] flex size-9 -translate-x-1/2 items-center justify-center rounded-full border-2 border-ink bg-bg font-display text-lg leading-none font-black"
+      >
+        {position}
+      </span>
+      <div className="flex flex-wrap items-start justify-between gap-x-8 gap-y-3">
         <div className="min-w-0 flex-1 basis-64">
-          <p className="eyebrow flex items-center gap-1.5">
-            <span className="text-faint">{String(position).padStart(2, '0')}</span>
+          <p className="eyebrow flex flex-wrap items-center gap-x-2.5">
             {tool.name}
-            <IconArrowRight className="text-sm text-accent" />
+            <RouteLine grade={chosen.result.band.level} className="text-accent" />
           </p>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h3 className="text-xl font-bold">
-              <Link to={`/alternatives/${chosen.alternative.id}`} className="hover:text-accent">
+          <div className="mt-0.5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h3 className="text-[1.8rem] leading-tight font-black">
+              <Link
+                to={`/alternatives/${chosen.alternative.id}`}
+                className="decoration-accent decoration-2 underline-offset-4 hover:underline hover:decoration-wavy"
+              >
                 {chosen.alternative.name}
               </Link>
             </h3>
             <OpennessBadge openness={chosen.alternative.openness} />
           </div>
-          <p className="mt-1 text-sm text-muted">{chosen.path.verdict}</p>
+          <p className="mt-1 max-w-2xl text-muted">{chosen.path.verdict}</p>
         </div>
-        <div className="flex shrink-0 flex-col items-start gap-1.5 sm:items-end">
+        <div className="flex shrink-0 flex-col items-start gap-1 sm:items-end">
           <ScoreBadge score={chosen.result.score} band={chosen.result.band} />
-          <p className="text-sm text-muted">
-            <span className="font-semibold text-ink">{formatEffort(chosen.result.hours)}</span> of work
+          <p className="text-muted">
+            <span className="font-bold text-ink">{formatEffort(chosen.result.hours)}</span> of work
           </p>
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-t border-line pt-4">
+      <div className="mt-4 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="w-full min-w-0 sm:w-auto">
           <label htmlFor={selectId} className="eyebrow mb-1 block">
             Where to
@@ -101,7 +109,7 @@ function Move({ item, position }: { item: PlanItem; position: number }) {
             id={selectId}
             value={auto ? '' : chosen.alternative.id}
             onChange={(event) => setPlanChoice(tool.id, event.target.value || null)}
-            className="h-9 w-full max-w-full cursor-pointer rounded-lg border border-line-strong bg-surface px-2.5 text-sm font-medium text-ellipsis focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15 sm:w-auto"
+            className="field h-10 w-full max-w-full cursor-pointer px-3 font-medium text-ellipsis sm:w-auto"
           >
             <option value="">Easiest for my situation ({easiest.alternative.name})</option>
             {options.map(({ alternative, result }) => (
@@ -111,23 +119,23 @@ function Move({ item, position }: { item: PlanItem; position: number }) {
             ))}
           </select>
         </div>
-        <p className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
+        <p className="flex flex-wrap items-center gap-x-6 gap-y-1">
           {guide && (
             <Link
               to={`/guides/${guide.id}`}
               className="link inline-flex items-center gap-1 whitespace-nowrap"
             >
-              Checklist <IconArrowRight />
+              Checklist <IconArrowRight className="text-accent" />
             </Link>
           )}
           <Link to={`/tools/${tool.id}`} className="link inline-flex items-center gap-1 whitespace-nowrap">
-            Details and comparison <IconArrowRight />
+            Details and comparison <IconArrowRight className="text-accent" />
           </Link>
           <button
             type="button"
             onClick={() => removeFromPlan(tool.id)}
             aria-label={`Remove ${tool.name} from the plan`}
-            className="inline-flex cursor-pointer items-center gap-1 font-medium whitespace-nowrap text-muted hover:text-level-5"
+            className="inline-flex cursor-pointer items-center gap-1 font-medium whitespace-nowrap text-muted hover:text-danger"
           >
             <IconX /> Remove
           </button>
@@ -155,10 +163,10 @@ export function PlanPage() {
     <Page>
       <header className="max-w-3xl">
         <p className="eyebrow">Your plan</p>
-        <h1 className="mt-2 text-3xl leading-tight font-extrabold tracking-tight sm:text-5xl">
+        <h1 className="mt-1 text-[2.6rem] leading-[1.02] font-black tracking-tight sm:text-[4rem]">
           Everything you want to leave, in one plan
         </h1>
-        <p className="mt-4 text-lg text-muted">
+        <p className="mt-4 text-xl text-muted">
           Tick what you use today. You get a path for each one, the total work involved, and an order to do it
           in. It is saved on this device and nowhere else.
         </p>
@@ -206,44 +214,48 @@ export function PlanPage() {
           <>
             <ContextBar />
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-3">
-              <div className="card p-4 sm:p-5">
-                <p className="eyebrow">Total hands-on work</p>
-                <p className="mt-1 text-2xl font-bold">{formatEffort(totals.hours)}</p>
-                <p className="mt-1 text-sm text-muted">
+            <dl className="mt-5 grid gap-x-10 gap-y-6 sm:grid-cols-3">
+              <div>
+                <dt className="eyebrow">Total hands-on work</dt>
+                <dd className="mt-0.5 font-display text-[2.1rem] leading-tight font-black">
+                  {formatEffort(totals.hours)}
+                </dd>
+                <dd className="mt-1 text-muted">
                   Spread over weeks, not done in one go. Shared destinations are only set up once.
-                </p>
+                </dd>
               </div>
-              <div className="card p-4 sm:p-5">
-                <p className="eyebrow">Where you end up</p>
-                <p className="mt-1 text-2xl font-bold">
+              <div>
+                <dt className="eyebrow">Where you end up</dt>
+                <dd className="mt-0.5 font-display text-[2.1rem] leading-tight font-black">
                   {totals.destinations} {totals.destinations === 1 ? 'tool' : 'tools'}
-                </p>
-                <p className="mt-1 text-sm text-muted">
+                </dd>
+                <dd className="mt-1 text-muted">
                   {totals.servers === 0
                     ? 'None of them needs a server that you run.'
                     : `${totals.servers} of them ${totals.servers === 1 ? 'is a server' : 'are servers'} you run and keep updated.`}
-                </p>
+                </dd>
               </div>
               {totals.hardest && (
-                <div className="card p-4 sm:p-5">
-                  <p className="eyebrow">The hardest move</p>
-                  <p className="mt-1 text-2xl font-bold">{totals.hardest.tool.name}</p>
-                  <p className="mt-1 text-sm text-muted">
+                <div>
+                  <dt className="eyebrow">The hardest move</dt>
+                  <dd className="mt-0.5 font-display text-[2.1rem] leading-tight font-black">
+                    {totals.hardest.tool.name}
+                  </dd>
+                  <dd className="mt-1 text-muted">
                     {totals.hardest.chosen.result.score} out of 100 on its way to{' '}
                     {totals.hardest.chosen.alternative.name}. Leave it until last.
-                  </p>
+                  </dd>
                 </div>
               )}
-            </div>
+            </dl>
 
-            <ol className="mt-4 space-y-4">
+            <ol className="mt-10 ml-[1.1rem] border-l-[3px] border-dotted border-line-strong">
               {items.map((item, index) => (
                 <Move key={item.tool.id} item={item} position={index + 1} />
               ))}
             </ol>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-muted">
               <p>
                 Saved in this browser only.{' '}
                 <Link to="/guides" className="link">
@@ -251,7 +263,7 @@ export function PlanPage() {
                 </Link>
               </p>
               <ConfirmButton
-                className="cursor-pointer text-sm font-semibold text-level-5 hover:underline"
+                className="cursor-pointer font-bold text-danger hover:underline"
                 label="Clear my plan"
                 question="Remove every move from your plan?"
                 confirmLabel="Yes, clear"

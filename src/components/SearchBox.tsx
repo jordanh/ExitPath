@@ -10,13 +10,6 @@ const KIND_LABEL: Record<ResultKind, string> = {
   guide: 'Guide',
 }
 
-const KIND_STYLE: Record<ResultKind, string> = {
-  tool: 'bg-sunken text-muted border-line',
-  suite: 'bg-sunken text-muted border-line',
-  alternative: 'bg-accent-soft text-accent border-accent/25',
-  guide: 'bg-level-3/10 text-level-3 border-level-3/30',
-}
-
 /**
  * Catalog search with a keyboard-navigable result list (ARIA combobox pattern).
  *
@@ -97,7 +90,7 @@ export function SearchBox({
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
         onKeyDown={onKeyDown}
-        className={`w-full rounded-xl border border-line-strong bg-surface pr-4 pl-12 text-base placeholder:text-faint focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/15 [&::-webkit-search-cancel-button]:hidden ${inDialog ? 'h-12' : 'h-14 shadow-sm sm:text-lg'}`}
+        className={`field w-full pr-4 pl-12 text-lg [&::-webkit-search-cancel-button]:hidden ${inDialog ? 'h-12' : 'h-[3.6rem] sm:text-xl'}`}
       />
 
       {/* Kept in the DOM while closed so that aria-controls always points at something. */}
@@ -109,7 +102,7 @@ export function SearchBox({
         className={
           inDialog
             ? 'mt-2 max-h-[min(24rem,55vh)] overflow-auto'
-            : 'absolute inset-x-0 top-full z-20 mt-2 max-h-[min(26rem,60vh)] overflow-auto rounded-xl border border-line-strong bg-surface p-1.5 shadow-xl'
+            : 'absolute inset-x-0 top-full z-20 mt-2 max-h-[min(26rem,60vh)] overflow-auto rounded-stone border-[1.5px] border-ink bg-surface p-1.5'
         }
       >
         {results.map((result, index) => {
@@ -127,16 +120,14 @@ export function SearchBox({
                 go(result.href)
               }}
               onMouseEnter={() => setActive(index)}
-              className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 ${selected ? 'bg-sunken' : ''}`}
+              className={`flex cursor-pointer items-center gap-3 rounded-stone px-3 py-2 ${selected ? 'bg-sunken' : ''}`}
             >
-              <span
-                className={`w-[5.5rem] shrink-0 rounded-full border px-2 py-0.5 text-center text-[0.6875rem] font-semibold ${KIND_STYLE[result.kind]}`}
-              >
-                {KIND_LABEL[result.kind]}
-              </span>
+              <span className="eyebrow w-[5.2rem] shrink-0">{KIND_LABEL[result.kind]}</span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold">{result.title}</span>
-                <span className="block truncate text-sm text-muted">{result.subtitle}</span>
+                <span className="block truncate font-display text-lg leading-tight font-bold">
+                  {result.title}
+                </span>
+                <span className="block truncate text-muted">{result.subtitle}</span>
               </span>
               <IconArrowRight className={`shrink-0 text-accent ${selected ? '' : 'invisible'}`} />
             </div>
@@ -148,7 +139,7 @@ export function SearchBox({
             aria-selected="false"
             aria-disabled="true"
             tabIndex={-1}
-            className="px-3 py-4 text-sm text-muted"
+            className="px-3 py-4 text-muted"
           >
             Nothing in the catalog matches “{query.trim()}” yet. The catalog is a folder of JSON files, and
             additions are welcome.

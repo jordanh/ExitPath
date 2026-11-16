@@ -7,7 +7,9 @@ they depend on: Microsoft 365, Google Workspace, Slack, Notion, GitHub and other
 software suite. It is a map of the projects that already exist, with the distances marked honestly: what
 moves across, what does not, how hard the switch is, and the order to do it in.
 
-![The Slack page, showing Mattermost as the easiest path with its difficulty score, effort estimate, and what does and does not transfer](docs/screenshot.png)
+![The ExitPath home page: the headline "Find your way out" beside a contour map with a route marked across it](docs/screenshot.png)
+
+![The Slack page, showing Mattermost as the easiest path with its grade, effort estimate and ratings](docs/screenshot-paths.png)
 
 ## What it does
 
@@ -34,7 +36,7 @@ analytics, no accounts, no web fonts, no API. Your situation, plan and checklist
 browser's local storage and can be exported to a JSON file, imported on another device, or erased.
 
 On Vercel that promise is enforced rather than merely kept: [`vercel.json`](vercel.json) sends a content
-security policy with `connect-src 'none'` and no inline scripts or styles, so the page could not phone home
+security policy with `connect-src 'none'`, fonts from its own origin only, and no inline scripts or styles, so the page could not phone home
 even if a dependency tried to. If you host it elsewhere, send the same headers.
 
 ## Run it
@@ -127,6 +129,25 @@ src/
 
 Built with React, TypeScript, Vite and Tailwind CSS. Runtime dependencies are React and React Router;
 nothing else ships to the browser.
+
+## The look
+
+ExitPath is drawn as a trail guide rather than a dashboard: map paper, contour lines, one colour for
+routes, and difficulty graded the way trails are.
+
+- **Grades have shapes.** Easy is a green circle, moderate a blue square, demanding a gold triangle, hard
+  a red diamond and very hard a black double diamond. The shape and the word carry the grade, so nothing
+  depends on telling colours apart. The four hues were checked for contrast and colour-blind separation
+  on every background, in both themes.
+- **Ratings are legends.** Every 1–5 rating is five dots and a word, with the word in ink.
+- **Checklists are trails.** Steps are waypoints on a dotted line; progress is the stretch already walked.
+- **Shapes are cut by hand.** Corners are deliberately uneven, and the contour lines are generated from a
+  seed in [`src/lib/contours.ts`](src/lib/contours.ts), so they are the same on every visit.
+- **Typefaces are self-hosted.** Vollkorn for headings, Alegreya Sans for text and its small caps for
+  labels, all under the SIL Open Font License and bundled from npm at build time. No font service is
+  contacted.
+
+Colours are CSS variables in [`src/index.css`](src/index.css) with light, dark and print values.
 
 ## Not built yet
 

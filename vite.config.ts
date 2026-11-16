@@ -46,6 +46,9 @@ export default defineConfig({
     // The catalog is bundled on purpose (the app makes no data requests), so
     // the single chunk is larger than Vite's default warning threshold.
     chunkSizeWarningLimit: 800,
+    // Fonts and images are always emitted as files, never inlined as data: URLs,
+    // so the content security policy can allow 'self' and nothing else.
+    assetsInlineLimit: 0,
   },
   test: {
     environment: 'jsdom',
