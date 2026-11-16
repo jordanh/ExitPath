@@ -149,7 +149,7 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
     <div
       // `relative` makes this the containing block for the visually-hidden labels inside,
       // so they clip with the table instead of widening the page.
-      className="card relative overflow-x-auto"
+      className="relative overflow-x-auto"
       role="region"
       aria-label="Side-by-side comparison"
       // Focusable so that keyboard users can scroll the table sideways.
@@ -161,7 +161,7 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
           <tr>
             <th
               scope="col"
-              className="sticky left-0 z-10 w-40 min-w-40 bg-surface px-4 py-3 align-bottom sm:w-52 sm:min-w-52"
+              className="sticky left-0 z-10 w-36 min-w-36 bg-bg py-3 pr-4 align-bottom sm:w-48 sm:min-w-48"
             >
               <span className="sr-only">What is compared</span>
             </th>
@@ -169,7 +169,7 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
               <th key={alternative.id} scope="col" className="w-56 min-w-52 px-4 py-3 align-bottom">
                 <Link
                   to={`/alternatives/${alternative.id}`}
-                  className="font-display text-[1.35rem] leading-tight font-extrabold decoration-accent decoration-[1.5px] underline-offset-4 hover:underline hover:decoration-wavy"
+                  className="font-display text-[1.25rem] leading-tight font-extrabold decoration-accent decoration-[1.5px] underline-offset-4 hover:underline"
                 >
                   {alternative.name}
                 </Link>
@@ -183,17 +183,14 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
               <th
                 scope="colgroup"
                 colSpan={paths.length + 1}
-                className="eyebrow border-y border-line bg-sunken px-4 py-2 text-left"
+                className="eyebrow border-b border-line-strong pt-6 pb-1.5 text-left"
               >
-                <span className="sticky left-4">{group.title}</span>
+                <span className="sticky left-0">{group.title}</span>
               </th>
             </tr>
             {group.rows.map((row) => (
               <tr key={row.label} className="border-b border-line last:border-b-0">
-                <th
-                  scope="row"
-                  className="sticky left-0 z-10 bg-surface px-4 py-3 align-top text-sm font-medium"
-                >
+                <th scope="row" className="sticky left-0 z-10 bg-bg py-3 pr-4 align-top text-sm font-medium">
                   {row.label}
                   {row.hint && (
                     <span className="mt-0.5 block text-xs font-normal text-muted">{row.hint}</span>

@@ -7,9 +7,9 @@ they depend on: Microsoft 365, Google Workspace, Slack, Notion, GitHub and other
 software suite. It is a map of the projects that already exist, with the distances marked honestly: what
 moves across, what does not, how hard the switch is, and the order to do it in.
 
-![The ExitPath home page: the headline "Find your way out" beside a contour map with a route marked across it](docs/screenshot.png)
+![The ExitPath home page: the headline "Find your way out", a search field, and an index of tools with the grade of the easiest way out of each](docs/screenshot.png)
 
-![The Slack page, showing Mattermost as the easiest path with its grade, effort estimate and ratings](docs/screenshot-paths.png)
+![The Slack page: three ways out, each with its grade, effort estimate, verdict and ratings](docs/screenshot-paths.png)
 
 ## What it does
 
@@ -22,9 +22,15 @@ moves across, what does not, how hard the switch is, and the order to do it in.
   every path, adjusted for how many people are moving and whether you self-host. The arithmetic is simple
   and shown in full on the "How it works" page.
 - **Your plan.** Tick everything you use and get one combined exit plan: a path for each tool, the total
-  hands-on work (counting a shared destination only once) and an order to do it in, easiest first.
+  hands-on work (counting a shared destination only once) and an order to do it in, easiest first. Tick
+  moves off as you finish them, and see how many weeks the rest takes at the hours you can give.
+- **Take it with you.** Copy a plan or a checklist as a Markdown task list for an issue tracker or a wiki,
+  print either, or share a plan as a link. The link carries the plan in its address; nothing is uploaded.
 - **Guided checklists.** Step-by-step plans for leaving Microsoft 365, Google Workspace, Slack and Notion,
   with progress and notes saved as you go, and a print layout for paper.
+- **Options that change the answers.** Say who is moving, who runs the servers, how many hours a week you
+  have and whether only fully open-source projects will do, and every grade, estimate and suggestion
+  follows. Paths can be ordered by ease, fit or maturity. Colours and text size are there too.
 - **Search from anywhere.** Press `/` or Ctrl+K on any page; it forgives a typo.
 - **Links that matter.** Official docs, Docker Compose files, installers and one-click deploys for
   self-hosting, plus managed hosting options where they exist.
@@ -32,8 +38,9 @@ moves across, what does not, how hard the switch is, and the order to do it in.
 ## Local-first
 
 The whole catalog is bundled with the app. After the page loads it makes no network requests: no
-analytics, no accounts, no web fonts, no API. Your situation, plan and checklist progress live in your
-browser's local storage and can be exported to a JSON file, imported on another device, or erased.
+analytics, no accounts, no web fonts, no API. Your options, plan and checklist progress live in your
+browser's local storage and can be exported to a JSON file, imported on another device, or erased, all
+from the options dialog.
 
 On Vercel that promise is enforced rather than merely kept: [`vercel.json`](vercel.json) sends a content
 security policy with `connect-src 'none'`, fonts from its own origin only, and no inline scripts or styles, so the page could not phone home
@@ -122,7 +129,7 @@ catalog/            the data (JSON)
 scripts/            catalog validation CLI
 src/
   catalog/          schema, validator and loader
-  lib/              scoring, search, local storage
+  lib/              scoring, search, plans, sharing, local storage
   components/       shared UI
   pages/            one file per route
 ```
@@ -132,17 +139,20 @@ nothing else ships to the browser.
 
 ## The look
 
-ExitPath is drawn as a trail guide rather than a dashboard: map paper, contour lines, one colour for
-routes, and difficulty graded the way trails are.
+ExitPath reads like a pocket trail guide rather than a dashboard: map paper, one colour for routes,
+difficulty graded the way trails are, and little else. There are no cards or panels; structure comes from
+type, white space and hairlines, and detail stays folded away until you ask for it.
 
 - **Grades have shapes.** Easy is a green circle, moderate a blue square, demanding a gold triangle, hard
   a red diamond and very hard a black double diamond. The shape and the word carry the grade, so nothing
   depends on telling colours apart. The four hues were checked for contrast and colour-blind separation
   on every background, in both themes.
 - **Ratings are legends.** Every 1–5 rating is five dots and a word, with the word in ink.
+- **Lists are indexes.** A name, a row of dots, and what you will find there, as in the back of a
+  guidebook.
 - **Checklists are trails.** Steps are waypoints on a dotted line; progress is the stretch already walked.
-- **Shapes are cut by hand.** Corners are deliberately uneven, and the contour lines are generated from a
-  seed in [`src/lib/contours.ts`](src/lib/contours.ts), so they are the same on every visit.
+- **One drawing.** The contour lines on the home page are generated from a seed in
+  [`src/lib/contours.ts`](src/lib/contours.ts), so they are the same on every visit.
 - **Typefaces are self-hosted.** Vollkorn for headings, Alegreya Sans for text and its small caps for
   labels, all under the SIL Open Font License and bundled from npm at build time. No font service is
   contacted.

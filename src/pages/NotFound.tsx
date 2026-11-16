@@ -6,8 +6,7 @@ export function NotFound({ what = 'page' }: { what?: string }) {
   useTitle('Not found')
   return (
     <Page narrow>
-      <p className="eyebrow">Dead end</p>
-      <h1 className="mt-1 text-[2.4rem] leading-[1.05] font-black tracking-tight">
+      <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
         This {what} is not in the catalog.
       </h1>
       <p className="mt-3 text-muted">

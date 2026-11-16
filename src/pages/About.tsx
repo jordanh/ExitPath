@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { alternatives, getAlternative, getTool, lastReviewed, tools, totalPaths } from '../catalog/index.ts'
-import { ContextBar } from '../components/ContextBar.tsx'
-import { DataControls } from '../components/DataControls.tsx'
+import { SituationLine } from '../components/Situation.tsx'
 import { ExternalLink, Meter, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { OPENNESS_LABELS, SCALES, type ScaleId } from '../lib/scales.ts'
 import {
@@ -14,6 +13,7 @@ import {
   scorePath,
   type TeamSize,
 } from '../lib/scoring.ts'
+import { openOptions } from '../lib/options-dialog.ts'
 import { REPO_URL } from '../lib/site.ts'
 import { usePrefs } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
@@ -51,9 +51,9 @@ function WorkedExample() {
   )
 
   return (
-    <div className="card overflow-hidden">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-sunken px-5 py-3.5 sm:px-7">
-        <p className="font-semibold">
+    <div>
+      <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-line-strong pb-2">
+        <p className="font-bold">
           Worked example: {tool.name} to {alternative.name}
         </p>
         <ScoreBadge score={result.score} band={result.band} size="sm" />
@@ -62,7 +62,7 @@ function WorkedExample() {
         <table className="w-full min-w-[34rem] text-left text-sm">
           <thead>
             <tr className="border-b border-line">
-              <th scope="col" className="eyebrow px-4 py-2 sm:px-5">
+              <th scope="col" className="eyebrow py-2 pr-4">
                 Factor
               </th>
               <th scope="col" className="eyebrow px-4 py-2">
@@ -74,22 +74,22 @@ function WorkedExample() {
               <th scope="col" className="eyebrow px-4 py-2 text-right">
                 Weight
               </th>
-              <th scope="col" className="eyebrow px-4 py-2 text-right sm:px-5">
+              <th scope="col" className="eyebrow py-2 pl-4 text-right">
                 Adds
               </th>
             </tr>
           </thead>
-          <tbody className="figures ">
+          <tbody className="figures">
             {result.factors.map((factor) => (
               <tr key={factor.key} className="border-b border-line">
-                <th scope="row" className="px-4 py-2 font-sans font-medium sm:px-5">
+                <th scope="row" className="py-2 pr-4 font-sans font-medium">
                   {factor.label}
                   <span className="block text-xs font-normal text-muted">{factor.explanation}</span>
                 </th>
                 <td className="px-4 py-2">{factor.level} / 5</td>
                 <td className="px-4 py-2 text-right">{normalised(factor.level).toFixed(2)}</td>
                 <td className="px-4 py-2 text-right">{percent(factor.weight)}</td>
-                <td className="px-4 py-2 text-right sm:px-5">
+                <td className="py-2 pl-4 text-right">
                   {(factor.weight * normalised(factor.level)).toFixed(3)}
                 </td>
               </tr>
@@ -97,7 +97,7 @@ function WorkedExample() {
           </tbody>
         </table>
       </div>
-      <p className="px-4 py-3 figures text-sm sm:px-5">
+      <p className="figures py-3 text-sm">
         100 × ({percent(1 - HARDEST_FACTOR_SHARE)} × {average.toFixed(3)} + {percent(HARDEST_FACTOR_SHARE)} ×{' '}
         {hardest.toFixed(2)}) = <strong>{result.score}</strong>
         <span className="font-sans text-muted">
@@ -113,8 +113,7 @@ export function About() {
   useTitle('How it works')
   return (
     <Page narrow>
-      <p className="eyebrow">How it works</p>
-      <h1 className="mt-1 text-[2.4rem] leading-[1.05] font-black tracking-tight sm:text-[3.4rem]">
+      <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
         A map of the exits, with the distances marked honestly
       </h1>
       <p className="mt-4 text-xl text-muted">
@@ -127,17 +126,17 @@ export function About() {
         {totalPaths} migration paths between them{lastReviewed ? `, last reviewed in ${lastReviewed}` : ''}.
       </p>
 
-      <Section eyebrow="The score" title="How migration difficulty is calculated">
+      <Section title="How migration difficulty is calculated">
         <div className="space-y-4">
           <p>
             Every path gets a score from 0 to 100. It is built from five ratings on a 1–5 scale, each written
             down by a person in the catalog. Four describe the migration itself and one describes you.
           </p>
-          <dl className="card divide-y divide-line">
+          <dl className="divide-y divide-line border-y border-line">
             {(Object.keys(WEIGHTS) as (keyof typeof WEIGHTS)[]).map((key) => (
-              <div key={key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 px-5 py-3.5 sm:px-7">
+              <div key={key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 py-3">
                 <dt className="font-semibold">{FACTOR_SOURCES[key].name}</dt>
-                <dd className="row-span-2 self-center figures text-lg font-bold ">{percent(WEIGHTS[key])}</dd>
+                <dd className="figures row-span-2 self-center text-lg font-bold">{percent(WEIGHTS[key])}</dd>
                 <dd className="text-sm text-muted">{FACTOR_SOURCES[key].source}</dd>
               </div>
             ))}
@@ -149,7 +148,7 @@ export function About() {
             you have to keep alive. Team size is left out of the “hardest” part so that head-count alone never
             dominates.
           </p>
-          <ContextBar />
+          <SituationLine />
           <WorkedExample />
           <ul className="flex flex-wrap gap-2">
             {BANDS.map((band, index) => (
@@ -164,20 +163,20 @@ export function About() {
         </div>
       </Section>
 
-      <Section eyebrow="The estimate" title="How effort is estimated">
+      <Section title="How effort is estimated">
         <div className="space-y-4">
           <p>
             Each path records how many hours one person needs to move their data and settle in. That figure is
             multiplied by team size, and server setup time is added once.
           </p>
-          <dl className="card divide-y divide-line">
+          <dl className="divide-y divide-line border-y border-line">
             {(Object.keys(TEAM_SIZES) as TeamSize[]).map((key) => (
-              <div key={key} className="flex items-baseline justify-between gap-4 px-5 py-3.5 sm:px-7">
+              <div key={key} className="flex items-baseline justify-between gap-4 py-3">
                 <dt>
                   <span className="font-semibold">{TEAM_SIZES[key].label}</span>{' '}
                   <span className="text-sm text-muted">({TEAM_SIZES[key].hint})</span>
                 </dt>
-                <dd className="figures font-bold ">× {TEAM_SIZES[key].multiplier}</dd>
+                <dd className="figures font-bold">× {TEAM_SIZES[key].multiplier}</dd>
               </div>
             ))}
           </dl>
@@ -190,11 +189,11 @@ export function About() {
         </div>
       </Section>
 
-      <Section eyebrow="The ratings" title="What the 1–5 scales mean">
+      <Section title="What the 1–5 scales mean">
         <dl className="space-y-4">
           {(Object.keys(SCALES) as ScaleId[]).map((id) => (
-            <div key={id} className="card p-5 sm:p-7">
-              <dt className="text-[1.4rem] leading-tight font-extrabold">{SCALES[id].title}</dt>
+            <div key={id} className="border-t border-line pt-4 first:border-t-0 first:pt-0">
+              <dt className="text-[1.25rem] leading-tight font-extrabold">{SCALES[id].title}</dt>
               <dd>
                 <p className="mt-1 text-sm text-muted">{SCALES[id].meaning}</p>
                 <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
@@ -211,13 +210,12 @@ export function About() {
       </Section>
 
       <Section
-        eyebrow="The labels"
         title="Open source, open core, source-available"
         intro="These are not the same thing, and the difference tends to matter a few years in."
       >
-        <dl className="card divide-y divide-line">
+        <dl className="divide-y divide-line border-y border-line">
           {(Object.keys(OPENNESS_LABELS) as Openness[]).map((id) => (
-            <div key={id} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-3.5 sm:px-7">
+            <div key={id} className="flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3">
               <dt className="w-36 shrink-0">
                 <OpennessBadge openness={id} />
               </dt>
@@ -227,7 +225,7 @@ export function About() {
         </dl>
       </Section>
 
-      <Section eyebrow="The limits" title="What to keep in mind">
+      <Section title="What to keep in mind">
         <ul className="prose-list list-disc space-y-2 pl-5 marker:text-accent [&>li]:pl-1">
           <li>
             Ratings are informed opinions, not measurements. They are written by people, reviewed in public
@@ -249,7 +247,6 @@ export function About() {
       </Section>
 
       <Section
-        eyebrow="Contributing"
         title="Fix a rating, add an alternative"
         intro="The whole catalog is plain JSON in the repository, validated against a schema. No build tooling knowledge is needed to edit it."
       >
@@ -264,13 +261,17 @@ export function About() {
       </Section>
 
       <Section
-        eyebrow="Your data"
         title="Stored here, and only here"
-        intro="Three things are saved in this browser’s local storage: your answers to “Who is moving?” and “Who runs the servers?”, your plan, and your checklist progress and notes. There is no server to send them to."
+        intro="Your options, your plan and your checklist progress and notes are saved in this browser’s local storage. There is no server to send them to."
       >
-        <DataControls />
-        <p className="mt-4 text-sm text-muted">
-          Looking for the checklists?{' '}
+        <p>
+          You can export everything to a file, bring it back in on another device, or erase it.{' '}
+          <button type="button" onClick={openOptions} className="link cursor-pointer">
+            Open the options
+          </button>
+        </p>
+        <p className="mt-3 text-muted">
+          A link to a plan carries the plan itself in the address, so sharing one uploads nothing either.{' '}
           <Link to="/guides" className="link">
             Guided migrations
           </Link>

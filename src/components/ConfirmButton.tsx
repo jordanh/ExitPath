@@ -35,8 +35,13 @@ export function ConfirmButton({
     wasAsking.current = asking
   }, [asking])
 
+  // Escape answers "no". Stopped here so that, inside a dialog, it does not
+  // also close the dialog the question was asked in.
   const closeOnEscape = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') setAsking(false)
+    if (event.key !== 'Escape') return
+    event.preventDefault()
+    event.stopPropagation()
+    setAsking(false)
   }
 
   if (!asking) {
@@ -48,11 +53,7 @@ export function ConfirmButton({
   }
 
   return (
-    <span
-      role="group"
-      aria-label={question}
-      className="inline-flex flex-wrap items-center gap-2 rounded-stone border-[1.5px] border-dashed border-danger px-3 py-1.5"
-    >
+    <span role="group" aria-label={question} className="inline-flex flex-wrap items-center gap-2">
       <span className="font-medium">{question}</span>
       <button
         type="button"

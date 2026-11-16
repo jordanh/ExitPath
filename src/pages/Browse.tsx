@@ -1,15 +1,14 @@
 import { useSearchParams } from 'react-router-dom'
-import { alternatives, categories, tools } from '../catalog/index.ts'
-import type { Openness } from '../catalog/schema.ts'
-import { AlternativeCard, ToolCard } from '../components/cards.tsx'
-import { EmptyState, Page } from '../components/ui.tsx'
-import { OPENNESS_LABELS } from '../lib/scales.ts'
+import { alternatives, categories, getCategory, tools } from '../catalog/index.ts'
+import type { Alternative } from '../catalog/schema.ts'
+import { EmptyState, IndexRow, OpennessBadge, Page, ScoreBadge } from '../components/ui.tsx'
+import { nameList } from '../lib/names.ts'
+import { scoredPathsFrom } from '../lib/paths.ts'
 import { tokenize } from '../lib/search.ts'
+import { setPrefs, usePrefs, useSituation } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 
 type View = 'tools' | 'alternatives'
-
-const chip = 'chip'
 
 /** Every word of the filter must appear at the start of some word in the text. */
 function matches(filter: string[], ...texts: (string | undefined)[]) {
@@ -18,12 +17,21 @@ function matches(filter: string[], ...texts: (string | undefined)[]) {
   return filter.every((token) => words.some((word) => word.startsWith(token)))
 }
 
+/** Usable without running a server: nothing to host, or hosting is optional. */
+const worksWithoutServer = (alternative: Alternative) =>
+  alternative.selfHosting === null || alternative.selfHosting.optional === true
+
+const toggle = 'chip'
+
 export function Browse() {
   useTitle('Browse')
   const [params, setParams] = useSearchParams()
+  const situation = useSituation()
+  const { licences } = usePrefs()
   const view: View = params.get('view') === 'alternatives' ? 'alternatives' : 'tools'
   const category = params.get('category') ?? ''
-  const openness = params.get('openness') ?? ''
+  const noServer = params.get('noserver') === '1'
+  const hosted = params.get('hosted') === '1'
   const query = params.get('q') ?? ''
   const filter = tokenize(query)
 
@@ -44,45 +52,43 @@ export function Browse() {
   const shownAlternatives = alternatives.filter(
     (alternative) =>
       (!category || alternative.categories.includes(category)) &&
-      (!openness || alternative.openness === openness) &&
+      (!situation.openOnly || alternative.openness === 'open-source') &&
+      (!noServer || worksWithoutServer(alternative)) &&
+      (!hosted || alternative.managedHosting.length > 0) &&
       matches(filter, alternative.name, alternative.tagline),
   )
   const count = view === 'tools' ? shownTools.length : shownAlternatives.length
 
   return (
     <Page>
-      <h1 className="text-[2.4rem] leading-[1.05] font-black tracking-tight sm:text-[3.4rem]">
-        Browse the catalog
-      </h1>
-      <p className="mt-2 max-w-2xl text-muted">
-        Start from the proprietary tool you want to leave, or look through the open-source projects directly.
-      </p>
+      <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">Browse</h1>
 
-      <div className="mt-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-        {/* Two views of one list, not tabs with separate panels: plain toggle buttons. */}
-        <div
-          role="group"
-          aria-label="What to browse"
-          className="flex flex-wrap gap-x-7 gap-y-1 font-display text-[1.45rem] leading-tight font-extrabold"
-        >
-          {(
-            [
-              ['tools', `What you use (${tools.length})`],
-              ['alternatives', `Alternatives (${alternatives.length})`],
-            ] as const
-          ).map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              aria-pressed={view === id}
-              onClick={() => update({ view: id === 'tools' ? '' : id, openness: '' })}
-              className="cursor-pointer text-faint decoration-accent decoration-2 underline-offset-[7px] hover:text-ink aria-pressed:text-ink aria-pressed:underline aria-pressed:decoration-wavy"
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <label className="min-w-48 flex-1 sm:max-w-xs">
+      {/* Two views of one list, not tabs with separate panels: plain toggle buttons. */}
+      <div
+        role="group"
+        aria-label="What to browse"
+        className="mt-5 flex flex-wrap gap-x-7 gap-y-1 font-display text-[1.3rem] leading-tight font-bold"
+      >
+        {(
+          [
+            ['tools', `What you use (${tools.length})`],
+            ['alternatives', `Alternatives (${alternatives.length})`],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={view === id}
+            onClick={() => update({ view: id === 'tools' ? '' : id, noserver: '', hosted: '' })}
+            className="cursor-pointer text-faint decoration-accent decoration-2 underline-offset-[7px] hover:text-ink aria-pressed:text-ink aria-pressed:underline"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-5 flex flex-wrap gap-2">
+        <label className="min-w-40 flex-1 sm:max-w-xs">
           <span className="sr-only">Filter by name</span>
           <input
             type="search"
@@ -92,52 +98,56 @@ export function Browse() {
             className="field h-10 w-full px-3.5"
           />
         </label>
+        <label className="min-w-0">
+          <span className="sr-only">Category</span>
+          <select
+            value={category}
+            onChange={(event) => update({ category: event.target.value })}
+            className="field h-10 max-w-full cursor-pointer px-3 font-medium"
+          >
+            <option value="">All categories</option>
+            {categories.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+      <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="More filters">
         <button
           type="button"
-          className={chip}
-          aria-pressed={category === ''}
-          onClick={() => update({ category: '' })}
+          className={toggle}
+          aria-pressed={licences === 'open'}
+          title="Leave out open-core and source-available projects, here and on every other page"
+          onClick={() => setPrefs({ licences: licences === 'open' ? 'any' : 'open' })}
         >
-          All categories
+          Open source only
         </button>
-        {categories.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={chip}
-            aria-pressed={category === item.id}
-            onClick={() => update({ category: category === item.id ? '' : item.id })}
-          >
-            {item.name}
-          </button>
-        ))}
+        {view === 'alternatives' && (
+          <>
+            <button
+              type="button"
+              className={toggle}
+              aria-pressed={noServer}
+              onClick={() => update({ noserver: noServer ? '' : '1' })}
+            >
+              Works without a server
+            </button>
+            <button
+              type="button"
+              className={toggle}
+              aria-pressed={hosted}
+              onClick={() => update({ hosted: hosted ? '' : '1' })}
+            >
+              Has managed hosting
+            </button>
+          </>
+        )}
       </div>
 
-      {view === 'alternatives' && (
-        <div
-          className="mt-3 flex flex-wrap items-center gap-2"
-          role="group"
-          aria-label="Filter by licence type"
-        >
-          {(Object.keys(OPENNESS_LABELS) as Openness[]).map((id) => (
-            <button
-              key={id}
-              type="button"
-              className={chip}
-              aria-pressed={openness === id}
-              title={OPENNESS_LABELS[id].meaning}
-              onClick={() => update({ openness: openness === id ? '' : id })}
-            >
-              {OPENNESS_LABELS[id].label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      <p className="mt-6 mb-3 text-sm text-muted" role="status">
+      <p className="mt-7 text-muted" role="status">
         Showing {count}{' '}
         {view === 'tools' ? (count === 1 ? 'tool' : 'tools') : count === 1 ? 'alternative' : 'alternatives'}
       </p>
@@ -147,13 +157,42 @@ export function Browse() {
           Clear a filter, or add what is missing: the catalog is a folder of JSON files.
         </EmptyState>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-1 gap-x-14 md:columns-2">
           {view === 'tools'
-            ? shownTools.map((tool) => <ToolCard key={tool.id} tool={tool} />)
+            ? shownTools.map((tool) => {
+                const paths = scoredPathsFrom(tool, situation)
+                const easiest = paths[0]
+                return (
+                  <li key={tool.id} className="break-inside-avoid">
+                    <IndexRow
+                      to={`/tools/${tool.id}`}
+                      title={tool.name}
+                      end={
+                        easiest && (
+                          <ScoreBadge score={easiest.result.score} band={easiest.result.band} size="sm" />
+                        )
+                      }
+                      detail={<>to {nameList(paths.map(({ alternative }) => alternative.name))}</>}
+                    />
+                  </li>
+                )
+              })
             : shownAlternatives.map((alternative) => (
-                <AlternativeCard key={alternative.id} alternative={alternative} />
+                <li key={alternative.id} className="break-inside-avoid">
+                  <IndexRow
+                    to={`/alternatives/${alternative.id}`}
+                    title={alternative.name}
+                    end={<OpennessBadge openness={alternative.openness} />}
+                    detail={
+                      <>
+                        {alternative.categories.map((id) => getCategory(id)?.name).join(', ')}.{' '}
+                        {alternative.tagline}
+                      </>
+                    }
+                  />
+                </li>
               ))}
-        </div>
+        </ul>
       )}
     </Page>
   )

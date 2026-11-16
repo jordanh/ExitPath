@@ -2,9 +2,19 @@ import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
-import { alternatives, guides, suites, tools } from './catalog/index.ts'
+import { alternatives, getTool, guides, suites, tools } from './catalog/index.ts'
 import { stepIds } from './lib/guides.ts'
-import { PROGRESS_KEY, getPlan, getPrefs, setPlanChoice, setPlanChoices, setStepDone } from './lib/storage.ts'
+import {
+  PROGRESS_KEY,
+  getPlan,
+  getPlanDone,
+  getPrefs,
+  setMoveDone,
+  setPlanChoice,
+  setPlanChoices,
+  setPrefs,
+  setStepDone,
+} from './lib/storage.ts'
 import { routes } from './routes.tsx'
 
 function renderAt(path: string) {
@@ -22,8 +32,17 @@ describe('pages', () => {
     for (const tool of tools)
       expect(screen.getAllByRole('link', { name: new RegExp(tool.name) }).length).toBeGreaterThan(0)
     for (const suite of suites)
-      expect(screen.getByRole('link', { name: `Leaving ${suite.name}` })).toBeDefined()
-    for (const guide of guides) expect(screen.getAllByText(guide.title).length).toBeGreaterThan(0)
+      expect(
+        screen
+          .getAllByRole('link', { name: `Leaving ${suite.name}` })
+          .some((link) => link.getAttribute('href') === `/suites/${suite.id}`),
+      ).toBe(true)
+    for (const guide of guides)
+      expect(
+        screen
+          .getAllByRole('link', { name: guide.title })
+          .some((link) => link.getAttribute('href') === `/guides/${guide.id}`),
+      ).toBe(true)
   })
 
   it.each(tools.map((tool) => [tool.id, tool] as const))('tool page renders: %s', (_id, tool) => {
@@ -106,18 +125,76 @@ describe('interactions', () => {
     renderAt('/tools/onedrive')
     const nextcloud = () => screen.getByRole('article', { name: 'Nextcloud' })
     expect(within(nextcloud()).getByText(/to set up and secure the server/)).toBeDefined()
+    expect(screen.getByText(/Graded for/)).toHaveTextContent('Graded for just me, self-hosting.')
 
-    await user.click(screen.getByRole('radio', { name: /Managed/ }))
+    // The line under the heading opens the same options as the header button.
+    await user.click(screen.getByRole('button', { name: 'Change' }))
+    const options = screen.getByRole('dialog', { name: 'Options' })
+    await user.click(within(options).getByRole('radio', { name: /Managed/ }))
+    await user.click(within(options).getByRole('radio', { name: /Small team/ }))
     expect(within(nextcloud()).getByText(/Assumes a hosted Nextcloud/)).toBeDefined()
-    expect(getPrefs().hosting).toBe('managed')
+    expect(getPrefs()).toMatchObject({ hosting: 'managed', teamSize: 'small' })
+
+    await user.click(within(options).getByRole('button', { name: 'Close options' }))
+    expect(screen.queryByRole('radio')).toBeNull()
+    expect(screen.getByText(/Graded for/)).toHaveTextContent('Graded for small team, managed hosting.')
   })
 
-  it('says when managed hosting was asked for but does not exist', async () => {
-    const user = userEvent.setup()
+  it('says when managed hosting was asked for but does not exist', () => {
+    setPrefs({ hosting: 'managed' })
     renderAt('/tools/outlook-exchange')
-    await user.click(screen.getByRole('radio', { name: /Managed/ }))
     const stalwart = screen.getByRole('article', { name: 'Stalwart' })
     expect(within(stalwart).getByText(/No managed Stalwart hosting is listed/)).toBeDefined()
+  })
+
+  it('can leave out everything that is not fully open source', async () => {
+    const user = userEvent.setup()
+    const notion = getTool('notion')!
+    renderAt('/tools/notion')
+    expect(screen.getAllByRole('article')).toHaveLength(notion.paths.length)
+
+    await user.click(screen.getByRole('button', { name: 'Options' }))
+    await user.click(screen.getByRole('radio', { name: /Open source only/ }))
+    expect(getPrefs().licences).toBe('open')
+    const left = screen.getAllByRole('article')
+    expect(left.length).toBeLessThan(notion.paths.length)
+    for (const article of left) expect(within(article).getByText('Open source')).toBeDefined()
+    expect(screen.getByText(/Graded for/)).toHaveTextContent(
+      `open source only. ${notion.paths.length - left.length} paths are hidden by the licence setting.`,
+    )
+  })
+
+  it('orders the ways out by fit or maturity, and keeps the choice in the address', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/tools/slack')
+    const names = () =>
+      screen
+        .getAllByRole('article')
+        .map((article) => within(article).getByRole('heading', { level: 3 }).textContent)
+    expect(names()).toEqual(['Mattermost', 'Zulip', 'Element (Matrix)'])
+    // Whatever the order, the easiest one stays marked.
+    const easiest = () => screen.getByText('Easiest for you').closest('article')
+    expect(easiest()).toBe(screen.getByRole('article', { name: 'Mattermost' }))
+
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Order' }), 'Most mature first')
+    expect(names()[0]).toBe('Zulip')
+    expect(router.state.location.search).toBe('?sort=maturity')
+    expect(easiest()).toBe(screen.getByRole('article', { name: 'Mattermost' }))
+  })
+
+  it('applies the colours and text size chosen in the options', async () => {
+    const user = userEvent.setup()
+    renderAt('/')
+    await user.click(screen.getByRole('button', { name: 'Options' }))
+    await user.click(screen.getByRole('radio', { name: 'Dark' }))
+    await user.click(screen.getByRole('radio', { name: 'Large' }))
+    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(document.documentElement.dataset.text).toBe('large')
+
+    await user.click(screen.getByRole('radio', { name: 'Match my device' }))
+    await user.click(screen.getByRole('radio', { name: 'Normal' }))
+    expect(document.documentElement.dataset.theme).toBeUndefined()
+    expect(document.documentElement.dataset.text).toBeUndefined()
   })
 
   it('ticking a step updates progress and saves it', async () => {
@@ -172,21 +249,23 @@ describe('interactions', () => {
     cleanup()
 
     renderAt('/guides')
-    await user.click(screen.getByRole('button', { name: 'Export my data' }))
-    const exported = JSON.parse((screen.getByLabelText('Your data as text') as HTMLTextAreaElement).value)
+    await user.click(screen.getByRole('button', { name: 'open the options' }))
+    const options = within(screen.getByRole('dialog', { name: 'Options' }))
+    await user.click(options.getByRole('button', { name: 'Export my data' }))
+    const exported = JSON.parse((options.getByLabelText('Your data as text') as HTMLTextAreaElement).value)
     expect(exported.format).toBe('exitpath-export')
     expect(exported.progress[guide.id].done).toEqual([stepIds(guide)[0]])
 
-    await user.click(screen.getByRole('button', { name: 'Erase everything' }))
+    await user.click(options.getByRole('button', { name: 'Erase everything' }))
     expect(localStorage.getItem(PROGRESS_KEY)).not.toBeNull()
     await user.keyboard('{Escape}')
-    expect(screen.getByRole('button', { name: 'Erase everything' })).toHaveFocus()
+    expect(options.getByRole('button', { name: 'Erase everything' })).toHaveFocus()
 
-    await user.click(screen.getByRole('button', { name: 'Erase everything' }))
-    await user.click(screen.getByRole('button', { name: 'Yes, erase' }))
+    await user.click(options.getByRole('button', { name: 'Erase everything' }))
+    await user.click(options.getByRole('button', { name: 'Yes, erase' }))
     expect(localStorage.getItem(PROGRESS_KEY)).toBeNull()
-    expect(screen.getByRole('status')).toHaveTextContent(/has been erased/)
-    expect(screen.queryByLabelText('Your data as text')).toBeNull()
+    expect(options.getByRole('status')).toHaveTextContent(/has been erased/)
+    expect(options.queryByLabelText('Your data as text')).toBeNull()
   })
 
   it('builds a plan from the tools you tick', async () => {
@@ -196,7 +275,7 @@ describe('interactions', () => {
 
     await user.click(screen.getByRole('button', { name: 'Slack' }))
     await user.click(screen.getByRole('button', { name: 'Visual Studio Code' }))
-    expect(heading()).toHaveTextContent('Everything you want to leave')
+    expect(heading()).toHaveTextContent('Your plan')
     expect(screen.getByRole('heading', { name: '2 moves, easiest first' })).toBeDefined()
     expect(getPlan()).toEqual({ slack: null, vscode: null })
 
@@ -259,7 +338,7 @@ describe('interactions', () => {
     expect(screen.queryByRole('combobox')).toBeNull()
 
     await user.keyboard('/')
-    const input = screen.getByRole('combobox')
+    const input = screen.getByPlaceholderText(/What do you want to leave/)
     expect(input).toHaveFocus()
     await user.type(input, 'immich')
     await user.keyboard('{Enter}')
@@ -272,7 +351,7 @@ describe('interactions', () => {
     renderAt('/browse')
     await user.type(screen.getByRole('searchbox'), 'a/b')
     expect(screen.getByRole('searchbox')).toHaveValue('a/b')
-    expect(screen.queryByRole('combobox')).toBeNull()
+    expect(screen.queryByPlaceholderText(/What do you want to leave/)).toBeNull()
   })
 
   it('shows returning visitors where they left off', async () => {
@@ -306,7 +385,7 @@ describe('interactions', () => {
     renderAt('/browse')
     expect(screen.getByRole('status')).toHaveTextContent(`Showing ${tools.length} tools`)
 
-    await user.click(screen.getByRole('button', { name: 'Team chat' }))
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Category' }), 'Team chat')
     expect(screen.getByRole('status')).toHaveTextContent('Showing 2 tools')
 
     await user.type(screen.getByRole('searchbox'), 'sla')
@@ -315,5 +394,157 @@ describe('interactions', () => {
 
     await user.type(screen.getByRole('searchbox'), 'zzz')
     expect(screen.getByText('Nothing matches those filters')).toBeDefined()
+  })
+
+  it('browse narrows the alternatives by licence, server and hosting', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/browse?view=alternatives')
+    const shown = () => Number(/Showing (\d+)/.exec(screen.getByRole('status').textContent)![1])
+    expect(shown()).toBe(alternatives.length)
+
+    await user.click(screen.getByRole('button', { name: 'Works without a server' }))
+    const withoutServer = alternatives.filter(
+      (alternative) => alternative.selfHosting === null || alternative.selfHosting.optional === true,
+    )
+    expect(shown()).toBe(withoutServer.length)
+    expect(router.state.location.search).toContain('noserver=1')
+    await user.click(screen.getByRole('button', { name: 'Works without a server' }))
+
+    await user.click(screen.getByRole('button', { name: 'Has managed hosting' }))
+    expect(shown()).toBe(alternatives.filter((alternative) => alternative.managedHosting.length > 0).length)
+    await user.click(screen.getByRole('button', { name: 'Has managed hosting' }))
+
+    // The licence filter is the same setting as in the options, so it follows you to other pages.
+    await user.click(screen.getByRole('button', { name: 'Open source only' }))
+    expect(shown()).toBe(alternatives.filter((alternative) => alternative.openness === 'open-source').length)
+    expect(getPrefs().licences).toBe('open')
+  })
+
+  it('ticks off finished moves and works out how long the rest will take', async () => {
+    const user = userEvent.setup()
+    setPlanChoices({ vscode: 'vscodium', slack: 'zulip' })
+    renderAt('/plan')
+    const summary = () => screen.getByText(/hours a week/).closest('dl')!
+    expect(summary()).toHaveTextContent('Hands-on work')
+    expect(summary()).toHaveTextContent('At 5 hours a week')
+    expect(summary()).toHaveTextContent('Hardest move left' + 'Slack')
+
+    await user.click(screen.getByRole('checkbox', { name: 'Visual Studio Code to VSCodium: done' }))
+    expect(getPlanDone()).toEqual(['vscode'])
+    expect(summary()).toHaveTextContent('Work left')
+    expect(summary()).toHaveTextContent('1 of 2 moves done.')
+    expect(summary()).toHaveTextContent('Last move' + 'Slack')
+
+    await user.click(screen.getByRole('checkbox', { name: 'Slack to Zulip: done' }))
+    expect(summary()).toHaveTextContent('You are out')
+
+    // The pace is one of the options, and the timeline follows it.
+    await user.click(screen.getByRole('checkbox', { name: 'Slack to Zulip: done' }))
+    const before = summary().textContent
+    await user.click(screen.getByRole('button', { name: 'Change the pace' }))
+    await user.click(screen.getByRole('radio', { name: '2 hours' }))
+    expect(summary()).toHaveTextContent('At 2 hours a week')
+    expect(summary().textContent).not.toBe(before)
+  })
+
+  it('folds the tool picker away once there is a plan, and brings it back when the plan is cleared', async () => {
+    const user = userEvent.setup()
+    setPlanChoices({ slack: null })
+    renderAt('/plan')
+    const picker = () => screen.getByText('What do you use?').closest('details')!
+    expect(picker().open).toBe(false)
+
+    await user.click(screen.getByRole('button', { name: 'Clear my plan' }))
+    await user.click(screen.getByRole('button', { name: 'Yes, clear' }))
+    expect(getPlan()).toEqual({})
+    expect(picker().open).toBe(true)
+    expect(screen.getByText('Nothing in your plan yet')).toBeDefined()
+  })
+
+  it('copies the plan as Markdown and as a link', async () => {
+    const user = userEvent.setup()
+    setPlanChoices({ vscode: 'vscodium', slack: null })
+    setMoveDone('vscode', true)
+    renderAt('/plan')
+
+    await user.click(screen.getByRole('button', { name: 'Copy as Markdown' }))
+    const markdown = await navigator.clipboard.readText()
+    expect(markdown).toContain('- [x] **Visual Studio Code → VSCodium**')
+    expect(markdown).toContain('- [ ] **Slack → Mattermost**')
+    expect(screen.getByRole('button', { name: 'Copied' })).toBeDefined()
+
+    await user.click(screen.getByRole('button', { name: 'Copy a link to this plan' }))
+    expect(await navigator.clipboard.readText()).toMatch(/#\/plan\?p=vscode\.vscodium~slack$/)
+  })
+
+  it('shows the text to copy when the clipboard is not available', async () => {
+    const user = userEvent.setup()
+    setPlanChoices({ slack: null })
+    renderAt('/plan')
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: () => Promise.reject(new Error('blocked')) },
+    })
+    await user.click(screen.getByRole('button', { name: 'Copy as Markdown' }))
+    const box = (await screen.findByLabelText('Select and copy')) as HTMLTextAreaElement
+    expect(box.value).toContain('**Slack → Mattermost**')
+  })
+
+  it('previews a plan from a link and only saves it when asked', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/plan?p=slack.zulip~github~not-a-tool')
+    const shared = screen.getByRole('region', { name: 'Someone shared a plan with you' })
+    expect(shared).toHaveTextContent('Slack to Zulip')
+    expect(shared).toHaveTextContent('GitHub to Forgejo')
+    expect(getPlan()).toEqual({})
+
+    await user.click(within(shared).getByRole('button', { name: 'Save as my plan' }))
+    expect(getPlan()).toEqual({ slack: 'zulip', github: null })
+    expect(router.state.location.search).toBe('')
+    expect(screen.queryByRole('region', { name: 'Someone shared a plan with you' })).toBeNull()
+    expect(screen.getByRole('heading', { name: '2 moves, easiest first' })).toBeDefined()
+  })
+
+  it('asks before a shared plan replaces your own, and can be dismissed', async () => {
+    const user = userEvent.setup()
+    setPlanChoices({ notion: 'logseq' })
+    renderAt('/plan?p=slack.zulip')
+    const shared = () => screen.getByRole('region', { name: 'Someone shared a plan with you' })
+
+    await user.click(within(shared()).getByRole('button', { name: 'Save as my plan' }))
+    expect(getPlan()).toEqual({ notion: 'logseq' })
+    await user.click(within(shared()).getByRole('button', { name: 'Cancel' }))
+    await user.click(within(shared()).getByRole('button', { name: 'Dismiss' }))
+    expect(screen.queryByRole('region', { name: 'Someone shared a plan with you' })).toBeNull()
+    expect(getPlan()).toEqual({ notion: 'logseq' })
+  })
+
+  it('does not offer a shared plan that is the one you already have', () => {
+    setPlanChoices({ slack: 'zulip' })
+    renderAt('/plan?p=slack.zulip')
+    expect(screen.queryByRole('region', { name: 'Someone shared a plan with you' })).toBeNull()
+  })
+
+  it('hides finished steps on a checklist when asked, and copies it as Markdown', async () => {
+    const user = userEvent.setup()
+    const guide = guides[0]!
+    const total = stepIds(guide).length
+    renderAt(`/guides/${guide.id}`)
+    expect(screen.queryByRole('button', { name: 'Hide finished steps' })).toBeNull()
+
+    await user.click(screen.getAllByRole('checkbox')[0]!)
+    await user.click(screen.getByRole('button', { name: 'Hide finished steps' }))
+    expect(screen.getAllByRole('checkbox')).toHaveLength(total - 1)
+    // Still counted, only out of sight.
+    expect(screen.getByRole('complementary', { name: 'Your progress' })).toHaveTextContent(
+      `1 of ${total} steps`,
+    )
+    await user.click(screen.getByRole('button', { name: 'Hide finished steps' }))
+    expect(screen.getAllByRole('checkbox')).toHaveLength(total)
+
+    await user.click(screen.getByRole('button', { name: 'Copy as Markdown' }))
+    const markdown = await navigator.clipboard.readText()
+    expect(markdown.startsWith(`# ${guide.title}\n`)).toBe(true)
+    expect(markdown.match(/^- \[x\] /gm)).toHaveLength(1)
   })
 })

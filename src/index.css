@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 
 /*
- * ExitPath is drawn as a trail guide: map paper, contour lines, routes marked
- * in one colour, and difficulty graded the way trails are.
+ * ExitPath reads like a pocket trail guide: map paper, one route colour,
+ * difficulty graded the way trails are, and little else. Structure comes
+ * from type, white space and hairlines rather than boxes.
  *
  * Typefaces are self-hosted and open-licensed (SIL OFL): Vollkorn for
  * headings, Alegreya Sans for reading, its small caps for labels. Nothing is
@@ -213,9 +214,6 @@
  * The horizontal and vertical radii are given separately so the unevenness
  * survives at every size.
  */
-@utility rounded-pebble {
-  border-radius: 1.7rem 1.2rem 1.85rem 1.3rem / 1.25rem 1.8rem 1.2rem 1.7rem;
-}
 @utility rounded-stone {
   border-radius: 1.05rem 0.8rem 1.15rem 0.85rem / 0.85rem 1.15rem 0.8rem 1.05rem;
 }
@@ -230,6 +228,11 @@
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /* "Large" in the options: everything is sized in rem, so the whole page follows. */
+  html[data-text='large'] {
+    font-size: 121.875%;
   }
 
   body {
@@ -310,23 +313,40 @@
     color: var(--muted);
   }
 
-  /* A sheet of lighter paper. */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 1.7rem 1.2rem 1.85rem 1.3rem / 1.25rem 1.8rem 1.2rem 1.7rem;
+  /* A dialog: the one place a sheet is laid over the page. */
+  .panel {
+    margin-inline: auto;
+    max-width: none;
+    padding: 0;
+    overflow: auto;
+    background: var(--bg);
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 1.05rem 0.8rem 1.15rem 0.85rem / 0.85rem 1.15rem 0.8rem 1.05rem;
+  }
+  .panel::backdrop {
+    background: rgb(0 0 0 / 0.45);
   }
 
-  /* A card that is a link lifts its border to ink, the way a pencil goes over a line twice. */
-  a.card,
-  .card-link {
+  /* A button that is only an icon, as in the header. */
+  .icon-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 1.15rem;
+    cursor: pointer;
     transition:
-      border-color 150ms,
-      background-color 150ms;
+      background-color 150ms,
+      color 150ms;
   }
-  a.card:hover,
-  .card-link:hover {
-    border-color: var(--ink);
+  .icon-button:hover {
+    background: var(--sunken);
+    color: var(--ink);
   }
 
   /* Links are ink with the route colour underneath; hovering turns the line into a path. */
@@ -378,6 +398,8 @@
   }
   /* A toggle: outlined when off, filled with the route wash when on. */
   .chip {
+    /* Contains the visually hidden radio or checkbox some chips wrap. */
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;

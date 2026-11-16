@@ -84,20 +84,3 @@ export function hillRings({ cx, cy, radius, rings, seed, stretch = 1 }: Hill): s
   }
   return paths
 }
-
-/**
- * A route between two points, left to right, that winds more the harder it
- * is: grade 1 is nearly straight, grade 5 is all switchbacks.
- */
-export function windingPath(width: number, mid: number, grade: number, startX = 2): string {
-  const bends = [1, 2, 3, 5, 7][grade - 1] ?? 3
-  const sway = [1.6, 2.6, 3.4, 4, 4.6][grade - 1] ?? 3
-  const step = (width - startX) / bends
-  let d = `M${startX} ${mid}`
-  for (let bend = 0; bend < bends; bend++) {
-    const x0 = startX + step * bend
-    const direction = bend % 2 === 0 ? -1 : 1
-    d += `Q${round(x0 + step / 2)} ${round(mid + direction * sway * 2)} ${round(x0 + step)} ${mid}`
-  }
-  return d
-}

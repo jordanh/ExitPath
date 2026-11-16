@@ -1,34 +1,50 @@
 import { guides } from '../catalog/index.ts'
-import { GuideCard } from '../components/cards.tsx'
-import { DataControls } from '../components/DataControls.tsx'
-import { Page, Section } from '../components/ui.tsx'
+import { IndexRow, Page } from '../components/ui.tsx'
+import { guideStatus } from '../lib/guides.ts'
+import { openOptions } from '../lib/options-dialog.ts'
+import { useAllProgress } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
+
+const NOT_STARTED = { done: [], notes: '', updatedAt: '' }
 
 export function Guides() {
   useTitle('Guides')
+  const progress = useAllProgress()
   return (
-    <Page>
-      <h1 className="text-[2.4rem] leading-[1.05] font-black tracking-tight sm:text-[3.4rem]">
-        Guided migrations
-      </h1>
-      <p className="mt-2 max-w-2xl text-muted">
-        Checklists for the common moves, written in the order things actually have to happen. Tick steps off
-        as you go and come back whenever: your place is kept on this device.
+    <Page narrow>
+      <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">Guides</h1>
+      <p className="mt-3 text-xl text-muted">
+        Checklists for the common moves, in the order things actually have to happen. Tick steps off as you
+        go; your place is kept on this device.
       </p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        {guides.map((guide) => (
-          <GuideCard key={guide.id} guide={guide} />
-        ))}
-      </div>
+      <ul className="mt-8">
+        {guides.map((guide) => {
+          const { done, total } = guideStatus(guide, progress[guide.id] ?? NOT_STARTED)
+          return (
+            <li key={guide.id} className="border-t border-line py-2 first:border-t-0">
+              <IndexRow
+                to={`/guides/${guide.id}`}
+                title={guide.title}
+                end={
+                  <span className={done === total ? 'font-bold text-accent' : 'text-muted'}>
+                    {done === total ? 'Done' : done > 0 ? `${done} of ${total}` : `${total} steps`}
+                  </span>
+                }
+                detail={guide.summary}
+              />
+            </li>
+          )
+        })}
+      </ul>
 
-      <Section
-        eyebrow="Your data"
-        title="Take your progress with you"
-        intro="Progress and notes live only in this browser. Export them to a file to back them up or to move to another device."
-      >
-        <DataControls />
-      </Section>
+      <p className="mt-8 text-muted">
+        To back up your progress or move it to another device,{' '}
+        <button type="button" onClick={openOptions} className="link cursor-pointer">
+          open the options
+        </button>
+        .
+      </p>
     </Page>
   )
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   EXPORT_FORMAT,
+  PLAN_DONE_KEY,
   PLAN_KEY,
   PREFS_KEY,
   PROGRESS_KEY,
@@ -8,47 +9,66 @@ import {
   clearPlan,
   exportData,
   getPlan,
+  getPlanDone,
   getPrefs,
   getProgress,
   importData,
   removeFromPlan,
+  replacePlan,
   resetGuide,
   sanitizePlan,
   sanitizePrefs,
   sanitizeProgress,
   setGuideNotes,
+  setMoveDone,
   setPlanChoice,
   setPlanChoices,
   setPrefs,
   setStepDone,
 } from './storage.ts'
 
+const DEFAULTS = {
+  teamSize: 'solo',
+  hosting: 'self',
+  theme: 'system',
+  licences: 'any',
+  hoursPerWeek: 5,
+  textSize: 'normal',
+}
+
 describe('preferences', () => {
   it('start with sensible defaults', () => {
-    expect(getPrefs()).toEqual({ teamSize: 'solo', hosting: 'self', theme: 'system' })
+    expect(getPrefs()).toEqual(DEFAULTS)
   })
 
   it('merge partial updates and persist them', () => {
     setPrefs({ teamSize: 'small' })
     setPrefs({ theme: 'dark' })
-    expect(getPrefs()).toEqual({ teamSize: 'small', hosting: 'self', theme: 'dark' })
+    expect(getPrefs()).toEqual({ ...DEFAULTS, teamSize: 'small', theme: 'dark' })
     expect(JSON.parse(localStorage.getItem(PREFS_KEY)!)).toEqual(getPrefs())
   })
 
   it('survive corrupted storage', () => {
     localStorage.setItem(PREFS_KEY, '{not json')
-    expect(getPrefs()).toEqual({ teamSize: 'solo', hosting: 'self', theme: 'system' })
+    expect(getPrefs()).toEqual(DEFAULTS)
   })
 
   it('drop values that are not valid choices', () => {
     expect(sanitizePrefs({ teamSize: 'huge', hosting: 'managed', theme: 7 })).toEqual({
-      teamSize: 'solo',
+      ...DEFAULTS,
       hosting: 'managed',
-      theme: 'system',
     })
-    expect(sanitizePrefs(null)).toEqual({ teamSize: 'solo', hosting: 'self', theme: 'system' })
+    expect(sanitizePrefs(null)).toEqual(DEFAULTS)
     // Inherited object keys are not choices.
     expect(sanitizePrefs({ teamSize: 'toString' }).teamSize).toBe('solo')
+  })
+
+  it('keep the licence filter, the weekly pace and the text size', () => {
+    setPrefs({ licences: 'open', hoursPerWeek: 10, textSize: 'large' })
+    expect(getPrefs()).toMatchObject({ licences: 'open', hoursPerWeek: 10, textSize: 'large' })
+    // Only the paces that are offered are accepted.
+    expect(sanitizePrefs({ licences: 'closed', hoursPerWeek: 7, textSize: 'huge' })).toEqual(DEFAULTS)
+    expect(sanitizePrefs({ hoursPerWeek: '10' }).hoursPerWeek).toBe(5)
   })
 })
 
@@ -138,6 +158,36 @@ describe('plan', () => {
     expect(getPlan()).toEqual({})
   })
 
+  it('remembers which moves are done', () => {
+    setPlanChoices({ slack: null, notion: null })
+    setMoveDone('slack', true)
+    setMoveDone('slack', true)
+    setMoveDone('notion', true)
+    expect(getPlanDone()).toEqual(['slack', 'notion'])
+    expect(JSON.parse(localStorage.getItem(PLAN_DONE_KEY)!)).toEqual(['slack', 'notion'])
+    setMoveDone('slack', false)
+    expect(getPlanDone()).toEqual(['notion'])
+  })
+
+  it('forgets a move was done once it leaves the plan', () => {
+    setPlanChoices({ slack: null, notion: null })
+    setMoveDone('slack', true)
+    removeFromPlan('slack')
+    expect(getPlanDone()).toEqual([])
+
+    setMoveDone('notion', true)
+    clearPlan()
+    expect(getPlanDone()).toEqual([])
+  })
+
+  it('replaces the whole plan and starts it from the beginning', () => {
+    setPlanChoices({ slack: null })
+    setMoveDone('slack', true)
+    replacePlan({ slack: 'zulip', github: null })
+    expect(getPlan()).toEqual({ slack: 'zulip', github: null })
+    expect(getPlanDone()).toEqual([])
+  })
+
   it('ignores malformed entries', () => {
     expect(sanitizePlan({ slack: 'zulip', notion: null, github: 7, vscode: { to: 'zed' } })).toEqual({
       slack: 'zulip',
@@ -166,6 +216,17 @@ describe('export and import', () => {
     expect(getPrefs()).toMatchObject({ teamSize: 'large', hosting: 'managed' })
     expect(getProgress()['leaving-slack']).toMatchObject({ done: ['export'], notes: 'note' })
     expect(getPlan()).toEqual({ slack: 'mattermost', notion: null })
+  })
+
+  it('carries finished moves across, but only for tools still in the plan', () => {
+    setPlanChoices({ slack: null, notion: null })
+    setMoveDone('slack', true)
+    const file = exportData()
+    expect(file.planDone).toEqual(['slack'])
+
+    clearEverything()
+    importData(JSON.stringify({ ...file, planDone: ['slack', 'not-in-the-plan', 7] }))
+    expect(getPlanDone()).toEqual(['slack'])
   })
 
   it('reads exports made before plans existed', () => {
@@ -197,7 +258,7 @@ describe('export and import', () => {
         progress: { g: { done: ['a', 42] }, junk: null },
       }),
     )
-    expect(getPrefs()).toEqual({ teamSize: 'solo', hosting: 'self', theme: 'dark' })
+    expect(getPrefs()).toEqual({ ...DEFAULTS, theme: 'dark' })
     expect(getProgress()).toEqual({ g: { done: ['a'], notes: '', updatedAt: '' } })
   })
 })

@@ -14,7 +14,7 @@ export function EntryFooter({
   reviewed: string
 }) {
   return (
-    <footer className="mt-12 flex flex-wrap items-center gap-x-5 gap-y-1.5 border-t border-dashed border-line-strong pt-4 text-sm text-muted print:hidden">
+    <footer className="mt-14 flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t border-line pt-5 text-muted print:hidden">
       <p>Last reviewed {reviewed}. Wrong or out of date?</p>
       <ExternalLink href={editUrl(folder, id)}>Edit this entry</ExternalLink>
       <ExternalLink href={issueUrl(`Catalog: ${name}`)}>Report a problem</ExternalLink>

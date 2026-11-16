@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import type { Openness, Support } from '../catalog/schema.ts'
 import { OPENNESS_LABELS, SCALES, SUPPORT_LABELS, toneFor, type ScaleId } from '../lib/scales.ts'
 import type { BANDS } from '../lib/scoring.ts'
@@ -11,37 +12,71 @@ const FILL = ['', 'bg-level-1', 'bg-level-2', 'bg-level-3', 'bg-level-4', 'bg-da
 
 export function Page({ children, narrow }: { children: ReactNode; narrow?: boolean }) {
   return (
-    <div className={`mx-auto w-full px-4 pt-8 pb-24 sm:px-6 sm:pt-12 ${narrow ? 'max-w-3xl' : 'max-w-6xl'}`}>
+    <div
+      className={`mx-auto w-full px-4 pt-10 pb-24 sm:px-6 sm:pt-14 ${narrow ? 'max-w-3xl' : 'max-w-[60rem]'}`}
+    >
       {children}
     </div>
   )
 }
 
+/** A part of a page: a hairline, a heading, and whatever follows. */
 export function Section({
   title,
-  eyebrow,
   intro,
   children,
   aside,
 }: {
   title: string
-  eyebrow?: string
   intro?: ReactNode
   children: ReactNode
   aside?: ReactNode
 }) {
   return (
-    <section className="mt-16 first:mt-0">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+    <section className="mt-14 border-t border-line pt-8">
+      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <div className="max-w-2xl">
-          {eyebrow && <p className="eyebrow mb-1">{eyebrow}</p>}
-          <h2 className="text-[1.7rem] leading-[1.15] font-extrabold sm:text-[2.1rem]">{title}</h2>
-          {intro && <p className="mt-2 text-lg text-muted">{intro}</p>}
+          <h2 className="text-[1.55rem] leading-tight font-extrabold">{title}</h2>
+          {intro && <p className="mt-1 text-muted">{intro}</p>}
         </div>
         {aside}
       </div>
       {children}
     </section>
+  )
+}
+
+/**
+ * A line in an index, as in a guidebook: the name, a row of dots, and what
+ * you will find there. The whole line is the link's target, but only the
+ * name is its accessible name.
+ */
+export function IndexRow({
+  to,
+  title,
+  detail,
+  end,
+}: {
+  to: string
+  title: ReactNode
+  detail?: ReactNode
+  end?: ReactNode
+}) {
+  return (
+    <div className="group relative py-2">
+      {/* Wraps when there is no room, so a long name never pushes the grade off a small screen. */}
+      <div className="flex flex-wrap items-baseline gap-x-2">
+        <Link
+          to={to}
+          className="font-display text-[1.25rem] leading-tight font-bold decoration-accent decoration-[1.5px] underline-offset-4 group-hover:underline after:absolute after:inset-0"
+        >
+          {title}
+        </Link>
+        <span className="leader" aria-hidden="true" />
+        {end}
+      </div>
+      {detail && <div className="text-muted">{detail}</div>}
+    </div>
   )
 }
 
@@ -55,31 +90,45 @@ export function Meter({
   scale,
   label,
   word,
+  inline,
 }: {
   level: number
   scale: ScaleId
   label?: string
   /** Overrides the scale's own word, e.g. "Managed for you". */
   word?: string
+  /** Label, dots and word on one line, for a row of several ratings. */
+  inline?: boolean
 }) {
   const tone = toneFor(scale, level)
+  const reading = (
+    <>
+      <span className="flex shrink-0 gap-[3px]" aria-hidden="true">
+        {[1, 2, 3, 4, 5].map((dot) => (
+          <span
+            key={dot}
+            className={`size-[0.56rem] rounded-leaf ${dot <= level ? FILL[tone] : 'border-[1.5px] border-line-strong'}`}
+          />
+        ))}
+      </span>
+      <span className="leading-tight font-medium">{word ?? SCALES[scale].labels[level - 1]}</span>
+      <span className="sr-only">
+        ({level} out of 5{label ? ` for ${label.toLowerCase()}` : ''})
+      </span>
+    </>
+  )
+  if (inline) {
+    return (
+      <span className="inline-flex flex-wrap items-center gap-x-2">
+        {label && <span className="eyebrow whitespace-nowrap">{label}</span>}
+        {reading}
+      </span>
+    )
+  }
   return (
     <div>
       {label && <div className="eyebrow mb-0.5">{label}</div>}
-      <div className="flex items-center gap-2">
-        <span className="flex shrink-0 gap-[3px]" aria-hidden="true">
-          {[1, 2, 3, 4, 5].map((dot) => (
-            <span
-              key={dot}
-              className={`size-[0.56rem] rounded-leaf ${dot <= level ? FILL[tone] : 'border-[1.5px] border-line-strong'}`}
-            />
-          ))}
-        </span>
-        <span className="leading-tight font-medium">{word ?? SCALES[scale].labels[level - 1]}</span>
-        <span className="sr-only">
-          ({level} out of 5{label ? ` for ${label.toLowerCase()}` : ''})
-        </span>
-      </div>
+      <div className="flex items-center gap-2">{reading}</div>
     </div>
   )
 }
@@ -127,13 +176,10 @@ export function OpennessBadge({ openness }: { openness: Openness }) {
   )
 }
 
-/** A small paper label, for facts such as a licence name. */
+/** A small fact set beside a name, such as a licence. */
 export function Tag({ children, title }: { children: ReactNode; title?: string }) {
   return (
-    <span
-      className="inline-flex items-center rounded-stone bg-sunken px-2 py-px text-[0.85rem] font-medium whitespace-nowrap text-muted"
-      title={title}
-    >
+    <span className="text-muted" title={title}>
       {children}
     </span>
   )
@@ -203,23 +249,12 @@ export function MarkedList({ items, kind }: { items: string[]; kind: 'good' | 'b
   )
 }
 
-/** A note pinned to the page: something to read before going further. */
-export function Callout({
-  title,
-  children,
-  tone = 3,
-}: {
-  title: string
-  children: ReactNode
-  tone?: number
-}) {
+/** Something to read before going further, marked with a line in the route colour. */
+export function Callout({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex gap-3 rounded-stone border-[1.5px] border-dashed border-line-strong bg-bg px-4 py-3">
-      <GradeMark level={tone} className="mt-1 shrink-0 text-[0.95rem]" />
-      <div>
-        <p className="font-display text-xl font-extrabold">{title}</p>
-        <div className="mt-0.5">{children}</div>
-      </div>
+    <div className="border-l-2 border-accent pl-4">
+      <p className="font-bold">{title}</p>
+      <div className="mt-0.5 text-muted">{children}</div>
     </div>
   )
 }
@@ -262,7 +297,7 @@ export function ProgressBar({ done, total, label }: { done: number; total: numbe
           strokeWidth="2.5"
           strokeLinecap="round"
         />
-        <circle cx={`${percent}%`} cy="50%" r="5" className="fill-accent stroke-surface" strokeWidth="2" />
+        <circle cx={`${percent}%`} cy="50%" r="5" className="fill-accent stroke-bg" strokeWidth="2" />
       </svg>
     </div>
   )
@@ -270,7 +305,7 @@ export function ProgressBar({ done, total, label }: { done: number; total: numbe
 
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="rounded-pebble border-[1.5px] border-dashed border-line-strong px-6 py-12 text-center">
+    <div className="py-4">
       <p className="font-display text-xl font-bold">{title}</p>
       {children && <div className="mt-1 text-muted">{children}</div>}
     </div>

@@ -51,11 +51,9 @@ export function SearchDialog() {
         aria-label="Search the catalog"
         aria-keyshortcuts="/"
         title="Search (press /)"
-        className="chip h-9 shrink-0 max-md:w-9 max-md:justify-center max-md:px-0"
+        className="icon-button"
       >
-        <IconSearch className="text-base" />
-        <span className="max-md:hidden">Search</span>
-        <kbd className="rounded-md bg-sunken px-1.5 leading-5 max-md:hidden">/</kbd>
+        <IconSearch />
       </button>
 
       {/* A click on the dialog element itself is a click on the backdrop: the panel inside covers the rest. */}
@@ -67,7 +65,7 @@ export function SearchDialog() {
         onClick={(event) => {
           if (event.target === event.currentTarget) setOpen(false)
         }}
-        className="mx-auto mt-[12vh] w-[min(40rem,calc(100vw-2rem))] max-w-none rounded-pebble border-[1.5px] border-ink bg-bg p-0 text-ink backdrop:bg-black/45"
+        className="panel mt-[12vh] w-[min(40rem,calc(100vw-2rem))]"
       >
         <div className="p-3">
           {/* Mounted only while open, so each opening starts with an empty, focused field. */}

@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { planTotals, resolvePlan } from './plan.ts'
-import type { Context } from './scoring.ts'
+import type { Context, Situation } from './scoring.ts'
 
 const solo: Context = { teamSize: 'solo', hosting: 'self' }
 const managed: Context = { teamSize: 'solo', hosting: 'managed' }
+const openOnly: Situation = { ...solo, openOnly: true }
 
 describe('resolvePlan', () => {
   it('is empty for an empty plan', () => {
@@ -44,6 +45,29 @@ describe('resolvePlan', () => {
     const [item] = resolvePlan({ slack: 'an-alternative-that-was-removed' }, solo)
     expect(item!.auto).toBe(true)
     expect(item!.chosen).toBe(item!.options[0])
+  })
+
+  it('offers each path once, including the one that was picked', () => {
+    const [item] = resolvePlan({ slack: 'zulip' }, solo)
+    const ids = item!.options.map((option) => option.alternative.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    expect(item!.options).toContain(item!.chosen)
+  })
+
+  it('only suggests open-source destinations when asked to', () => {
+    // Mattermost is open core, so the easiest open path out of Slack is another one.
+    const [any] = resolvePlan({ slack: null }, solo)
+    const [open] = resolvePlan({ slack: null }, openOnly)
+    expect(any!.chosen.alternative.id).toBe('mattermost')
+    expect(open!.chosen.alternative.openness).toBe('open-source')
+    for (const option of open!.options) expect(option.alternative.openness).toBe('open-source')
+  })
+
+  it('keeps a destination picked by hand even when the licence filter would hide it', () => {
+    const [item] = resolvePlan({ slack: 'mattermost' }, openOnly)
+    expect(item!.auto).toBe(false)
+    expect(item!.chosen.alternative.id).toBe('mattermost')
+    expect(item!.options.filter((option) => option.alternative.id === 'mattermost')).toHaveLength(1)
   })
 
   it('puts the easiest move first', () => {
