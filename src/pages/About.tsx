@@ -129,8 +129,9 @@ export function About() {
       <Section title="How migration difficulty is calculated">
         <div className="space-y-4">
           <p>
-            Every path gets a score from 0 to 100. It is built from five ratings on a 1–5 scale, each written
-            down by a person in the catalog. Four describe the migration itself and one describes you.
+            Every path gets a score from 0 to 100. It is built from five ratings on a 1–5 scale, each recorded
+            in the catalog where anyone can read it and dispute it. Four describe the migration itself and one
+            describes you.
           </p>
           <dl className="divide-y divide-line border-y border-line">
             {(Object.keys(WEIGHTS) as (keyof typeof WEIGHTS)[]).map((key) => (
@@ -228,16 +229,18 @@ export function About() {
       <Section title="What to keep in mind">
         <ul className="prose-list list-disc space-y-2 pl-5 marker:text-accent [&>li]:pl-1">
           <li>
-            Ratings are informed opinions, not measurements. They are written by people, reviewed in public
-            and dated. Each entry shows the month it was last checked.
+            Ratings are opinions, not measurements. The first version of the catalog was compiled with an AI
+            assistant from each project’s public documentation, and not every entry has yet been checked by
+            someone who runs the software. Each entry shows the month it was last reviewed, and corrections
+            from people with first-hand experience are the most useful thing you can send.
           </li>
           <li>
             Projects change their licences, pricing and features, sometimes abruptly. Check the project’s own
             documentation before you commit a team to it.
           </li>
           <li>
-            The catalog is deliberately small. An alternative is listed when it is a realistic replacement
-            that someone has actually run, not because it exists.
+            The catalog is deliberately small. It aims to list the realistic replacements, not everything that
+            exists.
           </li>
           <li>
             Running your own services means running your own backups, updates and security. The time estimates

@@ -118,8 +118,11 @@ because a migration is as hard as its hardest step. Effort is the path's per-per
 size, plus server setup time. The whole model is one short
 function in [`src/lib/scoring.ts`](src/lib/scoring.ts), and it is meant to be argued with.
 
-Ratings are informed opinions written by people, not measurements. Every entry records the month it was
-last reviewed. Projects change licences, pricing and features, sometimes abruptly: check the project's own
+Ratings are opinions, not measurements. The first version of the catalog was compiled with an AI assistant
+from each project's public documentation. Not every entry has been checked by someone who runs the
+software, and not every outside link has been tested (`npm run check-links` does that). Every entry records
+the month it was last reviewed, and corrections from people with first-hand experience are the most useful
+contribution. Projects change licences, pricing and features, sometimes abruptly: check the project's own
 documentation before committing a team to anything.
 
 ## Project layout

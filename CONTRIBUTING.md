@@ -4,6 +4,10 @@ The most useful contributions are to the catalog: fixing a rating that is wrong,
 project changes, or adding an alternative that someone has really run. You do not need to know React to do
 any of that. Every entry is a JSON file.
 
+The first version of the catalog was compiled with an AI assistant from each project's public
+documentation, so some entries have not yet been checked by anyone who runs the software. If you do run
+one of them, confirming or correcting its entry is the single most valuable thing you can do here.
+
 ## Before you start
 
 ```sh

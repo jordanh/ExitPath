@@ -2,7 +2,7 @@
  * Migration difficulty and effort.
  *
  * Deliberately simple and fully explained on the About page: every input is a
- * 1–5 rating that a contributor wrote down in the catalog, and the arithmetic
+ * 1–5 rating recorded in the catalog, and the arithmetic
  * here is the whole model. There is no hidden weighting.
  */
 import type { Alternative, Path, Tool } from '../catalog/schema.ts'
