@@ -91,12 +91,3 @@ export const checkedCounts = {
   checked: [...tools, ...alternatives].filter(isChecked).length,
   total: tools.length + alternatives.length,
 }
-
-/** Everyone credited on an entry, once each, in alphabetical order. */
-export const contributors = [
-  ...new Map(
-    [...tools, ...alternatives]
-      .flatMap((entry) => entry.checkedBy ?? [])
-      .map((person) => [person.name, person]),
-  ).values(),
-].sort((a, b) => a.name.localeCompare(b.name))

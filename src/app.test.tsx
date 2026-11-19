@@ -308,6 +308,15 @@ describe('interactions', () => {
     expect(easiest()).toBe(pathRow('Mattermost'))
   })
 
+  it('points to GitHub for the list of contributors instead of keeping its own', () => {
+    renderAt('/about')
+    expect(screen.getByRole('link', { name: /Everyone who has contributed/ })).toHaveAttribute(
+      'href',
+      'https://github.com/noobmaster69/ExitPath/graphs/contributors',
+    )
+    expect(screen.queryByText(/Written or checked by/)).toBeNull()
+  })
+
   it('says which entries a person has checked and which are AI drafts', () => {
     renderAt('/alternatives/galene')
     const credit = screen.getByText(/Written or checked by/)
