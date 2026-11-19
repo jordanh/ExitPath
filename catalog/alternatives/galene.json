@@ -69,5 +69,6 @@
     "large-meetings": "Yes for lectures; meetings with everyone on camera top out at a few dozen",
     "mobile-apps": "Mobile browsers, and an Android app with chat, audio and screen sharing"
   },
+  "checkedBy": [{ "name": "Stefane Fermigier", "url": "https://github.com/sfermigier" }],
   "reviewed": "2026-11"
 }

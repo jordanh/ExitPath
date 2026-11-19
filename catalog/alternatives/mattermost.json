@@ -1,7 +1,7 @@
 {
   "id": "mattermost",
   "name": "Mattermost",
-  "tagline": "The closest thing to a self-hosted Slack",
+  "tagline": "Self-hosted team chat modelled on Slack",
   "description": "Channel-based team chat with threads, reactions, slash commands and integrations, laid out almost exactly like Slack. A single Go server with PostgreSQL behind it, plus desktop and mobile apps.",
   "categories": ["chat"],
   "kind": "server",
@@ -58,7 +58,7 @@
   "weaknesses": [
     "Open core, and the line keeps moving: single sign-on (GitLab sign-in included, since version 11), guest accounts and compliance features are paid",
     "Calls in the free edition are limited to one-to-one, with a time cap; group calls need a licence",
-    "The default free install since version 11 is the history-limited Entry edition, which catches people out",
+    "The default free install since version 11 is the Entry edition, which limits message history; Team Edition has to be chosen explicitly",
     "No end-to-end encryption"
   ],
   "features": {

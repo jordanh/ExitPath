@@ -1,7 +1,7 @@
 {
   "id": "alacritty",
   "name": "Alacritty",
-  "tagline": "A minimal, fast terminal that does one thing",
+  "tagline": "A minimal, fast terminal without tabs or splits",
   "description": "A deliberately small GPU-accelerated terminal emulator. It draws text quickly and leaves tabs, splits and session management to your window manager or a multiplexer such as tmux.",
   "categories": ["terminal"],
   "kind": "desktop",

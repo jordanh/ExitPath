@@ -1,6 +1,15 @@
 import { Link } from 'react-router-dom'
-import { alternatives, getAlternative, getTool, lastReviewed, tools, totalPaths } from '../catalog/index.ts'
-import { SituationLine } from '../components/Situation.tsx'
+import {
+  alternatives,
+  checkedCounts,
+  contributors,
+  getAlternative,
+  getTool,
+  lastReviewed,
+  tools,
+  totalPaths,
+} from '../catalog/index.ts'
+import { SituationBar } from '../components/Situation.tsx'
 import { ExternalLink, Meter, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { OPENNESS_LABELS, SCALES, type ScaleId } from '../lib/scales.ts'
 import {
@@ -61,7 +70,7 @@ function WorkedExample() {
         <p className="font-bold">
           Worked example: {tool.name} to {alternative.name}
         </p>
-        <ScoreBadge score={result.score} band={result.band} size="sm" />
+        <ScoreBadge band={result.band} size="sm" />
       </div>
       <div className="relative overflow-x-auto">
         <table className="w-full min-w-[34rem] text-left text-sm">
@@ -115,21 +124,44 @@ function WorkedExample() {
 }
 
 export function About() {
-  useTitle('How it works')
+  useTitle('About')
   return (
     <Page narrow>
-      <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
-        A map of the exits, with the distances marked honestly
-      </h1>
-      <p className="mt-4 text-xl text-muted">
-        ExitPath is not another software suite. It is a guide to the open-source projects that already exist:
-        which of them can really replace the tool you depend on, what the move costs, and the order in which
-        to do it.
+      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">About ExitPath</h1>
+      <p className="mt-4 text-lg">
+        ExitPath is a catalog of open-source alternatives to common proprietary tools. For each alternative it
+        records how well it replaces the original, what data transfers, and how hard the move is. It also has
+        step-by-step checklists for four common migrations.
       </p>
       <p className="mt-3 text-muted">
-        The catalog currently covers {tools.length} proprietary tools, {alternatives.length} alternatives and{' '}
+        The catalog covers {tools.length} proprietary tools, {alternatives.length} alternatives and{' '}
         {totalPaths} migration paths between them{lastReviewed ? `, last reviewed in ${lastReviewed}` : ''}.
       </p>
+
+      <Section title="Who wrote the catalog">
+        <p>
+          Most of it was drafted with an AI assistant from each project’s public documentation. An entry stays
+          marked “AI draft” until someone who uses the tool has written or checked it and added their name. So
+          far that is true of {checkedCounts.checked} of the {checkedCounts.total} entries.
+        </p>
+        {contributors.length > 0 && (
+          <p className="mt-3">
+            Written or checked by:{' '}
+            {contributors.map((person, index) => (
+              <span key={person.name}>
+                {index > 0 && ', '}
+                {person.url ? <ExternalLink href={person.url}>{person.name}</ExternalLink> : person.name}
+              </span>
+            ))}
+            .
+          </p>
+        )}
+        <p className="mt-3">
+          If you use one of these tools, checking its entry is the most useful contribution: each page has an
+          “Edit this entry” link, and adding yourself to <code>checkedBy</code> in the file marks it as
+          checked.
+        </p>
+      </Section>
 
       <Section title="How migration difficulty is calculated">
         <div className="space-y-4">
@@ -156,17 +188,20 @@ export function About() {
             dominates.
           </p>
           <p>
-            A low score means the move is easy, not that the destination is better. Each path also carries a
-            fit rating, a verdict and its main drawback, and those matter more than the number.
+            The pages show the grade as a word (easy, moderate, demanding, hard, very hard) and keep the
+            number for the breakdown, because it is a judgement and not a measurement. A low score only says
+            the move is easy. Whether the alternative is any good is a separate question, answered by its fit
+            rating, verdict and main drawback.
           </p>
-          <SituationLine explain={false} />
+          <SituationBar explain={false} />
           <WorkedExample />
           <ul className="flex flex-wrap gap-2">
             {BANDS.map((band, index) => (
               <li key={band.id} className="flex items-center gap-2">
-                <ScoreBadge score={index === 0 ? 0 : BANDS[index - 1]!.below} band={band} size="sm" />
+                <ScoreBadge band={band} size="sm" />
                 <span className="text-sm text-muted">
-                  {index === BANDS.length - 1 ? 'and above' : `to ${band.below - 1}`}
+                  {index === 0 ? 0 : BANDS[index - 1]!.below}
+                  {index === BANDS.length - 1 ? ' and above' : ` to ${band.below - 1}`}
                 </span>
               </li>
             ))}
@@ -202,7 +237,7 @@ export function About() {
 
       <Section
         title="If you would rather not run servers"
-        intro="Self-hosting is one way to use these projects, not the only one."
+        intro="Most of these projects can be used in three ways."
       >
         <ul className="prose-list list-disc space-y-2 pl-5 marker:text-accent [&>li]:pl-1">
           <li>
@@ -224,7 +259,7 @@ export function About() {
 
       <Section
         title="What the 1–5 scales mean"
-        intro="More filled dots is always better news for you: an easy import fills the row just as a close fit does."
+        intro="More filled dots is better on every scale, so an easy import and a close fit look alike."
       >
         <dl className="space-y-4">
           {(Object.keys(SCALES) as ScaleId[]).map((id) => (
@@ -247,7 +282,7 @@ export function About() {
 
       <Section
         title="Open source, open core, source-available"
-        intro="These are not the same thing, and the difference tends to matter a few years in."
+        intro="These three labels mean different things."
       >
         <dl className="divide-y divide-line border-y border-line">
           {(Object.keys(OPENNESS_LABELS) as Openness[]).map((id) => (
@@ -261,31 +296,29 @@ export function About() {
         </dl>
       </Section>
 
-      <Section title="What to keep in mind">
+      <Section title="Limits">
         <ul className="prose-list list-disc space-y-2 pl-5 marker:text-accent [&>li]:pl-1">
           <li>
-            Ratings are opinions, not measurements. The first version of the catalog was compiled with an AI
-            assistant from each project’s public documentation, and not every entry has yet been checked by
-            someone who runs the software. Each entry shows the month it was last reviewed, and corrections
-            from people with first-hand experience are the most useful thing you can send.
+            Ratings are opinions. Most were drafted by an AI assistant and have not been checked by someone
+            who uses the tool; each entry says which, and shows the month it was last reviewed.
           </li>
           <li>
             Projects change their licences, pricing and features, sometimes abruptly. Check the project’s own
             documentation before you commit a team to it.
           </li>
           <li>
-            The catalog is deliberately small. It aims to list the realistic replacements, not everything that
-            exists.
+            The catalog is small on purpose. It lists the alternatives most people would consider and leaves
+            out the long tail.
           </li>
           <li>
             Running your own services means running your own backups, updates and security. The time estimates
-            cover getting there, not staying there.
+            cover the migration and the initial setup only.
           </li>
         </ul>
       </Section>
 
       <Section
-        title="Fix a rating, add an alternative"
+        title="Contributing"
         intro="The whole catalog is plain JSON in the repository, validated against a schema. No build tooling knowledge is needed to edit it."
       >
         <p>
@@ -299,7 +332,7 @@ export function About() {
       </Section>
 
       <Section
-        title="Stored here, and only here"
+        title="Your data"
         intro="Your options, your plan and your checklist progress and notes are saved in this browser’s local storage. There is no server to send them to."
       >
         <p>

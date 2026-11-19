@@ -9,44 +9,10 @@ import {
   type TextSize,
   type Theme,
 } from '../lib/storage.ts'
+import { Choice } from './Choice.tsx'
 import { DataControls } from './DataControls.tsx'
 import { Disclosure } from './Disclosure.tsx'
 import { IconOptions, IconX } from './icons.tsx'
-
-function Choice<T extends string>({
-  legend,
-  value,
-  options,
-  onChange,
-}: {
-  legend: string
-  value: T
-  options: { value: T; label: string; hint?: string }[]
-  onChange: (value: T) => void
-}) {
-  const name = useId()
-  return (
-    <fieldset className="min-w-0">
-      <legend className="eyebrow mb-1.5">{legend}</legend>
-      <div className="flex flex-wrap gap-1.5">
-        {options.map((option) => (
-          <label key={option.value} title={option.hint} className="chip">
-            <input
-              type="radio"
-              name={name}
-              value={option.value}
-              checked={value === option.value}
-              onChange={() => onChange(option.value)}
-              className="sr-only"
-            />
-            {option.label}
-            {option.hint && <span className="sr-only"> ({option.hint})</span>}
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  )
-}
 
 const THEMES: { value: Theme; label: string }[] = [
   { value: 'system', label: 'Match my device' },
@@ -128,7 +94,7 @@ export function OptionsDialog() {
                 <h2 id={titleId} className="text-[1.6rem] leading-tight font-extrabold">
                   Options
                 </h2>
-                <p className="text-muted">Remembered on this device, and nowhere else.</p>
+                <p className="text-muted">Saved in this browser only.</p>
               </div>
               <button
                 type="button"

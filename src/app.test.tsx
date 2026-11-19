@@ -25,32 +25,55 @@ function renderAt(path: string) {
 
 const heading = () => screen.getByRole('heading', { level: 1 })
 
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** Every alternative listed on a tool page, by its row heading. */
+const pathHeadings = () =>
+  within(screen.getByRole('table', { name: 'Alternatives compared' })).getAllByRole('rowheader')
+
+/** The table row for one alternative on a tool page. */
+const pathRow = (name: string) =>
+  screen.getByRole('rowheader', { name: new RegExp(`^${escapeRegExp(name)}`) }).closest('tr')!
+
+/** Unfolds a row and returns the detail row under it. */
+async function openDetails(user: ReturnType<typeof userEvent.setup>, name: string) {
+  const row = pathRow(name)
+  await user.click(within(row).getByRole('button', { name: `Details for ${name}` }))
+  return row.nextElementSibling as HTMLElement
+}
+
 describe('pages', () => {
   it('home lists every tool, suite and guide', () => {
     renderAt('/')
-    expect(heading()).toHaveTextContent('Find your way out.')
+    expect(heading()).toHaveTextContent(`Open-source alternatives to ${tools.length} tools`)
     for (const tool of tools)
-      expect(screen.getAllByRole('link', { name: new RegExp(tool.name) }).length).toBeGreaterThan(0)
+      expect(
+        screen.getAllByRole('link', { name: new RegExp(escapeRegExp(tool.name)) }).length,
+      ).toBeGreaterThan(0)
     for (const suite of suites)
-      expect(
-        screen
-          .getAllByRole('link', { name: `Leaving ${suite.name}` })
-          .some((link) => link.getAttribute('href') === `/suites/${suite.id}`),
-      ).toBe(true)
+      expect(screen.getByRole('link', { name: suite.name })).toHaveAttribute('href', `/suites/${suite.id}`)
     for (const guide of guides)
-      expect(
-        screen
-          .getAllByRole('link', { name: guide.title })
-          .some((link) => link.getAttribute('href') === `/guides/${guide.id}`),
-      ).toBe(true)
+      expect(screen.getByRole('link', { name: guide.title })).toHaveAttribute('href', `/guides/${guide.id}`)
+  })
+
+  it('home says how much of the catalog a person has checked', () => {
+    renderAt('/')
+    const checked = [...tools, ...alternatives].filter((entry) => entry.checkedBy).length
+    expect(checked).toBeGreaterThan(0)
+    expect(screen.getByText(/written or checked by someone who uses the tool/)).toHaveTextContent(
+      `${checked} of the ${tools.length + alternatives.length} entries have been written or checked`,
+    )
   })
 
   it.each(tools.map((tool) => [tool.id, tool] as const))('tool page renders: %s', (_id, tool) => {
     renderAt(`/tools/${tool.id}`)
-    expect(heading()).toHaveTextContent(tool.name)
-    // One card per path out, and a comparison table when there is something to compare.
-    expect(screen.getAllByRole('article')).toHaveLength(tool.paths.length)
-    expect(screen.getByRole('table')).toBeDefined()
+    expect(heading()).toHaveTextContent(`Alternatives to ${tool.name}`)
+    // One row per alternative, each saying how hard the move is in a word.
+    expect(pathHeadings()).toHaveLength(tool.paths.length)
+    for (const path of tool.paths) {
+      const name = alternatives.find((alternative) => alternative.id === path.to)!.name
+      expect(pathRow(name)).toHaveTextContent(/Easy|Moderate|Demanding|Hard|Very hard/)
+    }
   })
 
   it.each(alternatives.map((alternative) => [alternative.id, alternative] as const))(
@@ -150,101 +173,138 @@ describe('interactions', () => {
     }
   })
 
-  it('changing your situation changes the scores and is remembered', async () => {
+  it('has the situation toggles on the page, and remembers them', async () => {
     const user = userEvent.setup()
     renderAt('/tools/onedrive')
-    const nextcloud = () => screen.getByRole('article', { name: 'Nextcloud' })
-    expect(within(nextcloud()).getByText(/to set up and secure the server/)).toBeDefined()
-    expect(screen.getByText(/Graded for/)).toHaveTextContent('Graded for just me, self-hosting.')
+    expect(pathRow('Nextcloud')).toHaveTextContent('Self-host, or Providers listed by Nextcloud')
 
-    // The line under the heading opens the same options as the header button.
-    await user.click(screen.getByRole('button', { name: 'Change' }))
-    const options = screen.getByRole('dialog', { name: 'Options' })
-    await user.click(within(options).getByRole('radio', { name: /Managed/ }))
-    await user.click(within(options).getByRole('radio', { name: /Small team/ }))
-    expect(within(nextcloud()).getByText(/hosting it for you/)).toBeDefined()
+    await user.click(screen.getByRole('radio', { name: /Managed/ }))
+    await user.click(screen.getByRole('radio', { name: /Small team/ }))
+    expect(pathRow('Nextcloud')).toHaveTextContent('Hosted by Providers listed by Nextcloud')
     expect(getPrefs()).toMatchObject({ hosting: 'managed', teamSize: 'small' })
 
-    await user.click(within(options).getByRole('button', { name: 'Close options' }))
-    expect(screen.queryByRole('radio')).toBeNull()
-    expect(screen.getByText(/Graded for/)).toHaveTextContent('Graded for small team, managed hosting.')
+    // The options dialog holds the same two answers, plus the rest.
+    await user.click(screen.getByRole('button', { name: 'More options' }))
+    const options = screen.getByRole('dialog', { name: 'Options' })
+    expect(within(options).getByRole('radio', { name: /Managed/ })).toBeChecked()
+    expect(within(options).getByRole('radio', { name: /Small team/ })).toBeChecked()
   })
 
-  it('says who can host a project for you, and what that does to the grade', () => {
+  it('grades in words, and keeps the number for the breakdown', async () => {
+    const user = userEvent.setup()
     renderAt('/tools/slack')
-    const zulip = screen.getByRole('article', { name: 'Zulip' })
-    expect(within(zulip).getByText(/You do not have to/)).toHaveTextContent(
-      /running it yourself.*hosted by Zulip Cloud.*it grades \d+ \((easy|moderate)\)/,
+    const row = pathRow('Mattermost')
+    expect(row).toHaveTextContent('Moderate')
+    expect(row).not.toHaveTextContent(/\d+ (of|out of) 100/)
+
+    const detail = await openDetails(user, 'Mattermost')
+    expect(detail).toHaveTextContent(/Moderate: a score of \d+ out of 100, from six ratings/)
+    expect(detail).toHaveTextContent(/Getting data out \d.*Lock-in \d.*People to move \d/)
+    // Unfolding is reversible, and the button says which row it belongs to.
+    await user.click(within(row).getByRole('button', { name: 'Hide details for Mattermost' }))
+    expect(screen.queryByText(/a score of \d+ out of 100/)).toBeNull()
+  })
+
+  it('says who can host a project for you, and what that does to the grade', async () => {
+    const user = userEvent.setup()
+    renderAt('/tools/slack')
+    expect(pathRow('Zulip')).toHaveTextContent('Self-host, or Zulip Cloud')
+    const detail = await openDetails(user, 'Zulip')
+    expect(detail).toHaveTextContent(
+      /Running it yourself: Moderate, \d+ of 100\. Includes .+ to set up and secure the server\./,
     )
-    expect(within(zulip).getByRole('link', { name: /Zulip Cloud/ })).toHaveAttribute(
+    expect(detail).toHaveTextContent(/Hosted by Zulip Cloud.*: (Easy|Moderate), \d+ of 100\./)
+    expect(within(detail).getByRole('link', { name: /Zulip Cloud/ })).toHaveAttribute(
       'href',
       'https://zulip.com/plans/',
     )
   })
 
-  it('puts the main drawback and the licence catch on the path itself', () => {
+  it('puts the verdict and main drawback in the row, and the licence catch one click away', async () => {
+    const user = userEvent.setup()
     renderAt('/tools/slack')
-    const mattermost = screen.getByRole('article', { name: 'Mattermost' })
-    expect(within(mattermost).getByText('Main drawback').parentElement).toHaveTextContent(
-      /Open core, and the line keeps moving/,
-    )
-    expect(within(mattermost).getByText(/^Licence: MIT, open core$/)).toBeDefined()
-    expect(within(mattermost).getByText(/no longer includes GitLab SSO/)).toBeDefined()
+    const row = pathRow('Mattermost')
+    expect(row).toHaveTextContent(/Needs the least retraining/)
+    expect(row).toHaveTextContent(/Main drawback: Open core, and the line keeps moving/)
+    const detail = await openDetails(user, 'Mattermost')
+    expect(within(detail).getByText(/^Licence: MIT, open core$/)).toBeDefined()
+    expect(within(detail).getByText(/no longer includes GitLab SSO/)).toBeDefined()
   })
 
-  it('fills more dots for better news, whichever way the scale runs', () => {
+  it('fills more dots for better news, whichever way the scale runs', async () => {
+    const user = userEvent.setup()
     renderAt('/tools/slack')
-    const mattermost = screen.getByRole('article', { name: 'Mattermost' })
-    const rating = (label: string) => within(mattermost).getByText(label).parentElement
-    // A like-for-like fit and an easy import both fill the row; neither reads as "1 out of 5".
-    expect(rating('Fit')).toHaveTextContent('Like for like(5 of 5, where 5 is best)')
-    expect(rating('Getting data in')).toHaveTextContent('Easy(4 of 5, where 5 is best)')
-    const element = screen.getByRole('article', { name: 'Element (Matrix)' })
-    expect(within(element).getByText('Getting data in').parentElement).toHaveTextContent(
-      'Hard(2 of 5, where 5 is best)',
-    )
+    // An easy import and a mature project both fill the row; neither reads as "1 out of 5".
+    const mattermost = await openDetails(user, 'Mattermost')
+    expect(mattermost).toHaveTextContent('Getting data inEasy(4 of 5, where 5 is best)')
+    expect(mattermost).toHaveTextContent('MaturityMature(4 of 5, where 5 is best)')
+    const element = await openDetails(user, 'Element (Matrix)')
+    expect(element).toHaveTextContent('Getting data inHard(2 of 5, where 5 is best)')
   })
 
-  it('says when managed hosting was asked for but does not exist', () => {
+  it('says when managed hosting was asked for but does not exist', async () => {
+    const user = userEvent.setup()
     setPrefs({ hosting: 'managed' })
     renderAt('/tools/outlook-exchange')
-    const stalwart = screen.getByRole('article', { name: 'Stalwart' })
-    expect(within(stalwart).getByText(/No managed Stalwart hosting is listed/)).toBeDefined()
+    expect(pathRow('Stalwart')).toHaveTextContent('Self-host only')
+    const detail = await openDetails(user, 'Stalwart')
+    expect(detail).toHaveTextContent(/No managed Stalwart hosting is listed/)
   })
 
   it('can leave out everything that is not fully open source', async () => {
     const user = userEvent.setup()
     const notion = getTool('notion')!
     renderAt('/tools/notion')
-    expect(screen.getAllByRole('article')).toHaveLength(notion.paths.length)
+    expect(pathHeadings()).toHaveLength(notion.paths.length)
 
     await user.click(screen.getByRole('button', { name: 'Options' }))
     await user.click(screen.getByRole('radio', { name: /Open source only/ }))
     expect(getPrefs().licences).toBe('open')
-    const left = screen.getAllByRole('article')
+    const left = pathHeadings()
     expect(left.length).toBeLessThan(notion.paths.length)
-    for (const article of left) expect(within(article).getByText('Open source')).toBeDefined()
-    expect(screen.getByText(/Graded for/)).toHaveTextContent(
-      `open source only. ${notion.paths.length - left.length} paths are hidden by the licence setting.`,
+    for (const rowHeading of left) expect(within(rowHeading).getByText('Open source')).toBeDefined()
+    expect(screen.getByText(/Grades and hours follow/)).toHaveTextContent(
+      `Showing open-source projects only, which hides ${notion.paths.length - left.length} alternatives.`,
     )
   })
 
-  it('orders the ways out by fit or maturity, and keeps the choice in the address', async () => {
+  it('orders the alternatives by fit or maturity, and keeps the choice in the address', async () => {
     const user = userEvent.setup()
     const router = renderAt('/tools/slack')
     const names = () =>
-      screen
-        .getAllByRole('article')
-        .map((article) => within(article).getByRole('heading', { level: 3 }).textContent)
+      pathHeadings().map((rowHeading) => within(rowHeading).getAllByRole('link')[0]!.textContent)
     expect(names()).toEqual(['Mattermost', 'Zulip', 'Element (Matrix)'])
     // Whatever the order, the easiest one stays marked.
-    const easiest = () => screen.getByText('Easiest for you').closest('article')
-    expect(easiest()).toBe(screen.getByRole('article', { name: 'Mattermost' }))
+    const easiest = () => screen.getByText('Easiest for you').closest('tr')
+    expect(easiest()).toBe(pathRow('Mattermost'))
 
     await user.selectOptions(screen.getByRole('combobox', { name: 'Order' }), 'Most mature first')
     expect(names()[0]).toBe('Zulip')
     expect(router.state.location.search).toBe('?sort=maturity')
-    expect(easiest()).toBe(screen.getByRole('article', { name: 'Mattermost' }))
+    expect(easiest()).toBe(pathRow('Mattermost'))
+  })
+
+  it('says which entries a person has checked and which are AI drafts', () => {
+    renderAt('/alternatives/galene')
+    const credit = screen.getByText(/Written or checked by/)
+    expect(within(credit).getByRole('link', { name: /Stefane Fermigier/ })).toHaveAttribute(
+      'href',
+      'https://github.com/sfermigier',
+    )
+    cleanup()
+
+    renderAt('/alternatives/nextcloud')
+    expect(screen.getByText(/^AI draft: written with an AI assistant/)).toBeDefined()
+    expect(screen.getByRole('link', { name: /Check or correct this entry/ })).toHaveAttribute(
+      'href',
+      'https://github.com/noobmaster69/ExitPath/edit/main/catalog/alternatives/nextcloud.json',
+    )
+    cleanup()
+
+    // In the table, the same fact in two words.
+    renderAt('/tools/zoom')
+    expect(pathRow('Galène')).toHaveTextContent('Checked')
+    expect(pathRow('Jitsi Meet')).toHaveTextContent('AI draft')
   })
 
   it('applies the colours and text size chosen in the options', async () => {
@@ -383,18 +443,16 @@ describe('interactions', () => {
   it('adds a path to the plan from a tool page and counts it in the header', async () => {
     const user = userEvent.setup()
     renderAt('/tools/notion')
-    const outline = screen.getByRole('article', { name: 'Outline' })
-    await user.click(within(outline).getByRole('button', { name: 'Add to my plan' }))
+    await user.click(within(pathRow('Outline')).getByRole('button', { name: 'Add to my plan' }))
     expect(getPlan()).toEqual({ notion: 'outline' })
-    expect(within(outline).getByRole('button', { name: 'In your plan' })).toHaveAttribute(
+    expect(within(pathRow('Outline')).getByRole('button', { name: 'In your plan' })).toHaveAttribute(
       'aria-pressed',
       'true',
     )
     expect(screen.getByRole('link', { name: 'Plan, 1 move planned' })).toBeDefined()
 
-    // Another path for the same tool offers to switch rather than add.
-    const appflowy = screen.getByRole('article', { name: 'AppFlowy' })
-    await user.click(within(appflowy).getByRole('button', { name: 'Use this path in my plan' }))
+    // Another alternative for the same tool offers to switch rather than add.
+    await user.click(within(pathRow('AppFlowy')).getByRole('button', { name: 'Use this in my plan' }))
     expect(getPlan()).toEqual({ notion: 'appflowy' })
   })
 
@@ -404,7 +462,7 @@ describe('interactions', () => {
     expect(screen.queryByRole('combobox')).toBeNull()
 
     await user.keyboard('/')
-    const input = screen.getByPlaceholderText(/What do you want to leave/)
+    const input = screen.getByPlaceholderText(/Search for a tool, such as/)
     expect(input).toHaveFocus()
     await user.type(input, 'immich')
     await user.keyboard('{Enter}')
@@ -417,7 +475,7 @@ describe('interactions', () => {
     renderAt('/browse')
     await user.type(screen.getByRole('searchbox'), 'a/b')
     expect(screen.getByRole('searchbox')).toHaveValue('a/b')
-    expect(screen.queryByPlaceholderText(/What do you want to leave/)).toBeNull()
+    expect(screen.queryByPlaceholderText(/Search for a tool, such as/)).toBeNull()
   })
 
   it('shows returning visitors where they left off', async () => {
@@ -480,6 +538,13 @@ describe('interactions', () => {
     expect(shown()).toBe(alternatives.filter((alternative) => alternative.managedHosting.length > 0).length)
     await user.click(screen.getByRole('button', { name: 'Has managed hosting' }))
 
+    await user.click(screen.getByRole('button', { name: 'Checked by a person' }))
+    const checked = alternatives.filter((alternative) => alternative.checkedBy)
+    expect(shown()).toBe(checked.length)
+    expect(screen.getByRole('link', { name: checked[0]!.name })).toBeDefined()
+    expect(router.state.location.search).toContain('checked=1')
+    await user.click(screen.getByRole('button', { name: 'Checked by a person' }))
+
     // The licence filter is the same setting as in the options, so it follows you to other pages.
     await user.click(screen.getByRole('button', { name: 'Open source only' }))
     expect(shown()).toBe(alternatives.filter((alternative) => alternative.openness === 'open-source').length)
@@ -502,7 +567,7 @@ describe('interactions', () => {
     expect(summary()).toHaveTextContent('Last move' + 'Slack')
 
     await user.click(screen.getByRole('checkbox', { name: 'Slack to Zulip: done' }))
-    expect(summary()).toHaveTextContent('You are out')
+    expect(summary()).toHaveTextContent('Finished')
 
     // The pace is one of the options, and the timeline follows it.
     await user.click(screen.getByRole('checkbox', { name: 'Slack to Zulip: done' }))
@@ -559,7 +624,7 @@ describe('interactions', () => {
   it('previews a plan from a link and only saves it when asked', async () => {
     const user = userEvent.setup()
     const router = renderAt('/plan?p=slack.zulip~github~not-a-tool')
-    const shared = screen.getByRole('region', { name: 'Someone shared a plan with you' })
+    const shared = screen.getByRole('region', { name: 'A plan shared with you' })
     expect(shared).toHaveTextContent('Slack to Zulip')
     expect(shared).toHaveTextContent('GitHub to Forgejo')
     expect(getPlan()).toEqual({})
@@ -567,7 +632,7 @@ describe('interactions', () => {
     await user.click(within(shared).getByRole('button', { name: 'Save as my plan' }))
     expect(getPlan()).toEqual({ slack: 'zulip', github: null })
     expect(router.state.location.search).toBe('')
-    expect(screen.queryByRole('region', { name: 'Someone shared a plan with you' })).toBeNull()
+    expect(screen.queryByRole('region', { name: 'A plan shared with you' })).toBeNull()
     expect(screen.getByRole('heading', { name: '2 moves, easiest first' })).toBeDefined()
   })
 
@@ -575,20 +640,20 @@ describe('interactions', () => {
     const user = userEvent.setup()
     setPlanChoices({ notion: 'logseq' })
     renderAt('/plan?p=slack.zulip')
-    const shared = () => screen.getByRole('region', { name: 'Someone shared a plan with you' })
+    const shared = () => screen.getByRole('region', { name: 'A plan shared with you' })
 
     await user.click(within(shared()).getByRole('button', { name: 'Save as my plan' }))
     expect(getPlan()).toEqual({ notion: 'logseq' })
     await user.click(within(shared()).getByRole('button', { name: 'Cancel' }))
     await user.click(within(shared()).getByRole('button', { name: 'Dismiss' }))
-    expect(screen.queryByRole('region', { name: 'Someone shared a plan with you' })).toBeNull()
+    expect(screen.queryByRole('region', { name: 'A plan shared with you' })).toBeNull()
     expect(getPlan()).toEqual({ notion: 'logseq' })
   })
 
   it('does not offer a shared plan that is the one you already have', () => {
     setPlanChoices({ slack: 'zulip' })
     renderAt('/plan?p=slack.zulip')
-    expect(screen.queryByRole('region', { name: 'Someone shared a plan with you' })).toBeNull()
+    expect(screen.queryByRole('region', { name: 'A plan shared with you' })).toBeNull()
   })
 
   it('hides finished steps on a checklist when asked, and copies it as Markdown', async () => {

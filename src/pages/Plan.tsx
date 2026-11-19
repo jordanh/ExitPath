@@ -5,7 +5,7 @@ import { ConfirmButton } from '../components/ConfirmButton.tsx'
 import { CopyText } from '../components/CopyText.tsx'
 import { Disclosure } from '../components/Disclosure.tsx'
 import { IconCheck, IconX } from '../components/icons.tsx'
-import { SituationLine } from '../components/Situation.tsx'
+import { SituationBar } from '../components/Situation.tsx'
 import { EmptyState, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { planToMarkdown } from '../lib/markdown.ts'
 import { openOptions } from '../lib/options-dialog.ts'
@@ -125,7 +125,7 @@ function Move({ item, done }: { item: PlanItem; done: boolean }) {
             </Link>
           </h3>
         </div>
-        <ScoreBadge score={chosen.result.score} band={chosen.result.band} size="sm" />
+        <ScoreBadge band={chosen.result.band} size="sm" />
       </div>
       <p className="mt-0.5 flex flex-wrap items-baseline gap-x-4 gap-y-0.5">
         <OpennessBadge openness={chosen.alternative.openness} />
@@ -149,7 +149,7 @@ function Move({ item, done }: { item: PlanItem; done: boolean }) {
             <option value="">Easiest for me ({easiest.alternative.name})</option>
             {options.map(({ alternative, result }) => (
               <option key={alternative.id} value={alternative.id}>
-                {alternative.name} · {result.score} {result.band.label.toLowerCase()}
+                {alternative.name} · {result.band.label.toLowerCase()}
               </option>
             ))}
           </select>
@@ -195,7 +195,7 @@ function SharedPlan({
   return (
     <section aria-labelledby="shared-plan" className="mt-8 border-l-2 border-accent pl-4 sm:pl-5">
       <h2 id="shared-plan" className="text-[1.3rem] leading-tight font-extrabold">
-        Someone shared a plan with you
+        A plan shared with you
       </h2>
       <ul className="mt-2">
         {items.map(({ tool, chosen }) => (
@@ -204,7 +204,7 @@ function SharedPlan({
               {tool.name} to <span className="font-bold">{chosen.alternative.name}</span>
             </span>
             <span className="leader" aria-hidden="true" />
-            <ScoreBadge score={chosen.result.score} band={chosen.result.band} size="sm" />
+            <ScoreBadge band={chosen.result.band} size="sm" />
           </li>
         ))}
       </ul>
@@ -265,10 +265,10 @@ export function PlanPage() {
   return (
     <Page>
       <header className="max-w-2xl">
-        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">Your plan</h1>
+        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">Your plan</h1>
         <p className="mt-3 text-xl text-muted">
-          Pick what you use today. You get a way out of each, the work it adds up to, and an order to do it
-          in.
+          Select the tools you use. The plan lists a replacement for each, the work it adds up to and an order
+          to do them in.
         </p>
       </header>
 
@@ -298,7 +298,9 @@ export function PlanPage() {
           </EmptyState>
         ) : (
           <>
-            <dl className="grid gap-x-10 gap-y-5 sm:grid-cols-3">
+            <SituationBar />
+
+            <dl className="mt-7 grid gap-x-10 gap-y-5 sm:grid-cols-3">
               <div>
                 <dt className="eyebrow">{doneCount > 0 ? 'Work left' : 'Hands-on work'}</dt>
                 <dd className="font-display text-[1.7rem] leading-tight font-black">
@@ -313,9 +315,7 @@ export function PlanPage() {
               <div>
                 <dt className="eyebrow">At {hoursPerWeek} hours a week</dt>
                 <dd className="font-display text-[1.7rem] leading-tight font-black first-letter:uppercase">
-                  {left.length === 0
-                    ? 'You are out'
-                    : formatWeeks(weeksAtPace(remaining.hours, hoursPerWeek))}
+                  {left.length === 0 ? 'Finished' : formatWeeks(weeksAtPace(remaining.hours, hoursPerWeek))}
                 </dd>
                 <dd className="print:hidden">
                   <button type="button" onClick={openOptions} className="link cursor-pointer">
@@ -330,7 +330,7 @@ export function PlanPage() {
                     {remaining.hardest.tool.name}
                   </dd>
                   <dd className="text-muted">
-                    {remaining.hardest.chosen.result.score} out of 100
+                    Graded {remaining.hardest.chosen.result.band.label.toLowerCase()}
                     {left.length > 1 ? '. Leave it until last.' : '.'}
                   </dd>
                 </div>
@@ -344,7 +344,6 @@ export function PlanPage() {
                   ? 'None of them needs a server that you run.'
                   : `${totals.servers} of them ${totals.servers === 1 ? 'is a server' : 'are servers'} you run and keep updated.`}
               </p>
-              <SituationLine />
             </div>
 
             <ol className="mt-9 ml-3.5 border-l-[3px] border-dotted border-line-strong">

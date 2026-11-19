@@ -24,8 +24,7 @@ function groupsFor(category: Category | undefined): Group[] {
       rows: [
         {
           label: 'Migration difficulty',
-          hint: '0 is trivial, 100 is brutal',
-          cell: ({ result }) => <ScoreBadge score={result.score} band={result.band} size="sm" />,
+          cell: ({ result }) => <ScoreBadge band={result.band} size="sm" />,
         },
         {
           label: 'Estimated effort',

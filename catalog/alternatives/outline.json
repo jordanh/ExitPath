@@ -47,7 +47,7 @@
     "A fast, uncluttered editor with Markdown shortcuts and real-time collaboration",
     "Imports Notion and Confluence exports and keeps the page hierarchy",
     "Collections, granular permissions, public share links and a solid API",
-    "Search that actually finds things"
+    "Fast full-text search"
   ],
   "weaknesses": [
     "Source-available, not open source: see the licence note",

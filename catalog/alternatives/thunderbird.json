@@ -1,7 +1,7 @@
 {
   "id": "thunderbird",
   "name": "Thunderbird",
-  "tagline": "The desktop mail client that outlived its rivals",
+  "tagline": "A desktop mail client with calendar and contacts",
   "description": "Mail, calendars, contacts and feeds in one desktop application, plus an Android app. It works with any standards-based mailbox and can also connect to Exchange, which makes it a useful first step before changing where your mail lives.",
   "categories": ["email"],
   "kind": "desktop",

@@ -20,9 +20,9 @@ export function planToMarkdown(
     '',
   ]
   for (const { tool, chosen } of items) {
-    const { score, band, hours } = chosen.result
+    const { band, hours } = chosen.result
     lines.push(
-      `${box(done.has(tool.id))} **${tool.name} → ${chosen.alternative.name}** (${band.label.toLowerCase()}, ${score}/100, ${formatEffort(hours).toLowerCase()})`,
+      `${box(done.has(tool.id))} **${tool.name} → ${chosen.alternative.name}** (${band.label.toLowerCase()}, ${formatEffort(hours).toLowerCase()})`,
       `  ${chosen.path.verdict}`,
     )
   }

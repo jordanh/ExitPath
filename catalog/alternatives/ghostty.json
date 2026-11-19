@@ -1,7 +1,7 @@
 {
   "id": "ghostty",
   "name": "Ghostty",
-  "tagline": "Fast, native and sensible out of the box",
+  "tagline": "A fast terminal with a native interface on macOS and Linux",
   "description": "A terminal emulator that uses each platform's native interface toolkit and GPU rendering, aiming to be fast, standards-compliant and pleasant with no configuration at all.",
   "categories": ["terminal"],
   "kind": "desktop",

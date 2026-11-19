@@ -1,7 +1,7 @@
 {
   "name": "ExitPath",
   "short_name": "ExitPath",
-  "description": "Find, compare and switch to open-source alternatives for the tools you depend on.",
+  "description": "A catalog of open-source alternatives to common proprietary tools, and what it takes to switch.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",

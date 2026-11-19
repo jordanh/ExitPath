@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
-import { alternatives, categories, getCategory, tools } from '../catalog/index.ts'
+import { alternatives, categories, getCategory, isChecked, tools } from '../catalog/index.ts'
 import type { Alternative } from '../catalog/schema.ts'
+import { SituationBar } from '../components/Situation.tsx'
 import { EmptyState, ExternalLink, IndexRow, OpennessBadge, Page, ScoreBadge } from '../components/ui.tsx'
 import { nameList } from '../lib/names.ts'
 import { scoredPathsFrom } from '../lib/paths.ts'
@@ -33,6 +34,7 @@ export function Browse() {
   const category = params.get('category') ?? ''
   const noServer = params.get('noserver') === '1'
   const hosted = params.get('hosted') === '1'
+  const checkedOnly = params.get('checked') === '1'
   const query = params.get('q') ?? ''
   const filter = tokenize(query)
 
@@ -56,13 +58,14 @@ export function Browse() {
       (!situation.openOnly || alternative.openness === 'open-source') &&
       (!noServer || worksWithoutServer(alternative)) &&
       (!hosted || alternative.managedHosting.length > 0) &&
+      (!checkedOnly || isChecked(alternative)) &&
       matches(filter, alternative.name, alternative.tagline),
   )
   const count = view === 'tools' ? shownTools.length : shownAlternatives.length
 
   return (
     <Page>
-      <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">Browse</h1>
+      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">Browse</h1>
 
       {/* Two views of one list, not tabs with separate panels: plain toggle buttons. */}
       <div
@@ -72,15 +75,15 @@ export function Browse() {
       >
         {(
           [
-            ['tools', `What you use (${tools.length})`],
-            ['alternatives', `Alternatives (${alternatives.length})`],
+            ['tools', `Proprietary tools (${tools.length})`],
+            ['alternatives', `Open-source alternatives (${alternatives.length})`],
           ] as const
         ).map(([id, label]) => (
           <button
             key={id}
             type="button"
             aria-pressed={view === id}
-            onClick={() => update({ view: id === 'tools' ? '' : id, noserver: '', hosted: '' })}
+            onClick={() => update({ view: id === 'tools' ? '' : id, noserver: '', hosted: '', checked: '' })}
             className="cursor-pointer text-faint decoration-accent decoration-2 underline-offset-[7px] hover:text-ink aria-pressed:text-ink aria-pressed:underline"
           >
             {label}
@@ -144,9 +147,24 @@ export function Browse() {
             >
               Has managed hosting
             </button>
+            <button
+              type="button"
+              className={toggle}
+              aria-pressed={checkedOnly}
+              title="Entries written or checked by someone who uses the tool, rather than AI drafts"
+              onClick={() => update({ checked: checkedOnly ? '' : '1' })}
+            >
+              Checked by a person
+            </button>
           </>
         )}
       </div>
+
+      {view === 'tools' && (
+        <div className="mt-6">
+          <SituationBar />
+        </div>
+      )}
 
       <p className="mt-7 text-muted" role="status">
         Showing {count}{' '}
@@ -169,12 +187,8 @@ export function Browse() {
                     <IndexRow
                       to={`/tools/${tool.id}`}
                       title={tool.name}
-                      end={
-                        easiest && (
-                          <ScoreBadge score={easiest.result.score} band={easiest.result.band} size="sm" />
-                        )
-                      }
-                      detail={<>to {nameList(paths.map(({ alternative }) => alternative.name))}</>}
+                      end={easiest && <ScoreBadge band={easiest.result.band} size="sm" />}
+                      detail={nameList(paths.map(({ alternative }) => alternative.name))}
                     />
                   </li>
                 )
@@ -189,6 +203,7 @@ export function Browse() {
                       <>
                         {alternative.categories.map((id) => getCategory(id)?.name).join(', ')}.{' '}
                         {alternative.tagline}
+                        {isChecked(alternative) && <span className="text-ink"> · Checked by a person</span>}
                       </>
                     }
                   />

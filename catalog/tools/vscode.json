@@ -36,7 +36,7 @@
     {
       "to": "vscodium",
       "fit": 5,
-      "verdict": "The same editor without Microsoft's build. The only question is whether you depend on a Microsoft-only extension.",
+      "verdict": "The same editor, built without Microsoft's branding and telemetry. Check first whether you depend on an extension that only works in Microsoft's build.",
       "import": {
         "difficulty": 1,
         "summary": "Copy your user settings into VSCodium's profile directory and reinstall extensions from Open VSX. Most are there under the same name; check the Microsoft-proprietary ones for open replacements first.",

@@ -56,6 +56,10 @@ at official documentation, and must be `https://`.
 **Update `reviewed`.** Set it to the current month (`YYYY-MM`) whenever you check an entry against reality,
 even if nothing needed changing.
 
+**Add yourself to `checkedBy`.** If you use the tool and have written or checked its entry, add your name
+(and a link, if you like) to the entry's `checkedBy` list. The site shows every entry without one as an AI
+draft, and names the people on the ones that have been checked.
+
 ### What does not belong
 
 - Projects that are abandoned, or that exist mainly as a landing page

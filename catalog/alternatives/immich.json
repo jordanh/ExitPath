@@ -1,7 +1,7 @@
 {
   "id": "immich",
   "name": "Immich",
-  "tagline": "The self-hosted Google Photos experience",
+  "tagline": "Self-hosted photo and video backup, similar to Google Photos",
   "description": "A photo and video server with mobile apps that back up your camera roll automatically. Timeline, albums, face recognition, search by content, map and sharing all run on your own hardware.",
   "categories": ["photos"],
   "kind": "server",

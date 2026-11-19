@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getGuide, getSuite, getTool } from '../catalog/index.ts'
 import type { Suite } from '../catalog/schema.ts'
 import { IconArrowRight } from '../components/icons.tsx'
-import { SituationLine } from '../components/Situation.tsx'
+import { SituationBar } from '../components/Situation.tsx'
 import { OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { scoredPathsFrom } from '../lib/paths.ts'
 import { planTotals } from '../lib/plan.ts'
@@ -18,7 +18,7 @@ export function SuitePage() {
 }
 
 function SuiteView({ suite }: { suite: Suite }) {
-  useTitle(`Leaving ${suite.name}`)
+  useTitle(`Replacing ${suite.name}`)
   const situation = useSituation()
   const guide = suite.guide ? getGuide(suite.guide) : undefined
 
@@ -48,9 +48,8 @@ function SuiteView({ suite }: { suite: Suite }) {
   return (
     <Page narrow>
       <header>
-        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
-          <span className="font-extrabold text-muted italic">Leaving </span>
-          {suite.name}
+        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+          Replacing {suite.name}
         </h1>
         <p className="mt-1 text-muted">{suite.vendor}</p>
         <p className="mt-4 text-xl">{suite.summary}</p>
@@ -84,11 +83,12 @@ function SuiteView({ suite }: { suite: Suite }) {
         <p>
           Taking the easiest path for each part comes to{' '}
           <span className="font-bold">{formatEffort(total).toLowerCase()}</span> of hands-on work. The hardest
-          part is <span className="font-bold">{hardest.component.label}</span>, at{' '}
-          {hardest.easiest.result.score} out of 100: plan around it, and consider leaving it until last.
+          part is <span className="font-bold">{hardest.component.label}</span>, graded{' '}
+          {hardest.easiest.result.band.label.toLowerCase()}: plan around it, and consider leaving it until
+          last.
         </p>
-        <div className="mt-1">
-          <SituationLine />
+        <div className="mt-5">
+          <SituationBar />
         </div>
 
         <ol className="mt-5">
@@ -106,7 +106,7 @@ function SuiteView({ suite }: { suite: Suite }) {
                     </Link>
                   </h3>
                 </div>
-                <ScoreBadge score={easiest.result.score} band={easiest.result.band} size="sm" />
+                <ScoreBadge band={easiest.result.band} size="sm" />
               </div>
               <p className="mt-0.5 flex flex-wrap items-baseline gap-x-4 gap-y-0.5">
                 <OpennessBadge openness={easiest.alternative.openness} />

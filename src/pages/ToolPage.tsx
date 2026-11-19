@@ -5,9 +5,9 @@ import type { Tool } from '../catalog/schema.ts'
 import { CompareTable } from '../components/CompareTable.tsx'
 import { Disclosure } from '../components/Disclosure.tsx'
 import { EntryFooter } from '../components/EntryFooter.tsx'
-import { IconArrowRight } from '../components/icons.tsx'
-import { PathCard } from '../components/PathCard.tsx'
-import { SituationLine } from '../components/Situation.tsx'
+import { PathsTable } from '../components/PathsTable.tsx'
+import { Provenance } from '../components/Provenance.tsx'
+import { SituationBar } from '../components/Situation.tsx'
 import { ExternalLink, MarkedList, Meter, Page, Section } from '../components/ui.tsx'
 import { PATH_ORDERS, allPathsFrom, orderPaths, scoredPathsFrom, type PathOrder } from '../lib/paths.ts'
 import { SCALES } from '../lib/scales.ts'
@@ -18,7 +18,7 @@ import { NotFound } from './NotFound.tsx'
 export function ToolPage() {
   const { id } = useParams()
   const tool = id ? getTool(id) : undefined
-  // Keyed so that per-page state (hidden comparison columns) resets between tools.
+  // Keyed so that per-page state (open rows, hidden comparison columns) resets between tools.
   return tool ? <ToolView key={tool.id} tool={tool} /> : <NotFound what="tool" />
 }
 
@@ -26,7 +26,7 @@ const isOrder = (value: string | null): value is PathOrder =>
   value !== null && Object.hasOwn(PATH_ORDERS, value)
 
 function ToolView({ tool }: { tool: Tool }) {
-  useTitle(`Leaving ${tool.name}`)
+  useTitle(`Alternatives to ${tool.name}`)
   const situation = useSituation()
   const [params, setParams] = useSearchParams()
   const [hidden, setHidden] = useState<ReadonlySet<string>>(new Set())
@@ -66,30 +66,29 @@ function ToolView({ tool }: { tool: Tool }) {
       </nav>
 
       <header className="max-w-2xl">
-        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
-          <span className="font-extrabold text-muted italic">Leaving </span>
-          {tool.name}
+        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+          Alternatives to {tool.name}
         </h1>
         <p className="mt-1 text-muted">
           {tool.vendor}
           {tool.alsoCovers && <> · also covers {tool.alsoCovers.join(', ')}</>}
         </p>
-        <p className="mt-4 text-xl">{tool.summary}</p>
+        <p className="mt-3 text-lg">{tool.summary}</p>
       </header>
 
       {(guides.length > 0 || suites.length > 0) && (
-        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
+        <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
           {guides.map((guide) => (
             <li key={guide.id}>
-              <Link to={`/guides/${guide.id}`} className="link inline-flex items-center gap-1">
-                Checklist: {guide.title} <IconArrowRight className="text-accent" />
+              <Link to={`/guides/${guide.id}`} className="link">
+                Checklist: {guide.title}
               </Link>
             </li>
           ))}
           {suites.map((suite) => (
             <li key={suite.id}>
-              <Link to={`/suites/${suite.id}`} className="link inline-flex items-center gap-1">
-                Part of {suite.name} <IconArrowRight className="text-accent" />
+              <Link to={`/suites/${suite.id}`} className="link">
+                Part of {suite.name}
               </Link>
             </li>
           ))}
@@ -97,7 +96,7 @@ function ToolView({ tool }: { tool: Tool }) {
       )}
 
       <Section
-        title={`${paths.length} ${paths.length === 1 ? 'way' : 'ways'} out`}
+        title={`${paths.length} ${paths.length === 1 ? 'alternative' : 'alternatives'}`}
         aside={
           paths.length > 1 && (
             <div className="flex items-baseline gap-2 print:hidden">
@@ -125,23 +124,14 @@ function ToolView({ tool }: { tool: Tool }) {
           )
         }
       >
-        <SituationLine hidden={filteredOut} />
-        <div className="mt-2">
-          {paths.map((scored) => (
-            <PathCard
-              key={scored.alternative.id}
-              scored={scored}
-              easiest={scored.alternative.id === easiestId && paths.length > 1}
-            />
-          ))}
+        <SituationBar hidden={filteredOut} />
+        <div className="mt-6">
+          <PathsTable paths={paths} easiestId={easiestId} />
         </div>
       </Section>
 
-      <Section title="Before you go">
-        <Disclosure
-          summary="What keeps you here"
-          hint={`Lock-in: ${SCALES.lockIn.labels[tool.lockIn.level - 1]}`}
-        >
+      <Section title={`About ${tool.name}`}>
+        <Disclosure summary="Lock-in" hint={SCALES.lockIn.labels[tool.lockIn.level - 1]}>
           <Meter
             scale="lockIn"
             level={tool.lockIn.level}
@@ -152,10 +142,7 @@ function ToolView({ tool }: { tool: Tool }) {
           </div>
         </Disclosure>
 
-        <Disclosure
-          summary="Getting your data out"
-          hint={`Export: ${SCALES.difficulty.labels[tool.export.difficulty - 1]}`}
-        >
+        <Disclosure summary="Exporting your data" hint={SCALES.difficulty.labels[tool.export.difficulty - 1]}>
           <div className="max-w-2xl">
             <Meter label="Getting data out" scale="difficulty" level={tool.export.difficulty} />
             <p className="mt-3">{tool.export.summary}</p>
@@ -180,7 +167,7 @@ function ToolView({ tool }: { tool: Tool }) {
 
         {paths.length > 1 && (
           <Disclosure
-            summary="Compare side by side"
+            summary="Feature comparison"
             hint={`${compared.length} alternatives, feature by feature`}
           >
             {paths.length > 2 && (
@@ -205,6 +192,10 @@ function ToolView({ tool }: { tool: Tool }) {
             <CompareTable paths={compared} category={category} />
           </Disclosure>
         )}
+
+        <div className="mt-4">
+          <Provenance entry={tool} folder="tools" />
+        </div>
       </Section>
 
       <EntryFooter folder="tools" id={tool.id} name={tool.name} reviewed={tool.reviewed} />

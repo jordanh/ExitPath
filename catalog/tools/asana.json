@@ -76,7 +76,7 @@
     {
       "to": "vikunja",
       "fit": 3,
-      "verdict": "For a small team or one person whose Asana is really a set of shared task lists. Light to run, but nothing brings your tasks across for you.",
+      "verdict": "For a small team or one person who uses Asana mainly as shared task lists. Light to run, but nothing brings your tasks across for you.",
       "import": {
         "difficulty": 4,
         "summary": "There is no Asana importer. Recreate the projects and move open tasks by hand, or write a short script against both APIs. Most teams take the chance to leave finished work behind in an export file."

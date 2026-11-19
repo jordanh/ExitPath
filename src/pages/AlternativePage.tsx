@@ -5,7 +5,8 @@ import type { Alternative } from '../catalog/schema.ts'
 import { Disclosure } from '../components/Disclosure.tsx'
 import { EntryFooter } from '../components/EntryFooter.tsx'
 import { IconArrowRight } from '../components/icons.tsx'
-import { SituationLine } from '../components/Situation.tsx'
+import { Provenance } from '../components/Provenance.tsx'
+import { SituationBar } from '../components/Situation.tsx'
 import {
   Callout,
   ExternalLink,
@@ -68,12 +69,10 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
       </nav>
 
       <header className="max-w-2xl">
-        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
+        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
           {alternative.name}
         </h1>
-        <p className="mt-1 font-display text-[1.35rem] leading-snug text-muted italic">
-          {alternative.tagline}
-        </p>
+        <p className="mt-1 text-lg text-muted">{alternative.tagline}</p>
         <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-0.5">
           <OpennessBadge openness={alternative.openness} />
           <Tag title="Licence">{alternative.license}</Tag>
@@ -81,6 +80,9 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
           <Tag>{KIND_LABELS[alternative.kind].toLowerCase()}</Tag>
         </p>
         <p className="mt-4 text-lg">{alternative.description}</p>
+        <div className="mt-3">
+          <Provenance entry={alternative} folder="alternatives" />
+        </div>
         <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-1">
           <li>
             <ExternalLink href={alternative.links.website}>Website</ExternalLink>
@@ -97,19 +99,19 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
       <div className="mt-10 grid gap-x-14 gap-y-8 md:grid-cols-2">
         <section aria-labelledby="strengths">
           <h2 id="strengths" className="mb-3 text-[1.3rem] leading-tight font-extrabold">
-            Where it is strong
+            Strengths
           </h2>
           <MarkedList kind="good" items={alternative.strengths} />
         </section>
         <section aria-labelledby="weaknesses">
           <h2 id="weaknesses" className="mb-3 text-[1.3rem] leading-tight font-extrabold">
-            Where it falls short
+            Weaknesses
           </h2>
           <MarkedList kind="bad" items={alternative.weaknesses} />
         </section>
       </div>
 
-      <Section title="Can you rely on it?">
+      <Section title="The project">
         <div className="max-w-2xl">
           <Meter label="Maturity" scale="maturity" level={alternative.maturity.score} />
           <p className="mt-2">{alternative.maturity.rationale}</p>
@@ -125,7 +127,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
           </dl>
           {alternative.licenseNote && (
             <div className="mt-5">
-              <Callout title="Read this before you commit">{alternative.licenseNote}</Callout>
+              <Callout title="Licence note">{alternative.licenseNote}</Callout>
             </div>
           )}
         </div>
@@ -143,7 +145,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
           <div className="grid gap-x-14 gap-y-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
             <div>
               <h3 className="font-display text-[1.3rem] font-extrabold">
-                Hosting it yourself{selfHosting.optional ? ' (optional)' : ''}
+                Self-hosting{selfHosting.optional ? ' (optional)' : ''}
               </h3>
               <div className="mt-2">
                 <Meter label="Running it" scale="difficulty" level={selfHosting.difficulty} />
@@ -170,7 +172,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
               </ul>
             </div>
             <div>
-              <h3 className="font-display text-[1.3rem] font-extrabold">Having it hosted</h3>
+              <h3 className="font-display text-[1.3rem] font-extrabold">Managed hosting</h3>
               {alternative.managedHosting.length > 0 ? (
                 <ul className="mt-2 space-y-3">
                   {alternative.managedHosting.map((host) => (
@@ -190,7 +192,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         )}
       </Section>
 
-      <Section title="What it does">
+      <Section title="Features">
         {categoryList.map((category) => (
           <Disclosure
             key={category.id}
@@ -221,15 +223,15 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         ))}
       </Section>
 
-      <Section title={`${replaces.length} ${replaces.length === 1 ? 'path leads' : 'paths lead'} here`}>
-        <SituationLine />
+      <Section title={`Replaces ${replaces.length} ${replaces.length === 1 ? 'tool' : 'tools'}`}>
+        <SituationBar />
         <ul className="mt-2 max-w-2xl">
           {replaces.map(({ tool, path, result }) => (
             <li key={tool.id}>
               <IndexRow
                 to={`/tools/${tool.id}`}
-                title={<>From {tool.name}</>}
-                end={<ScoreBadge score={result.score} band={result.band} size="sm" />}
+                title={tool.name}
+                end={<ScoreBadge band={result.band} size="sm" />}
                 detail={path.verdict}
               />
             </li>
