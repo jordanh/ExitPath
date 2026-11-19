@@ -1,40 +1,40 @@
 # ExitPath
 
-Find your way out of big-platform lock-in.
+Open-source alternatives to common proprietary tools, and what it takes to switch.
 
-ExitPath helps people and small teams find, compare and switch to open-source alternatives for the tools
-they depend on: Microsoft 365, Google Workspace, Slack, Notion, GitHub and others. It is not another
-software suite. It is a map of the projects that already exist, with the distances marked honestly: what
-moves across, what does not, how hard the switch is, and the order to do it in.
+ExitPath is a catalog of open-source alternatives to Microsoft 365, Google Workspace, Slack, Notion,
+GitHub, Jira and other tools. For each alternative it records how well it replaces the original, what data
+transfers, and how hard the move is. It also has step-by-step checklists for four common migrations.
 
-![The ExitPath home page: the headline "Find your way out", a search field, and an index of tools with the grade of the easiest way out of each](docs/screenshot.png)
+![The ExitPath home page: a search field and an index of tools, each with its alternatives and the grade of the easiest one](docs/screenshot.png)
 
-![The Slack page: three ways out, each with its grade, effort estimate, verdict and ratings](docs/screenshot-paths.png)
+![The Slack page: its three alternatives in a table, with difficulty, fit, hosting and a one-line verdict for each](docs/screenshot-paths.png)
 
 ## What it does
 
-- **Searchable catalog.** 19 proprietary tools, 41 alternatives and 60 migration paths between them, from office suites and chat
-  to the company login. Each
-  alternative carries its real licence, who funds it, a maturity rating with a written rationale, and a list
-  of weaknesses as well as strengths. Open-core and source-available projects are labelled as such.
-- **Side-by-side comparison.** For any tool, compare its alternatives on features, licence, maturity,
-  import difficulty, self-hosting difficulty and server requirements.
-- **Migration difficulty score and effort estimate.** A 0–100 score and an hours-to-weeks estimate for
-  every path, adjusted for how many people are moving and whether you self-host. The arithmetic is simple
-  and shown in full on the "How it works" page.
-- **Your plan.** Tick everything you use and get one combined exit plan: a path for each tool, the total
+- **Catalog with search.** 19 proprietary tools, 41 alternatives and 60 migration paths between them.
+  Each alternative lists its licence, who funds it, a maturity rating with a written rationale, and its
+  weaknesses as well as its strengths. Open-core and source-available projects are labelled as such.
+- **A comparison table per tool.** One row per alternative: difficulty, fit, hosting, a one-line verdict
+  and its main drawback. A row unfolds to show what transfers, how the import works, both hosting routes
+  and how the grade was worked out. A second table compares features.
+- **Difficulty in words, effort in hours.** Each migration is graded easy, moderate, demanding, hard or
+  very hard, with an hours-to-weeks estimate, for the team size and hosting you choose with toggles on the
+  page. The 0–100 score behind the grade is shown only next to its breakdown.
+- **Who checked each entry.** Most of the catalog was drafted with an AI assistant. Every entry says
+  whether a person who uses the tool has written or checked it, and names them, or is still an AI draft.
+- **Your plan.** Select everything you use and get one plan: a replacement for each tool, the total
   hands-on work (counting a shared destination only once) and an order to do it in, easiest first. Tick
   moves off as you finish them, and see how many weeks the rest takes at the hours you can give.
 - **Take it with you.** Copy a plan or a checklist as a Markdown task list for an issue tracker or a wiki,
   print either, or share a plan as a link. The link carries the plan in its address; nothing is uploaded.
-- **Guided checklists.** Step-by-step plans for leaving Microsoft 365, Google Workspace, Slack and Notion,
-  with progress and notes saved as you go, and a print layout for paper.
-- **Options that change the answers.** Say who is moving, who runs the servers, how many hours a week you
-  have and whether only fully open-source projects will do, and every grade, estimate and suggestion
-  follows. Paths can be ordered by ease, fit or maturity. Colours and text size are there too.
+- **Checklists.** Step-by-step plans for leaving Microsoft 365, Google Workspace, Slack and Notion, with
+  progress and notes saved as you go, and a print layout for paper.
+- **Options.** Open source only, hours per week, colours and text size, and export, import or erase of
+  what the site has stored.
 - **Search from anywhere.** Press `/` or Ctrl+K on any page; it forgives a typo.
-- **Links that matter.** Official docs, Docker Compose files, installers and one-click deploys for
-  self-hosting, plus managed hosting options where they exist.
+- **Links.** Official docs, Docker Compose files, installers and one-click deploys for self-hosting, plus
+  managed hosting options where they exist.
 
 ## Local-first
 
@@ -124,7 +124,8 @@ everyone you work with still sends the old format. Effort is the path's per-pers
 size, plus server setup time. The whole model is one short function in
 [`src/lib/scoring.ts`](src/lib/scoring.ts), and it is meant to be argued with.
 
-A low score means the move is easy, not that the destination is better. Each path also shows its fit, a
+The site shows the grade as a word and keeps the number for the breakdown, because it is a judgement
+and not a measurement. A low score only says the move is easy; each alternative also shows its fit, a
 verdict, its main drawback, and the grade both self-hosted and hosted where a provider exists.
 
 Ratings are opinions, not measurements. The first version of the catalog was compiled with an AI assistant
@@ -151,21 +152,15 @@ nothing else ships to the browser.
 
 ## The look
 
-ExitPath reads like a pocket trail guide rather than a dashboard: map paper, one colour for routes,
-difficulty graded the way trails are, and little else. There are no cards or panels; structure comes from
-type, white space and hairlines, and detail stays folded away until you ask for it.
+The site is laid out as a reference work: it opens with the search field and the index, tool pages are
+tables, and detail stays folded until asked for. There is no landing page.
 
 - **Grades have shapes.** Easy is a green circle, moderate a blue square, demanding a gold triangle, hard
   a red diamond and very hard a black double diamond. The shape and the word carry the grade, so nothing
   depends on telling colours apart. The four hues were checked for contrast and colour-blind separation
   on every background, in both themes.
-- **Ratings are legends.** Every 1–5 rating is five dots and a word, with the word in ink. More filled
-  dots is always better news, whichever way the underlying scale runs.
-- **Lists are indexes.** A name, a row of dots, and what you will find there, as in the back of a
-  guidebook.
-- **Checklists are trails.** Steps are waypoints on a dotted line; progress is the stretch already walked.
-- **One drawing.** The contour lines on the home page are generated from a seed in
-  [`src/lib/contours.ts`](src/lib/contours.ts), so they are the same on every visit.
+- **Ratings are five dots and a word.** More filled dots is better on every scale, whichever way the
+  underlying number runs.
 - **Typefaces are self-hosted.** Vollkorn for headings, Alegreya Sans for text and its small caps for
   labels, all under the SIL Open Font License and bundled from npm at build time. No font service is
   contacted.

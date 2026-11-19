@@ -13,7 +13,7 @@ const FILL = ['', 'bg-level-1', 'bg-level-2', 'bg-level-3', 'bg-level-4', 'bg-da
 export function Page({ children, narrow }: { children: ReactNode; narrow?: boolean }) {
   return (
     <div
-      className={`mx-auto w-full px-4 pt-10 pb-24 sm:px-6 sm:pt-14 ${narrow ? 'max-w-3xl' : 'max-w-[60rem]'}`}
+      className={`mx-auto w-full px-4 pt-10 pb-24 sm:px-6 sm:pt-14 ${narrow ? 'max-w-3xl' : 'max-w-[68rem]'}`}
     >
       {children}
     </div>
@@ -137,29 +137,19 @@ export function Meter({
 }
 
 /**
- * Migration difficulty as a trail grade: the shape and its colour give the
- * band, the number gives the score, and the band is named in words.
+ * Migration difficulty as a trail grade: a shape and a word. The 0–100 score
+ * behind it is deliberately not shown here; it only appears where its
+ * breakdown is shown too, so nobody mistakes it for a measurement.
  */
-export function ScoreBadge({
-  score,
-  band,
-  size = 'md',
-}: {
-  score: number
-  band: (typeof BANDS)[number]
-  size?: 'sm' | 'md' | 'lg'
-}) {
-  const number = size === 'lg' ? 'text-5xl' : size === 'md' ? 'text-[2rem]' : 'text-xl'
-  const mark = size === 'lg' ? 'text-2xl' : size === 'md' ? 'text-lg' : 'text-[0.8rem]'
+export function ScoreBadge({ band, size = 'md' }: { band: (typeof BANDS)[number]; size?: 'sm' | 'md' }) {
   return (
-    <span
-      className="inline-flex items-center gap-2 whitespace-nowrap"
-      title="Migration difficulty, from 0 (trivial) to 100"
-    >
-      <GradeMark level={band.level} className={`shrink-0 ${mark}`} />
-      <span className={`figures font-display leading-none font-black ${number}`}>{score}</span>
-      <span className={`eyebrow text-ink ${size === 'sm' ? 'text-[0.8rem]' : ''}`}>{band.label}</span>
-      <span className="sr-only">migration difficulty out of 100</span>
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+      <GradeMark
+        level={band.level}
+        className={`shrink-0 ${size === 'md' ? 'text-[0.95rem]' : 'text-[0.8rem]'}`}
+      />
+      <span className={`font-bold ${size === 'md' ? 'text-lg' : ''}`}>{band.label}</span>
+      <span className="sr-only">to move</span>
     </span>
   )
 }

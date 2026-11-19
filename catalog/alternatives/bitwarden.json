@@ -1,7 +1,7 @@
 {
   "id": "bitwarden",
   "name": "Bitwarden",
-  "tagline": "The mainstream open-source password manager",
+  "tagline": "A widely used password manager for people and teams",
   "description": "A cloud-synced password manager with apps and browser extensions everywhere. Vaults are encrypted on your device before they sync. Use Bitwarden's own cloud or host the server yourself.",
   "categories": ["passwords"],
   "kind": "server",

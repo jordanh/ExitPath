@@ -48,5 +48,6 @@
     "scriptable": "Custom Python kittens, watchers, and 'kitten @' remote control",
     "ssh-multiplexing": "Via 'kitten ssh' with automatic terminfo upload and connection reuse"
   },
+  "checkedBy": [{ "name": "valentin-p", "url": "https://github.com/valentin-p" }],
   "reviewed": "2026-11"
 }

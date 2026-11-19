@@ -1,41 +1,60 @@
 import { Link } from 'react-router-dom'
 import { openOptions } from '../lib/options-dialog.ts'
-import { TEAM_SIZES } from '../lib/scoring.ts'
-import { usePrefs } from '../lib/storage.ts'
+import { HOSTING, TEAM_SIZES, type HostingPreference, type TeamSize } from '../lib/scoring.ts'
+import { setPrefs, usePrefs } from '../lib/storage.ts'
+import { Choice } from './Choice.tsx'
 
 /**
- * One quiet line saying whose situation the grades are for, with a way to
- * change it and a way to see how they are worked out. The choices themselves
- * live in the options dialog.
+ * The two answers that change every grade and estimate, as toggles on the
+ * page itself rather than behind a menu. They are saved, and shared by every
+ * page that shows grades.
  */
-export function SituationLine({ hidden = 0, explain = true }: { hidden?: number; explain?: boolean }) {
+export function SituationBar({ hidden = 0, explain = true }: { hidden?: number; explain?: boolean }) {
   const { teamSize, hosting, licences } = usePrefs()
   return (
-    <p className="text-muted print:hidden">
-      Graded for <span className="text-ink">{TEAM_SIZES[teamSize].label.toLowerCase()}</span>,{' '}
-      <span className="text-ink">{hosting === 'self' ? 'self-hosting' : 'managed hosting'}</span>
-      {licences === 'open' && (
-        <>
-          , <span className="text-ink">open source only</span>
-        </>
-      )}
-      .{' '}
-      {hidden > 0 && (
-        <>
-          {hidden} {hidden === 1 ? 'path is' : 'paths are'} hidden by the licence setting.{' '}
-        </>
-      )}
-      <button type="button" onClick={openOptions} className="link cursor-pointer">
-        Change
-      </button>
-      {explain && (
-        <>
-          {' · '}
-          <Link to="/about" className="link">
-            How grades work
-          </Link>
-        </>
-      )}
-    </p>
+    <div className="print:hidden">
+      <div className="flex flex-wrap gap-x-10 gap-y-3">
+        <Choice<TeamSize>
+          legend="Who is moving?"
+          value={teamSize}
+          onChange={(value) => setPrefs({ teamSize: value })}
+          options={(Object.keys(TEAM_SIZES) as TeamSize[]).map((key) => ({ value: key, ...TEAM_SIZES[key] }))}
+        />
+        <Choice<HostingPreference>
+          legend="Who runs the servers?"
+          value={hosting}
+          onChange={(value) => setPrefs({ hosting: value })}
+          options={(Object.keys(HOSTING) as HostingPreference[]).map((key) => ({
+            value: key,
+            ...HOSTING[key],
+          }))}
+        />
+      </div>
+      <p className="mt-2 text-muted">
+        Grades and hours follow these two answers.{' '}
+        {licences === 'open' && (
+          <>
+            Showing open-source projects only
+            {hidden > 0 && (
+              <>
+                , which hides {hidden} {hidden === 1 ? 'alternative' : 'alternatives'}
+              </>
+            )}
+            .{' '}
+          </>
+        )}
+        <button type="button" onClick={openOptions} className="link cursor-pointer">
+          More options
+        </button>
+        {explain && (
+          <>
+            {' · '}
+            <Link to="/about" className="link">
+              How grades work
+            </Link>
+          </>
+        )}
+      </p>
+    </div>
   )
 }

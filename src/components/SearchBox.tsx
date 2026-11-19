@@ -5,7 +5,7 @@ import { issueUrl } from '../lib/site.ts'
 import { IconArrowRight, IconExternal, IconSearch } from './icons.tsx'
 
 const KIND_LABEL: Record<ResultKind, string> = {
-  tool: 'Leaving',
+  tool: 'Tool',
   suite: 'Suite',
   alternative: 'Alternative',
   guide: 'Guide',
@@ -71,7 +71,7 @@ export function SearchBox({
   return (
     <div className="relative">
       <label htmlFor={`${listId}-input`} className="sr-only">
-        Search for a tool you want to leave, or an alternative
+        Search for a tool or an alternative
       </label>
       <IconSearch
         className={`pointer-events-none absolute left-4 -translate-y-1/2 text-xl text-muted ${inDialog ? 'top-6' : 'top-7'}`}
@@ -93,7 +93,7 @@ export function SearchBox({
         autoComplete="off"
         autoCorrect="off"
         spellCheck={false}
-        placeholder="What do you want to leave? Try Slack, OneDrive, Notion…"
+        placeholder="Search for a tool, such as Slack, OneDrive or Notion"
         value={query}
         onChange={(event) => {
           setQuery(event.target.value)

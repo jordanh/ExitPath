@@ -56,11 +56,11 @@ export function Layout() {
         className="sticky top-[env(safe-area-inset-top,0px)] z-30 border-b border-line bg-bg print:hidden"
       >
         {/* Wraps onto a second line rather than overflow, which large text on a small phone needs. */}
-        <div className="mx-auto flex min-h-14 max-w-[60rem] flex-wrap items-center justify-end px-4 sm:px-6">
+        <div className="mx-auto flex min-h-14 max-w-[68rem] flex-wrap items-center justify-end px-4 sm:px-6">
           <Link to="/" className="mr-auto flex shrink-0 items-center gap-2 rounded-md">
             <Logo className="size-7" />
             <span className="font-display text-[1.3rem] leading-none font-black tracking-tight max-sm:sr-only">
-              Exit<span className="font-extrabold text-accent italic">Path</span>
+              ExitPath
             </span>
           </Link>
           <nav aria-label="Main" className="mr-1 flex items-center font-medium sm:mr-3">
@@ -98,17 +98,19 @@ export function Layout() {
       </main>
 
       <footer className="border-t border-line print:hidden">
-        <div className="mx-auto max-w-[60rem] px-4 py-6 text-muted sm:px-6">
+        <div className="mx-auto max-w-[68rem] px-4 py-6 text-muted sm:px-6">
           <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
-            <p className="mr-auto">Nothing you do here leaves your browser.</p>
+            <p className="mr-auto">
+              No account and no tracking. Your plan and progress stay in this browser.
+            </p>
             <Link to="/about" className="link">
-              How it works
+              About
             </Link>
             <ExternalLink href={REPO_URL}>Source</ExternalLink>
           </div>
           <p className="mt-2">
-            The first catalog was compiled with an AI assistant and is being corrected by the people who use
-            these tools{lastReviewed ? `; last reviewed ${lastReviewed}` : ''}.{' '}
+            Most entries are AI drafts that nobody who uses the tool has checked yet; each page says which
+            {lastReviewed ? `. Catalog last reviewed ${lastReviewed}` : ''}.{' '}
             <ExternalLink href={issueUrl('Catalog correction: ')} className="link whitespace-nowrap">
               Report a mistake
             </ExternalLink>

@@ -47,7 +47,7 @@
   "strengths": [
     "A hosted service from the developers, so you can leave Entra without running a login server",
     "Organisations are built in: useful for agencies, groups of companies, or software with customer logins",
-    "Passkeys and multi-factor sign-in work out of the box",
+    "Passkeys and multi-factor sign-in are built in",
     "Every change is recorded in an audit trail and reachable through the API"
   ],
   "weaknesses": [

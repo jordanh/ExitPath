@@ -88,7 +88,7 @@ function GuideView({ guide }: { guide: Guide }) {
       </nav>
 
       <header>
-        <h1 className="text-[2.3rem] leading-[1.05] font-black tracking-tight sm:text-[3rem]">
+        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
           {guide.title}
         </h1>
         <p className="mt-3 text-xl text-muted">{guide.summary}</p>
@@ -102,7 +102,7 @@ function GuideView({ guide }: { guide: Guide }) {
             <dd>{guide.timeframe}</dd>
           </div>
           <div className="grid gap-x-4 py-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
-            <dt className="eyebrow sm:pt-0.5">Leaving</dt>
+            <dt className="eyebrow sm:pt-0.5">Replaces</dt>
             <dd>
               {guide.tools.flatMap((id, index) => {
                 const tool = getTool(id)
@@ -133,7 +133,7 @@ function GuideView({ guide }: { guide: Guide }) {
           </p>
           <p className="min-w-0 truncate text-muted" aria-live="polite">
             {finished ? (
-              <span className="font-display font-bold text-accent italic">Every step done. You are out.</span>
+              <span className="font-bold text-ink">All steps done.</span>
             ) : next ? (
               <>
                 Next: <span className="text-ink">{next.title}</span>
@@ -148,9 +148,9 @@ function GuideView({ guide }: { guide: Guide }) {
 
       <section className="mt-8" aria-labelledby="stack">
         <h2 id="stack" className="text-[1.55rem] leading-tight font-extrabold">
-          Where you are going
+          Tools this checklist uses
         </h2>
-        <p className="mt-1 text-muted">One combination that works. Each link shows the other options.</p>
+        <p className="mt-1 text-muted">Other options are listed on each tool’s page.</p>
         <dl className="mt-3">
           {guide.stack.map((entry) => {
             const alternative = getAlternative(entry.alternative)

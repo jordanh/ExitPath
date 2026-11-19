@@ -39,11 +39,16 @@
     {
       "to": "mattermost",
       "fit": 5,
-      "verdict": "The least retraining: people find everything where they expect it. Read the licence note before you install.",
+      "verdict": "Needs the least retraining, because its layout follows Slack's. It is open core, so read the licence note before you install.",
       "import": {
         "difficulty": 2,
         "summary": "Mattermost's mmetl tool converts a Slack export into a bulk-import file, bringing users, channels, messages, threads and (with the files fetched) attachments. Run a trial import on a test server first.",
-        "links": [{ "label": "mmetl: Slack export converter", "url": "https://github.com/mattermost/mmetl" }]
+        "links": [
+          {
+            "label": "mmetl: Slack export converter",
+            "url": "https://github.com/mattermost/mmetl"
+          }
+        ]
       },
       "effortHours": [1, 3],
       "transfers": [
@@ -62,7 +67,7 @@
     {
       "to": "zulip",
       "fit": 4,
-      "verdict": "Pick it if the real problem with Slack was the noise. Expect a week of adjustment to topics.",
+      "verdict": "Suits teams whose main complaint about Slack was the noise. Allow about a week for people to get used to topics.",
       "import": {
         "difficulty": 2,
         "summary": "Zulip's official importer reads a Slack export and recreates users, channels, messages, threads, files and reactions. Slack threads become Zulip topics.",

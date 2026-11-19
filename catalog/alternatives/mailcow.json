@@ -1,7 +1,7 @@
 {
   "id": "mailcow",
   "name": "mailcow",
-  "tagline": "The proven Docker mail suite with a friendly admin UI",
+  "tagline": "A mail server suite in Docker with a web admin interface",
   "description": "A complete mail server assembled from long-established parts (Postfix, Dovecot, Rspamd and SOGo) and delivered as one Docker Compose stack with a web admin. It provides mailboxes, webmail, calendars, contacts and phone sync.",
   "categories": ["email"],
   "kind": "server",

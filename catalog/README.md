@@ -86,3 +86,15 @@ after publication, because saved progress is keyed by them. Adding and removing 
 
 The month (`YYYY-MM`) someone last checked the entry against the project's current state. Update it when
 you verify an entry, whether or not anything changed.
+
+## `checkedBy`
+
+Optional, on tools and alternatives: the people who wrote the entry or checked it against their own
+experience of the tool.
+
+```json
+"checkedBy": [{ "name": "Your name or handle", "url": "https://example.org/you" }]
+```
+
+`url` is optional. An entry without `checkedBy` is shown on the site as an AI draft; adding your name is
+what marks it as checked. Only add yourself to entries for tools you use or have run.

@@ -7,6 +7,6 @@ export function useTitle(title?: string) {
   useEffect(() => {
     document.title = title
       ? `${title} · ${SITE_TITLE}`
-      : `${SITE_TITLE} — find your way out of big-platform lock-in`
+      : `${SITE_TITLE}: open-source alternatives and what it takes to switch`
   }, [title])
 }

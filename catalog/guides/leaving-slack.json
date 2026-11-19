@@ -26,7 +26,7 @@
     {
       "id": "take-stock",
       "title": "Take stock",
-      "intro": "Find out what Slack is really doing for you beyond messages.",
+      "intro": "List what Slack does for the team besides messages.",
       "steps": [
         {
           "id": "check-export-rights",
@@ -70,7 +70,10 @@
           "title": "Install the server",
           "detail": "Follow the official installation path on a fresh machine, with HTTPS and a proper host name. For Mattermost, make sure you install Team Edition: the default Entry edition limits visible history.",
           "links": [
-            { "label": "Mattermost: Docker deployment", "url": "https://github.com/mattermost/docker" },
+            {
+              "label": "Mattermost: Docker deployment",
+              "url": "https://github.com/mattermost/docker"
+            },
             {
               "label": "Zulip: production installer",
               "url": "https://zulip.readthedocs.io/en/stable/production/install.html"
@@ -121,7 +124,10 @@
           "title": "Import into a test server",
           "detail": "For Mattermost, convert the archive with mmetl and run a bulk import. For Zulip, run its Slack import command. Expect the first attempt to reveal something: a user without an email address, an oversized file, a channel name that clashes.",
           "links": [
-            { "label": "mmetl", "url": "https://github.com/mattermost/mmetl" },
+            {
+              "label": "mmetl",
+              "url": "https://github.com/mattermost/mmetl"
+            },
             {
               "label": "Zulip: migrating from other chat tools",
               "url": "https://zulip.com/help/migrating-from-other-chat-tools"

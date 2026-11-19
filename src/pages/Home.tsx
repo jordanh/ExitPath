@@ -1,19 +1,27 @@
 import { Link } from 'react-router-dom'
-import { alternatives, categories, getTool, guides, suites, tools, totalPaths } from '../catalog/index.ts'
+import {
+  alternatives,
+  categories,
+  checkedCounts,
+  getTool,
+  guides,
+  suites,
+  tools,
+  totalPaths,
+} from '../catalog/index.ts'
 import { PickUp } from '../components/PickUp.tsx'
 import { SearchBox } from '../components/SearchBox.tsx'
-import { SituationLine } from '../components/Situation.tsx'
-import { TrailMap } from '../components/TrailMap.tsx'
+import { SituationBar } from '../components/Situation.tsx'
 import { IndexRow, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { guideStatus } from '../lib/guides.ts'
-import { scoredPathsFrom } from '../lib/paths.ts'
 import { nameList } from '../lib/names.ts'
+import { scoredPathsFrom } from '../lib/paths.ts'
 import { useAllProgress, useSituation } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 
 /**
- * The catalog as the index of a guidebook: each tool, a line of dots, and
- * the grade of its easiest way out for the reader's situation.
+ * The catalog as an index: each tool, a line of dots, and the grade of its
+ * easiest alternative for the reader's situation.
  */
 function ToolIndex() {
   const situation = useSituation()
@@ -34,12 +42,8 @@ function ToolIndex() {
                     <IndexRow
                       to={`/tools/${tool.id}`}
                       title={tool.name}
-                      end={
-                        easiest && (
-                          <ScoreBadge score={easiest.result.score} band={easiest.result.band} size="sm" />
-                        )
-                      }
-                      detail={<>to {nameList(paths.map(({ alternative }) => alternative.name))}</>}
+                      end={easiest && <ScoreBadge band={easiest.result.band} size="sm" />}
+                      detail={nameList(paths.map(({ alternative }) => alternative.name))}
                     />
                   </li>
                 )
@@ -57,93 +61,88 @@ export function Home() {
   const progress = useAllProgress()
 
   return (
-    <>
-      <div className="relative">
-        {/* The drawing is clipped to the hero; the search results below must not be. */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden max-lg:hidden">
-          <TrailMap className="absolute top-2 right-[max(1.5rem,calc(50%-31rem))] w-[26rem]" />
-        </div>
-        <div className="relative mx-auto max-w-[60rem] px-4 pt-14 pb-10 sm:px-6 sm:pt-24 sm:pb-16">
-          <div className="max-w-[33rem]">
-            <h1 className="text-[3.2rem] leading-[0.95] font-black tracking-tight sm:text-[4.6rem]">
-              Find your way <em className="text-accent">out.</em>
-            </h1>
-            <p className="mt-5 text-xl text-muted">
-              A guide to open-source replacements for the tools you depend on: which ones hold up, what moves
-              across, what does not, and how much work the switch really is.
-            </p>
-            <div className="mt-7">
-              <SearchBox />
-            </div>
-          </div>
-        </div>
+    <Page>
+      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+        Open-source alternatives to {tools.length} tools
+      </h1>
+      <p className="mt-3 max-w-2xl text-lg text-muted">
+        For each tool, this lists the replacements worth considering, what transfers and what does not, and
+        how much work the move is for one person or a team.
+      </p>
+      <div className="mt-6 max-w-xl">
+        <SearchBox />
       </div>
 
-      <Page>
+      <div className="mt-12">
         <PickUp />
+      </div>
 
-        <section aria-labelledby="index">
-          <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-            <h2 id="index" className="text-[1.55rem] leading-tight font-extrabold">
-              Start from what you use
-            </h2>
-            <Link to="/plan" className="link">
-              Leaving several? Build a plan
-            </Link>
-          </div>
+      <section aria-labelledby="index">
+        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <h2 id="index" className="text-[1.55rem] leading-tight font-extrabold">
+            Tools
+          </h2>
+          <Link to="/plan" className="link">
+            Plan several moves at once
+          </Link>
+        </div>
+        <SituationBar />
+        <div className="mt-6">
           <ToolIndex />
-          <div className="mt-1 space-y-1">
-            <SituationLine />
-            <p className="text-muted">
-              {tools.length} tools, {alternatives.length} alternatives, {totalPaths} routes between them. The
-              mark grades the easiest way out, hosted or self-hosted as you choose.
-            </p>
-          </div>
-        </section>
+        </div>
+        <p className="text-muted">
+          Each tool is followed by its alternatives and the grade of the easiest one. {tools.length} tools,{' '}
+          {alternatives.length} alternatives and {totalPaths} migration paths in all. {checkedCounts.checked}{' '}
+          of the {checkedCounts.total} entries have been written or checked by someone who uses the tool; the
+          rest are AI drafts.{' '}
+          <Link to="/about" className="link">
+            About the catalog
+          </Link>
+        </p>
+      </section>
 
-        <div className="grid gap-x-14 md:grid-cols-2">
-          <Section title="Whole suites">
-            <ul>
-              {suites.map((suite) => (
-                <li key={suite.id}>
+      <div className="grid gap-x-14 md:grid-cols-2">
+        <Section title="Suites">
+          <ul>
+            {suites.map((suite) => (
+              <li key={suite.id}>
+                <IndexRow
+                  to={`/suites/${suite.id}`}
+                  title={suite.name}
+                  end={<span className="text-muted">{suite.components.length} parts</span>}
+                  detail={nameList(
+                    suite.components.flatMap((component) => getTool(component.tool)?.name ?? []),
+                  ).replace(' or ', ' and ')}
+                />
+              </li>
+            ))}
+          </ul>
+        </Section>
+
+        <Section title="Checklists">
+          <ul>
+            {guides.map((guide) => {
+              const { done, total } = guideStatus(
+                guide,
+                progress[guide.id] ?? { done: [], notes: '', updatedAt: '' },
+              )
+              return (
+                <li key={guide.id}>
                   <IndexRow
-                    to={`/suites/${suite.id}`}
-                    title={`Leaving ${suite.name}`}
-                    end={<span className="text-muted">{suite.components.length} parts</span>}
-                    detail={nameList(
-                      suite.components.flatMap((component) => getTool(component.tool)?.name ?? []),
-                    ).replace(' or ', ' and ')}
+                    to={`/guides/${guide.id}`}
+                    title={guide.title}
+                    end={
+                      <span className="text-muted">
+                        {done > 0 ? `${done} of ${total} done` : `${total} steps`}
+                      </span>
+                    }
                   />
                 </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section title="Checklists">
-            <ul>
-              {guides.map((guide) => {
-                const { done, total } = guideStatus(
-                  guide,
-                  progress[guide.id] ?? { done: [], notes: '', updatedAt: '' },
-                )
-                return (
-                  <li key={guide.id}>
-                    <IndexRow
-                      to={`/guides/${guide.id}`}
-                      title={guide.title}
-                      end={
-                        <span className="text-muted">
-                          {done > 0 ? `${done} of ${total} done` : `${total} steps`}
-                        </span>
-                      }
-                    />
-                  </li>
-                )
-              })}
-            </ul>
-          </Section>
-        </div>
-      </Page>
-    </>
+              )
+            })}
+          </ul>
+        </Section>
+      </div>
+    </Page>
   )
 }

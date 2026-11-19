@@ -51,7 +51,7 @@
     {
       "id": "take-stock",
       "title": "Take stock",
-      "intro": "Nothing changes for anyone yet. You are finding out what you actually use, and starting the things that take weeks.",
+      "intro": "Nothing changes for anyone yet. You list what is in use and start the things that take weeks.",
       "steps": [
         {
           "id": "list-accounts",

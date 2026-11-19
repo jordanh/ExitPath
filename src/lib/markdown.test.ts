@@ -12,7 +12,7 @@ describe('planToMarkdown', () => {
     const tasks = text.split('\n').filter((line) => line.startsWith('- ['))
     expect(tasks).toHaveLength(2)
     expect(tasks[0]).toMatch(/^- \[x\] \*\*Visual Studio Code → VSCodium\*\*/)
-    expect(tasks[1]).toMatch(/^- \[ \] \*\*Slack → Zulip\*\* \(moderate, \d+\/100, /)
+    expect(tasks[1]).toMatch(/^- \[ \] \*\*Slack → Zulip\*\* \(moderate, [^)]*hours\)$/)
   })
 
   it('says how much work it adds up to', () => {

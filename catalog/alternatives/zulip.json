@@ -56,7 +56,7 @@
     "Excellent documentation and upgrade tooling"
   ],
   "weaknesses": [
-    "The topic model takes a week to click, and some teams never warm to it",
+    "The topic model takes about a week to get used to, and some teams never take to it",
     "The interface is dense and less polished than Slack's",
     "Mobile push for more than 10 self-hosted users needs a paid plan or a community sponsorship",
     "No end-to-end encryption, and calls are handed to Jitsi, BigBlueButton or Zoom rather than built in"

@@ -78,3 +78,25 @@ export const lastReviewed = [...tools, ...alternatives, ...guides]
   .map((entry) => entry.reviewed)
   .sort()
   .at(-1)
+
+/** An entry that says who wrote or checked it. */
+export interface Checkable {
+  checkedBy?: { name: string; url?: string }[]
+}
+
+export const isChecked = (entry: Checkable) => (entry.checkedBy?.length ?? 0) > 0
+
+/** How much of the catalog a person has written or checked, as opposed to an AI draft. */
+export const checkedCounts = {
+  checked: [...tools, ...alternatives].filter(isChecked).length,
+  total: tools.length + alternatives.length,
+}
+
+/** Everyone credited on an entry, once each, in alphabetical order. */
+export const contributors = [
+  ...new Map(
+    [...tools, ...alternatives]
+      .flatMap((entry) => entry.checkedBy ?? [])
+      .map((person) => [person.name, person]),
+  ).values(),
+].sort((a, b) => a.name.localeCompare(b.name))

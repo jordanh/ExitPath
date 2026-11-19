@@ -44,7 +44,7 @@
     {
       "to": "thunderbird",
       "fit": 3,
-      "verdict": "The lowest-risk first step: change the client now, keep the mailbox, and move the server later, or never.",
+      "verdict": "A low-risk first step. You change the mail client now and keep the mailbox, and can move the server later if you want to.",
       "import": {
         "difficulty": 2,
         "summary": "Add the account and your mail appears, using Thunderbird's native Exchange support or IMAP with modern authentication. Local .pst archives need converting unless you import on a Windows machine that still has Outlook installed."

@@ -31,6 +31,22 @@ export const LinkSchema = z.strictObject({
   url: HttpsUrl,
 })
 
+/**
+ * People who wrote an entry or checked it against their own experience of
+ * the tool. An entry without any was drafted with an AI assistant from public
+ * documentation, and the site says so until someone adds their name.
+ */
+export const CheckedBySchema = z
+  .array(
+    z.strictObject({
+      /** A name or handle, as the person wants to be credited. */
+      name: Text,
+      /** Optional link, such as a profile page. */
+      url: HttpsUrl.optional(),
+    }),
+  )
+  .min(1)
+
 // ---------------------------------------------------------------------------
 // Categories
 // ---------------------------------------------------------------------------
@@ -133,6 +149,7 @@ export const AlternativeSchema = z.strictObject({
   /** Optional short qualifiers, keyed by feature id. */
   featureNotes: z.record(Id, Text).optional(),
 
+  checkedBy: CheckedBySchema.optional(),
   reviewed: Month,
 })
 
@@ -191,6 +208,7 @@ export const ToolSchema = z.strictObject({
     caveats: z.array(Text),
   }),
   paths: z.array(PathSchema).min(1),
+  checkedBy: CheckedBySchema.optional(),
   reviewed: Month,
 })
 
