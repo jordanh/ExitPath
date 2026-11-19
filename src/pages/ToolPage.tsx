@@ -8,7 +8,7 @@ import { EntryFooter } from '../components/EntryFooter.tsx'
 import { PathsTable } from '../components/PathsTable.tsx'
 import { Provenance } from '../components/Provenance.tsx'
 import { SituationBar } from '../components/Situation.tsx'
-import { ExternalLink, MarkedList, Meter, Page, Section } from '../components/ui.tsx'
+import { ExternalLink, MarkedList, Rating, Page, Section } from '../components/ui.tsx'
 import { PATH_ORDERS, allPathsFrom, orderPaths, scoredPathsFrom, type PathOrder } from '../lib/paths.ts'
 import { SCALES } from '../lib/scales.ts'
 import { useSituation } from '../lib/storage.ts'
@@ -66,7 +66,7 @@ function ToolView({ tool }: { tool: Tool }) {
       </nav>
 
       <header className="max-w-2xl">
-        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+        <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
           Alternatives to {tool.name}
         </h1>
         <p className="mt-1 text-muted">
@@ -100,7 +100,7 @@ function ToolView({ tool }: { tool: Tool }) {
         aside={
           paths.length > 1 && (
             <div className="flex items-baseline gap-2 print:hidden">
-              <label htmlFor={sortId} className="eyebrow">
+              <label htmlFor={sortId} className="label">
                 Order
               </label>
               <select
@@ -132,11 +132,7 @@ function ToolView({ tool }: { tool: Tool }) {
 
       <Section title={`About ${tool.name}`}>
         <Disclosure summary="Lock-in" hint={SCALES.lockIn.labels[tool.lockIn.level - 1]}>
-          <Meter
-            scale="lockIn"
-            level={tool.lockIn.level}
-            word={`${SCALES.lockIn.labels[tool.lockIn.level - 1]} lock-in`}
-          />
+          <p className="font-bold">{SCALES.lockIn.labels[tool.lockIn.level - 1]} lock-in</p>
           <div className="mt-3 max-w-2xl">
             <MarkedList kind="neutral" items={tool.lockIn.factors} />
           </div>
@@ -144,7 +140,7 @@ function ToolView({ tool }: { tool: Tool }) {
 
         <Disclosure summary="Exporting your data" hint={SCALES.difficulty.labels[tool.export.difficulty - 1]}>
           <div className="max-w-2xl">
-            <Meter label="Getting data out" scale="difficulty" level={tool.export.difficulty} />
+            <Rating label="Getting data out" scale="difficulty" level={tool.export.difficulty} />
             <p className="mt-3">{tool.export.summary}</p>
             <dl className="mt-4 space-y-3">
               {tool.export.methods.map((method) => (
@@ -158,7 +154,7 @@ function ToolView({ tool }: { tool: Tool }) {
             </dl>
             {tool.export.caveats.length > 0 && (
               <>
-                <h3 className="eyebrow mt-5 mb-2">Watch out for</h3>
+                <h3 className="label mt-5 mb-2">Watch out for</h3>
                 <MarkedList kind="neutral" items={tool.export.caveats} />
               </>
             )}

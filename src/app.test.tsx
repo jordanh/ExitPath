@@ -231,15 +231,39 @@ describe('interactions', () => {
     expect(within(detail).getByText(/no longer includes GitLab SSO/)).toBeDefined()
   })
 
-  it('fills more dots for better news, whichever way the scale runs', async () => {
+  it('gives ratings as plain words', async () => {
     const user = userEvent.setup()
     renderAt('/tools/slack')
-    // An easy import and a mature project both fill the row; neither reads as "1 out of 5".
     const mattermost = await openDetails(user, 'Mattermost')
-    expect(mattermost).toHaveTextContent('Getting data inEasy(4 of 5, where 5 is best)')
-    expect(mattermost).toHaveTextContent('MaturityMature(4 of 5, where 5 is best)')
+    expect(mattermost).toHaveTextContent('Getting data inEasy')
+    expect(mattermost).toHaveTextContent('MaturityMature')
     const element = await openDetails(user, 'Element (Matrix)')
-    expect(element).toHaveTextContent('Getting data inHard(2 of 5, where 5 is best)')
+    expect(element).toHaveTextContent('Getting data inHard')
+    // No dots to count, and no "n out of 5" beside a word that already says it.
+    expect(element).not.toHaveTextContent(/\d (out )?of 5/)
+  })
+
+  it('says "not known" where the catalog does not know, and lets entries differ in length', () => {
+    const unknown = alternatives.filter((alternative) =>
+      Object.values(alternative.features).includes('unknown'),
+    )
+    expect(unknown.length).toBeGreaterThan(0)
+    const sample = unknown[0]!
+    renderAt(`/alternatives/${sample.id}`)
+    expect(screen.getAllByText('Not known').length).toBeGreaterThan(0)
+
+    // Entries are as long as what is worth saying about them, not a fixed four and four.
+    const shapes = new Set(alternatives.map((a) => `${a.strengths.length}/${a.weaknesses.length}`))
+    expect(shapes.size).toBeGreaterThan(3)
+  })
+
+  it("uses the browser's own checkboxes and progress bar on a checklist", () => {
+    const guide = guides[0]!
+    renderAt(`/guides/${guide.id}`)
+    const bar = screen.getByRole('progressbar', { name: `Progress through ${guide.title}` })
+    expect(bar.tagName).toBe('PROGRESS')
+    expect(bar).toHaveAttribute('max', String(stepIds(guide).length))
+    for (const box of screen.getAllByRole('checkbox')) expect(box.className).not.toContain('appearance-none')
   })
 
   it('says when managed hosting was asked for but does not exist', async () => {

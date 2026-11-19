@@ -15,7 +15,7 @@ export function Choice<T extends string>({
   const name = useId()
   return (
     <fieldset className="min-w-0">
-      <legend className="eyebrow mb-1.5">{legend}</legend>
+      <legend className="label mb-1.5">{legend}</legend>
       <div className="flex flex-wrap gap-1.5">
         {options.map((option) => (
           <label key={option.value} title={option.hint} className="chip">

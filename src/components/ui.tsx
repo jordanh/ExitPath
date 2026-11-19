@@ -1,14 +1,21 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { Openness, Support } from '../catalog/schema.ts'
-import { OPENNESS_LABELS, SCALES, SUPPORT_LABELS, toneFor, type ScaleId } from '../lib/scales.ts'
+import { OPENNESS_LABELS, SCALES, SUPPORT_LABELS, type ScaleId } from '../lib/scales.ts'
 import type { BANDS } from '../lib/scoring.ts'
-import { GradeMark, IconCheck, IconExternal, IconPartial, IconPlus, IconX } from './icons.tsx'
+import {
+  GradeMark,
+  IconCheck,
+  IconExternal,
+  IconPartial,
+  IconPlus,
+  IconUnknown,
+  IconX,
+} from './icons.tsx'
 
 // Tailwind only generates classes it can see as whole strings, so the
 // level-to-class lookups are spelled out rather than built by concatenation.
 const TEXT = ['', 'text-level-1', 'text-level-2', 'text-level-3', 'text-level-4', 'text-danger']
-const FILL = ['', 'bg-level-1', 'bg-level-2', 'bg-level-3', 'bg-level-4', 'bg-danger']
 
 export function Page({ children, narrow }: { children: ReactNode; narrow?: boolean }) {
   return (
@@ -68,7 +75,7 @@ export function IndexRow({
       <div className="flex flex-wrap items-baseline gap-x-2">
         <Link
           to={to}
-          className="font-display text-[1.25rem] leading-tight font-bold decoration-accent decoration-[1.5px] underline-offset-4 group-hover:underline after:absolute after:inset-0"
+          className="text-[1.15rem] leading-tight font-bold text-accent group-hover:underline after:absolute after:inset-0"
         >
           {title}
         </Link>
@@ -81,58 +88,26 @@ export function IndexRow({
 }
 
 /**
- * A 1–5 rating, drawn like a map legend: five dots and a word in ink.
- *
- * More filled dots is always better news for the reader, whichever way the
- * underlying scale runs: an easy import fills the row just as a close fit
- * does, and a hard one empties it. The colour says the same thing, and the
- * word says it exactly.
+ * A 1–5 rating, shown as the word it stands for ("Maturity: Mature"). The
+ * tooltip lists the whole scale, so the word can be placed on it.
  */
-export function Meter({
+export function Rating({
   level,
   scale,
   label,
   word,
-  inline,
 }: {
   level: number
   scale: ScaleId
   label?: string
   /** Overrides the scale's own word, e.g. "Managed for you". */
   word?: string
-  /** Label, dots and word on one line, for a row of several ratings. */
-  inline?: boolean
 }) {
-  const tone = toneFor(scale, level)
-  const filled = SCALES[scale].higherIsBetter ? level : 6 - level
-  const reading = (
-    <>
-      <span className="flex shrink-0 gap-[3px]" aria-hidden="true">
-        {[1, 2, 3, 4, 5].map((dot) => (
-          <span
-            key={dot}
-            className={`size-[0.56rem] rounded-leaf ${dot <= filled ? FILL[tone] : 'border-[1.5px] border-line-strong'}`}
-          />
-        ))}
-      </span>
-      <span className="leading-tight font-medium">{word ?? SCALES[scale].labels[level - 1]}</span>
-      <span className="sr-only">({filled} of 5, where 5 is best)</span>
-    </>
-  )
-  const hint = 'More filled dots is better'
-  if (inline) {
-    return (
-      <span className="inline-flex flex-wrap items-center gap-x-2" title={hint}>
-        {label && <span className="eyebrow whitespace-nowrap">{label}</span>}
-        {reading}
-      </span>
-    )
-  }
   return (
-    <div title={hint}>
-      {label && <div className="eyebrow mb-0.5">{label}</div>}
-      <div className="flex items-center gap-2">{reading}</div>
-    </div>
+    <span title={`Scale: ${SCALES[scale].labels.join(', ')}`}>
+      {label && <span className="label mr-1.5">{label}</span>}
+      {word ?? SCALES[scale].labels[level - 1]}
+    </span>
   )
 }
 
@@ -158,7 +133,7 @@ export function ScoreBadge({ band, size = 'md' }: { band: (typeof BANDS)[number]
 export function OpennessBadge({ openness }: { openness: Openness }) {
   const { label, tone, meaning } = OPENNESS_LABELS[openness]
   return (
-    <span className="eyebrow inline-flex items-center gap-1.5 whitespace-nowrap text-ink" title={meaning}>
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap" title={meaning}>
       <svg viewBox="0 0 12 12" className={`size-[0.7rem] shrink-0 ${TEXT[tone]}`} aria-hidden="true">
         <circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" strokeWidth="1.6" />
         {openness === 'open-source' && <circle cx="6" cy="6" r="4.6" fill="currentColor" />}
@@ -183,6 +158,7 @@ const SUPPORT_STYLE: Record<Support, { icon: ReactNode; className: string }> = {
   partial: { icon: <IconPartial />, className: 'text-level-3' },
   addon: { icon: <IconPlus />, className: 'text-level-2' },
   no: { icon: <IconX />, className: 'text-faint' },
+  unknown: { icon: <IconUnknown />, className: 'text-faint' },
 }
 
 export function SupportMark({ support, note }: { support: Support; note?: string }) {
@@ -190,7 +166,7 @@ export function SupportMark({ support, note }: { support: Support; note?: string
   return (
     <div>
       <span
-        className={`inline-flex items-center gap-1.5 font-medium ${support === 'no' ? 'text-muted' : ''}`}
+        className={`inline-flex items-center gap-1.5 font-medium ${support === 'no' || support === 'unknown' ? 'text-muted' : ''}`}
       >
         <span className={`text-[1.05rem] ${className}`}>{icon}</span>
         {SUPPORT_LABELS[support]}
@@ -226,7 +202,7 @@ export function MarkedList({ items, kind }: { items: string[]; kind: 'good' | 'b
     ) : kind === 'bad' ? (
       <IconX className="text-danger" />
     ) : (
-      <span className="mt-[0.5em] ml-1 block size-[0.4rem] rounded-leaf bg-contour" />
+      <span className="mt-[0.5em] ml-1 block size-[0.4rem] rounded-full bg-faint" />
     )
   return (
     <ul className="prose-list">
@@ -245,61 +221,30 @@ export function MarkedList({ items, kind }: { items: string[]; kind: 'good' | 'b
 /** Something to read before going further, marked with a line in the route colour. */
 export function Callout({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="border-l-2 border-accent pl-4">
+    <div className="border-l-2 border-line-strong pl-4">
       <p className="font-bold">{title}</p>
       <div className="mt-0.5 text-muted">{children}</div>
     </div>
   )
 }
 
-/**
- * Progress as a walked trail: the part behind you is a solid line, the part
- * ahead is dashed, and a marker shows where you are.
- */
+/** How far through a checklist someone is: the browser's own progress bar. */
 export function ProgressBar({ done, total, label }: { done: number; total: number; label: string }) {
-  const percent = total === 0 ? 0 : Math.round((done / total) * 100)
   return (
-    // Drawn as SVG so the position is an attribute, not an inline style: the
-    // site's content security policy allows no inline styles at all.
-    <div className="px-[0.4rem]">
-      <svg
-        className="block h-3.5 w-full overflow-visible"
-        role="progressbar"
-        aria-label={label}
-        aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={done}
-        aria-valuetext={`${done} of ${total} steps done`}
-      >
-        <line
-          x1="0"
-          x2="100%"
-          y1="50%"
-          y2="50%"
-          className="stroke-line-strong"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeDasharray="1 6"
-        />
-        <line
-          x1="0"
-          x2={`${percent}%`}
-          y1="50%"
-          y2="50%"
-          className="stroke-accent"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <circle cx={`${percent}%`} cy="50%" r="5" className="fill-accent stroke-bg" strokeWidth="2" />
-      </svg>
-    </div>
+    <progress
+      className="block h-2 w-full"
+      value={done}
+      max={Math.max(total, 1)}
+      aria-label={label}
+      aria-valuetext={`${done} of ${total} steps done`}
+    />
   )
 }
 
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="py-4">
-      <p className="font-display text-xl font-bold">{title}</p>
+      <p className="text-xl font-bold">{title}</p>
       {children && <div className="mt-1 text-muted">{children}</div>}
     </div>
   )

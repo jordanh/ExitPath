@@ -38,7 +38,7 @@
   },
   "managedHosting": [],
   "strengths": [
-    "Runs on almost nothing",
+    "Needs very little memory or processor",
     "Works with the official Bitwarden apps and browser extensions",
     "Includes features that are paid on Bitwarden's own server, such as organisations and one-time codes",
     "A single container with SQLite by default, so backups are simple"
@@ -46,8 +46,7 @@
   "weaknesses": [
     "Unofficial: compatibility depends on keeping up with Bitwarden's clients, and occasionally breaks until patched",
     "Far less independent security review than Bitwarden's server",
-    "An exposed, unpatched instance is a high-value target, and that risk is yours",
-    "No vendor support and no enterprise directory integration"
+    "An exposed, unpatched instance is a high-value target, and that risk is yours"
   ],
   "features": {
     "browser-autofill": "yes",

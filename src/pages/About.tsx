@@ -10,7 +10,7 @@ import {
   totalPaths,
 } from '../catalog/index.ts'
 import { SituationBar } from '../components/Situation.tsx'
-import { ExternalLink, Meter, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
+import { ExternalLink, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { OPENNESS_LABELS, SCALES, type ScaleId } from '../lib/scales.ts'
 import {
   BANDS,
@@ -76,19 +76,19 @@ function WorkedExample() {
         <table className="w-full min-w-[34rem] text-left text-sm">
           <thead>
             <tr className="border-b border-line">
-              <th scope="col" className="eyebrow py-2 pr-4">
+              <th scope="col" className="label py-2 pr-4">
                 Factor
               </th>
-              <th scope="col" className="eyebrow px-4 py-2">
+              <th scope="col" className="label px-4 py-2">
                 Difficulty
               </th>
-              <th scope="col" className="eyebrow px-4 py-2 text-right">
+              <th scope="col" className="label px-4 py-2 text-right">
                 As 0–1
               </th>
-              <th scope="col" className="eyebrow px-4 py-2 text-right">
+              <th scope="col" className="label px-4 py-2 text-right">
                 Weight
               </th>
-              <th scope="col" className="eyebrow py-2 pl-4 text-right">
+              <th scope="col" className="label py-2 pl-4 text-right">
                 Adds
               </th>
             </tr>
@@ -127,7 +127,9 @@ export function About() {
   useTitle('About')
   return (
     <Page narrow>
-      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">About ExitPath</h1>
+      <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
+        About ExitPath
+      </h1>
       <p className="mt-4 text-lg">
         ExitPath is a catalog of open-source alternatives to common proprietary tools. For each alternative it
         records how well it replaces the original, what data transfers, and how hard the move is. It also has
@@ -259,7 +261,7 @@ export function About() {
 
       <Section
         title="What the 1–5 scales mean"
-        intro="More filled dots is better on every scale, so an easy import and a close fit look alike."
+        intro="Each rating is a number from 1 to 5. The pages show the word for it."
       >
         <dl className="space-y-4">
           {(Object.keys(SCALES) as ScaleId[]).map((id) => (
@@ -270,7 +272,7 @@ export function About() {
                 <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">
                   {[1, 2, 3, 4, 5].map((level) => (
                     <li key={level}>
-                      <Meter scale={id} level={level} />
+                      <span className="figures font-bold">{level}</span> {SCALES[id].labels[level - 1]}
                     </li>
                   ))}
                 </ul>

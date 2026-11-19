@@ -65,13 +65,13 @@ export function Browse() {
 
   return (
     <Page>
-      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">Browse</h1>
+      <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">Browse</h1>
 
       {/* Two views of one list, not tabs with separate panels: plain toggle buttons. */}
       <div
         role="group"
         aria-label="What to browse"
-        className="mt-5 flex flex-wrap gap-x-7 gap-y-1 font-display text-[1.3rem] leading-tight font-bold"
+        className="mt-5 flex flex-wrap gap-x-7 gap-y-1 text-[1.3rem] leading-tight font-bold"
       >
         {(
           [
@@ -84,7 +84,7 @@ export function Browse() {
             type="button"
             aria-pressed={view === id}
             onClick={() => update({ view: id === 'tools' ? '' : id, noserver: '', hosted: '', checked: '' })}
-            className="cursor-pointer text-faint decoration-accent decoration-2 underline-offset-[7px] hover:text-ink aria-pressed:text-ink aria-pressed:underline"
+            className="cursor-pointer text-muted underline-offset-4 hover:text-ink aria-pressed:text-ink aria-pressed:underline"
           >
             {label}
           </button>

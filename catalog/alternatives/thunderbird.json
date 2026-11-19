@@ -30,7 +30,6 @@
   "weaknesses": [
     "It is only a client: you still need a mailbox somewhere",
     "Exchange support covers mail first; calendar and address-book sync with Exchange Online has been arriving in stages, so check the current release notes",
-    "No iOS app yet",
     "Outlook .pst archives must be converted, or imported on a Windows machine that still has Outlook, before Thunderbird can read them"
   ],
   "features": {

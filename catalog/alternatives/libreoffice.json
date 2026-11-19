@@ -30,8 +30,7 @@
   "weaknesses": [
     "No real-time co-editing: collaboration means passing files around, or pairing it with Collabora Online",
     "Complex Word layouts, Excel pivot tables and PowerPoint animations can shift when files go back and forth",
-    "VBA macros run only partially; anything substantial needs rewriting",
-    "The default interface feels dated next to Microsoft 365, though a ribbon-style layout is available"
+    "VBA macros run only partially; anything substantial needs rewriting"
   ],
   "features": {
     "ms-format-fidelity": "partial",

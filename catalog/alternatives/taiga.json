@@ -45,14 +45,11 @@
   "strengths": [
     "Easy to learn: a backlog, sprints and a board without Jira's configuration",
     "Built-in importers for Jira, Trello, Asana and GitHub",
-    "Fully open source, with no paid edition",
-    "Works for Scrum and for Kanban, with epics and a wiki"
+    "Fully open source, with no paid edition"
   ],
   "weaknesses": [
     "Development has slowed to maintenance: few new features in recent years",
-    "No Gantt chart, time tracking or configurable workflows",
-    "No official mobile apps",
-    "More containers to run than a tool this simple should need"
+    "No Gantt chart, time tracking or configurable workflows"
   ],
   "features": {
     "kanban": "yes",

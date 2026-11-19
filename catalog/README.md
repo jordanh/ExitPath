@@ -26,9 +26,8 @@ page explains the parts that need judgement.
 | `alternative.maturity.score`         | Experimental                      | Boring in the best way                       |
 | `alternative.selfHosting.difficulty` | An afternoon with Docker          | You are now an on-call sysadmin              |
 
-Higher is worse for the difficulty and lock-in scales, and better for fit and maturity. That is only how
-the files are written: on screen the app always fills more dots for better news, so an easy import and a
-close fit look alike. You only supply the number.
+Higher is worse for the difficulty and lock-in scales, and better for fit and maturity. The site shows each
+rating as the word for it, so you only supply the number.
 
 `tool.lockIn.level` also feeds the difficulty score, so rate it for what ties people to the tool beyond
 their own data: other people's files and habits, integrations, shared channels.
@@ -98,3 +97,12 @@ experience of the tool.
 
 `url` is optional. An entry without `checkedBy` is shown on the site as an AI draft; adding your name is
 what marks it as checked. Only add yourself to entries for tools you use or have run.
+
+## Feature values
+
+Each feature of an alternative is `yes`, `partial`, `addon`, `no` or `unknown`. Use `unknown` when you do
+not know: the site shows it as "Not known", which is more useful than a guess. A short `featureNotes`
+entry can say what would need checking.
+
+Lists such as `strengths` and `weaknesses` have a minimum length, not a fixed one. Write down what is
+worth knowing about the project and stop; do not pad a list to match another entry.

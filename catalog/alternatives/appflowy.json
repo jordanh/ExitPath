@@ -47,13 +47,11 @@
   "strengths": [
     "Pages, databases, boards and calendars that feel like Notion",
     "Works fully offline: your data lives on your device first",
-    "Native apps on every platform",
     "Imports Notion exports, including simple databases"
   ],
   "weaknesses": [
     "Team self-hosting is not free: the sync server's free tier is a single seat",
     "Collaboration, permissions and web publishing trail Notion and Outline",
-    "Database relations, formulas and automations need rebuilding after import",
     "Rapid change means occasional sync bugs and breaking updates"
   ],
   "features": {

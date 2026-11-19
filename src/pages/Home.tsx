@@ -32,7 +32,7 @@ function ToolIndex() {
         if (inCategory.length === 0) return null
         return (
           <div key={category.id} className="mb-6 break-inside-avoid">
-            <h3 className="eyebrow">{category.name}</h3>
+            <h3 className="label">{category.name}</h3>
             <ul>
               {inCategory.map((tool) => {
                 const paths = scoredPathsFrom(tool, situation)
@@ -62,7 +62,7 @@ export function Home() {
 
   return (
     <Page>
-      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+      <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
         Open-source alternatives to {tools.length} tools
       </h1>
       <p className="mt-3 max-w-2xl text-lg text-muted">

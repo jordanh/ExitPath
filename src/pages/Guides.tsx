@@ -12,7 +12,7 @@ export function Guides() {
   const progress = useAllProgress()
   return (
     <Page narrow>
-      <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">Guides</h1>
+      <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">Guides</h1>
       <p className="mt-3 text-xl text-muted">
         Step-by-step checklists for four common migrations. Tick steps off as you go; progress is saved in
         this browser.

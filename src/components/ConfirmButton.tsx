@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 
-const choice = 'cursor-pointer rounded-leaf border-[1.5px] px-3 py-0.5 font-bold'
+const choice = 'cursor-pointer rounded-full border px-3 py-0.5 font-bold'
 
 /**
  * A destructive action that asks "are you sure?" inside the page.

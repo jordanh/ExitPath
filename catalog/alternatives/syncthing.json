@@ -24,8 +24,7 @@
   "strengths": [
     "Nothing to host: your devices talk to each other directly, encrypted with keys only they hold",
     "No storage limit beyond your own disks, and no subscription",
-    "Untrusted (encrypted) devices let you keep an off-site copy on hardware you do not fully control",
-    "Very little to go wrong; it has quietly worked for years on millions of machines"
+    "Untrusted (encrypted) devices let you keep an off-site copy on hardware you do not fully control"
   ],
   "weaknesses": [
     "It is sync, not a cloud drive: no web interface, no share links, no browser editing",

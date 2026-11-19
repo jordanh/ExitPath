@@ -57,8 +57,7 @@
   "weaknesses": [
     "Heavy: plan for 6 GB of RAM",
     "Deliverability to Gmail and Outlook depends on IP reputation that you have to earn and keep",
-    "Docker-only, and it expects to own ports 25, 80 and 443 on the host",
-    "SOGo's webmail is functional rather than pleasant"
+    "Docker-only, and it expects to own ports 25, 80 and 443 on the host"
   ],
   "features": {
     "hosts-mailboxes": "yes",

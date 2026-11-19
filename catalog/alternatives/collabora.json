@@ -46,14 +46,12 @@
   "strengths": [
     "Fully open source, with no user or connection cap in the code",
     "Native OpenDocument support and LibreOffice's very broad format coverage",
-    "Tight Nextcloud integration: it is the editor behind Nextcloud Office",
-    "Same engine as LibreOffice on the desktop, so documents look identical in both"
+    "Tight Nextcloud integration: it is the editor behind Nextcloud Office"
   ],
   "weaknesses": [
     "Microsoft-format fidelity is LibreOffice's: good, not perfect",
     "Server-rendered editing can feel laggy on a slow connection or an under-powered server",
-    "CODE builds come without support; a supported version means a subscription",
-    "Like any online editor, it needs a file platform in front of it"
+    "CODE builds come without support; a supported version means a subscription"
   ],
   "features": {
     "ms-format-fidelity": "partial",

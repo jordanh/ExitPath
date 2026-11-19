@@ -33,9 +33,7 @@ export function Disclosure({
     >
       <summary className="flex cursor-pointer list-none flex-wrap items-baseline gap-x-2 py-1.5 [&::-webkit-details-marker]:hidden">
         <IconChevron className="shrink-0 translate-y-[0.12em] text-[0.9em] text-accent transition-transform group-open:rotate-90" />
-        <span className="font-bold decoration-accent decoration-[1.5px] underline-offset-4 group-hover:underline">
-          {summary}
-        </span>
+        <span className="font-bold group-hover:underline">{summary}</span>
         {hint && <span className="text-muted">{hint}</span>}
       </summary>
       <div className="pt-3 pb-4 sm:pl-6">{children}</div>

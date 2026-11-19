@@ -4,7 +4,7 @@ import type { Category } from '../catalog/schema.ts'
 import type { ScoredPath } from '../lib/paths.ts'
 import { PLATFORM_LABELS } from '../lib/scales.ts'
 import { formatEffort } from '../lib/scoring.ts'
-import { Meter, OpennessBadge, ScoreBadge, SupportMark } from './ui.tsx'
+import { Rating, OpennessBadge, ScoreBadge, SupportMark } from './ui.tsx'
 
 interface Row {
   label: string
@@ -33,11 +33,11 @@ function groupsFor(category: Category | undefined): Group[] {
         {
           label: 'Fit',
           hint: 'How completely it replaces the tool',
-          cell: ({ path }) => <Meter scale="fit" level={path.fit} />,
+          cell: ({ path }) => <Rating scale="fit" level={path.fit} />,
         },
         {
           label: 'Getting data in',
-          cell: ({ path }) => <Meter scale="difficulty" level={path.import.difficulty} />,
+          cell: ({ path }) => <Rating scale="difficulty" level={path.import.difficulty} />,
         },
       ],
     },
@@ -55,7 +55,7 @@ function groupsFor(category: Category | undefined): Group[] {
         },
         {
           label: 'Maturity',
-          cell: ({ alternative }) => <Meter scale="maturity" level={alternative.maturity.score} />,
+          cell: ({ alternative }) => <Rating scale="maturity" level={alternative.maturity.score} />,
         },
         {
           label: 'Who is behind it',
@@ -82,7 +82,7 @@ function groupsFor(category: Category | undefined): Group[] {
           label: 'Self-hosting',
           cell: ({ alternative }) =>
             alternative.selfHosting ? (
-              <Meter scale="difficulty" level={alternative.selfHosting.difficulty} />
+              <Rating scale="difficulty" level={alternative.selfHosting.difficulty} />
             ) : (
               <span className="text-sm text-muted">Nothing to host</span>
             ),
@@ -168,7 +168,7 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
               <th key={alternative.id} scope="col" className="w-56 min-w-52 px-4 py-3 align-bottom">
                 <Link
                   to={`/alternatives/${alternative.id}`}
-                  className="font-display text-[1.25rem] leading-tight font-extrabold decoration-accent decoration-[1.5px] underline-offset-4 hover:underline"
+                  className="text-[1.1rem] leading-tight font-extrabold text-accent hover:underline"
                 >
                   {alternative.name}
                 </Link>
@@ -182,7 +182,7 @@ export function CompareTable({ paths, category }: { paths: ScoredPath[]; categor
               <th
                 scope="colgroup"
                 colSpan={paths.length + 1}
-                className="eyebrow border-b border-line-strong pt-6 pb-1.5 text-left"
+                className="label border-b border-line-strong pt-6 pb-1.5 text-left"
               >
                 <span className="sticky left-0">{group.title}</span>
               </th>

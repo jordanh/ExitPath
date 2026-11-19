@@ -31,7 +31,7 @@ export function PickUp() {
 
   return (
     <section aria-labelledby="pick-up" className="mb-12">
-      <h2 id="pick-up" className="eyebrow mb-1">
+      <h2 id="pick-up" className="label mb-1">
         Pick up where you left off
       </h2>
       {moves.length > 0 && (

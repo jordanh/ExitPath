@@ -53,8 +53,7 @@
   "weaknesses": [
     "The free Community build stops at 20 concurrent connections",
     "VBA macros are not supported; it has its own JavaScript macro system",
-    "Governance and trust questions after the 2026 fork: see the licence note",
-    "It does not store files itself, so it always needs a file platform alongside"
+    "Governance and trust questions after the 2026 fork: see the licence note"
   ],
   "features": {
     "ms-format-fidelity": "yes",

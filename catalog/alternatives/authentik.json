@@ -7,7 +7,7 @@
   "kind": "server",
   "openness": "open-core",
   "license": "MIT",
-  "licenseNote": "The core is MIT-licensed and covers single sign-on, multi-factor sign-in, the proxy and the LDAP and RADIUS interfaces. Some features, such as pushing accounts to Google Workspace or Microsoft Entra and device checks, belong to a paid Enterprise edition. Check the current split before relying on a feature.",
+  "licenseNote": "The core is MIT-licensed and covers single sign-on, multi-factor sign-in, the proxy and the LDAP and RADIUS interfaces. Some features, such as pushing accounts to Google Workspace or Microsoft Entra, belong to a paid Enterprise edition. Check the current split before relying on a feature.",
   "backing": "Authentik Security, Inc. (US), a venture-backed company funded by Enterprise subscriptions",
   "since": 2018,
   "maturity": {
@@ -40,14 +40,11 @@
   "strengths": [
     "Covers awkward software too: a login proxy for apps with no single sign-on, and LDAP and RADIUS for older systems",
     "Can create and remove accounts in other apps over SCIM",
-    "A clear admin interface, with sign-in and enrolment flows you can change without writing code",
-    "Quick to get running from the official Docker Compose file"
+    "A clear admin interface, with sign-in and enrolment flows you can change without writing code"
   ],
   "weaknesses": [
-    "Open core: some integrations and device checks need the paid Enterprise edition",
-    "Flows and policies are flexible enough to misconfigure; test changes with a second admin account",
-    "A fast release pace means upgrades need attention",
-    "It becomes the door to everything: if it is down, nobody signs in"
+    "Open core: some integrations need the paid Enterprise edition",
+    "A fast release pace means upgrades need attention"
   ],
   "features": {
     "oidc-saml": "yes",
@@ -57,12 +54,11 @@
     "self-service": "yes",
     "legacy-apps": "yes",
     "multi-tenant": "partial",
-    "device-rules": "addon"
+    "device-rules": "unknown"
   },
   "featureNotes": {
     "legacy-apps": "Proxy, LDAP and RADIUS interfaces",
-    "multi-tenant": "Separate branding per domain rather than fully separate organisations",
-    "device-rules": "Enterprise edition"
+    "multi-tenant": "Separate branding per domain rather than fully separate organisations"
   },
   "reviewed": "2026-11"
 }

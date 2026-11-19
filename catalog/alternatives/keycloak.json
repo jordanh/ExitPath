@@ -56,14 +56,12 @@
   "strengths": [
     "Works with nearly every app: OpenID Connect, SAML and years of written-up integrations",
     "Signs people in against an existing LDAP or Active Directory, so nobody has to be re-created",
-    "No paid edition: clustering, fine-grained authorisation and everything else are in the open build",
-    "A very large user base, so almost any problem has been met and documented"
+    "No paid edition: clustering, fine-grained authorisation and everything else are in the open build"
   ],
   "weaknesses": [
     "A lot to learn before the first app signs in: realms, clients, flows and mappers",
     "No built-in way to push accounts to other apps (SCIM) or to protect apps that lack single sign-on; both need add-ons",
-    "The admin console and default login pages are functional rather than friendly",
-    "It becomes the door to everything: an outage or a botched upgrade locks the whole company out"
+    "The admin console and default login pages are functional rather than friendly"
   ],
   "features": {
     "oidc-saml": "yes",

@@ -45,7 +45,6 @@
   "strengths": [
     "Block-level sync and deduplication make it quick with large files and huge folders",
     "The drive client offers on-demand files on Windows, macOS and Linux",
-    "Low resource use for the number of users it serves",
     "Libraries can be encrypted on the client with a password the server never sees"
   ],
   "weaknesses": [

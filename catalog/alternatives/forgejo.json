@@ -51,9 +51,8 @@
   ],
   "weaknesses": [
     "Actions is designed to be familiar rather than identical: workflows that lean on GitHub-hosted runners or marketplace actions need work",
-    "No network effect: no stars to chase and few drive-by contributors",
-    "Code search and review tooling are simpler than GitHub's or GitLab's",
-    "Federation between forges is still in development"
+    "No network effect: far fewer passing contributors than on GitHub",
+    "Code search and review tooling are simpler than GitHub's or GitLab's"
   ],
   "features": {
     "pull-requests": "yes",
