@@ -45,7 +45,10 @@
         "difficulty": 2,
         "summary": "Copy the files into the Nextcloud sync folder, or use rclone to move them server-to-server over WebDAV. Recreate shared folders and links afterwards.",
         "links": [
-          { "label": "rclone WebDAV backend (works with Nextcloud)", "url": "https://rclone.org/webdav/" }
+          {
+            "label": "rclone WebDAV backend (works with Nextcloud)",
+            "url": "https://rclone.org/webdav/"
+          }
         ]
       },
       "effortHours": [2, 6],
@@ -69,7 +72,12 @@
       "import": {
         "difficulty": 2,
         "summary": "Create libraries that mirror your top-level folders, then copy the files in through the sync client or with rclone's Seafile backend.",
-        "links": [{ "label": "rclone Seafile backend", "url": "https://rclone.org/seafile/" }]
+        "links": [
+          {
+            "label": "rclone Seafile backend",
+            "url": "https://rclone.org/seafile/"
+          }
+        ]
       },
       "effortHours": [2, 6],
       "transfers": [
@@ -104,6 +112,28 @@
         "Shared folders with people outside your own devices",
         "On-demand files: every device holds a full copy unless you exclude folders",
         "A proper mobile experience on iOS"
+      ]
+    },
+    {
+      "to": "opencloud",
+      "fit": 3,
+      "verdict": "A lighter, files-only alternative to Nextcloud. Young, so better suited to teams happy to be early than to ones that need a long track record.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Copy the files into the desktop client's sync folder, or use rclone to move them server-to-server over WebDAV. Recreate shares afterwards.",
+        "links": [
+          {
+            "label": "rclone WebDAV backend",
+            "url": "https://rclone.org/webdav/"
+          }
+        ]
+      },
+      "effortHours": [2, 6],
+      "transfers": ["Files and folder structure", "Modification dates", "Access from desktop, web and phone"],
+      "lost": [
+        "Existing share links and shared-folder memberships",
+        "Version history",
+        "Paper documents, unless exported first"
       ]
     }
   ],

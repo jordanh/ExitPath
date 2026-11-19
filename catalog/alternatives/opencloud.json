@@ -1,0 +1,67 @@
+{
+  "id": "opencloud",
+  "name": "OpenCloud",
+  "tagline": "A lean file-sharing server with no database to run",
+  "description": "A file sync and sharing platform written in Go, forked in 2025 from ownCloud Infinite Scale. It keeps files and their metadata on disk rather than in a database, and offers a web interface, desktop and mobile sync clients, shared spaces for teams and browser editing through a connected office suite.",
+  "categories": ["files"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "Apache-2.0",
+  "backing": "OpenCloud GmbH (Germany), part of the Heinlein Group, funded by support and enterprise subscriptions",
+  "since": 2025,
+  "maturity": {
+    "score": 2,
+    "rationale": "A young project on an older foundation: the code it forked had years of development behind it, but OpenCloud itself, its releases and its clients date from 2025. Promising, with a short track record."
+  },
+  "platforms": ["web", "windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://opencloud.eu",
+    "source": "https://github.com/opencloud-eu/opencloud",
+    "docs": "https://docs.opencloud.eu"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "A single service started with Docker Compose, with no database to install or tune. A production setup still needs TLS, a proper sign-in provider once there are more than a few users, and backups of the data directory; office editing means running Collabora or ONLYOFFICE alongside.",
+    "setupHours": [2, 6],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores",
+      "notes": "Storage is whatever your files need."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation and administration documentation",
+        "url": "https://docs.opencloud.eu"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "No database: files live on disk, where ordinary backup tools can reach them",
+    "Fast and light compared with PHP-based file platforms",
+    "Spaces give teams shared folders that do not belong to any one person",
+    "Single sign-on over OpenID Connect is built in"
+  ],
+  "weaknesses": [
+    "Young: a short track record as a project, and few independent hosting providers",
+    "It does files, not calendars, contacts or chat, and has far fewer add-ons than Nextcloud",
+    "Browser editing needs a separate office server",
+    "No end-to-end encryption"
+  ],
+  "features": {
+    "desktop-sync": "yes",
+    "on-demand-files": "partial",
+    "mobile-apps": "yes",
+    "share-links": "yes",
+    "browser-editing": "addon",
+    "versioning": "yes",
+    "e2ee": "no",
+    "serverless": "no"
+  },
+  "featureNotes": {
+    "on-demand-files": "Not on every platform",
+    "browser-editing": "With Collabora or ONLYOFFICE connected"
+  },
+  "reviewed": "2026-11"
+}

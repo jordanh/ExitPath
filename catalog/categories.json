@@ -253,6 +253,54 @@
     ]
   },
   {
+    "id": "project-management",
+    "name": "Project management",
+    "description": "Issues, boards, sprints and task lists for teams",
+    "features": [
+      {
+        "id": "kanban",
+        "name": "Kanban boards"
+      },
+      {
+        "id": "sprints",
+        "name": "Sprints and backlogs"
+      },
+      {
+        "id": "gantt",
+        "name": "Gantt or timeline view"
+      },
+      {
+        "id": "time-tracking",
+        "name": "Time tracking"
+      },
+      {
+        "id": "custom-workflows",
+        "name": "Custom fields and workflows"
+      },
+      {
+        "id": "wiki",
+        "name": "Built-in wiki or documents"
+      },
+      {
+        "id": "jira-import",
+        "name": "Imports from Jira"
+      },
+      {
+        "id": "task-app-import",
+        "name": "Imports from Asana or Trello"
+      },
+      {
+        "id": "mobile-apps",
+        "name": "Mobile apps"
+      },
+      {
+        "id": "free-sso",
+        "name": "SSO in the free edition",
+        "hint": "SAML or OpenID Connect without a paid licence"
+      }
+    ]
+  },
+  {
     "id": "photos",
     "name": "Photos",
     "description": "Photo backup, libraries and sharing",
