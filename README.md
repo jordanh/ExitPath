@@ -68,6 +68,9 @@ npm run dev        # http://localhost:5173
 | `npm run check`       | Validate, lint, test and build: what CI runs           |
 | `npm run check-links` | Fetch every link in the catalog and list the dead ones |
 
+The link check also runs on GitHub every Monday, and on demand from the Actions tab ("Check catalog
+links"). It fails when a link is dead, so broken links surface without anyone having to remember.
+
 ### Hosting it yourself
 
 `npm run build` produces a fully static site in `dist/`. It uses relative asset paths and hash-based
@@ -126,9 +129,9 @@ verdict, its main drawback, and the grade both self-hosted and hosted where a pr
 
 Ratings are opinions, not measurements. The first version of the catalog was compiled with an AI assistant
 from each project's public documentation. Not every entry has been checked by someone who runs the
-software, and not every outside link has been tested (`npm run check-links` does that). Every entry records
-the month it was last reviewed, and corrections from people with first-hand experience are the most useful
-contribution. Projects change licences, pricing and features, sometimes abruptly: check the project's own
+software. Outside links are fetched every week by the "Check catalog links" workflow, which reports the
+dead ones. Every entry records the month it was last reviewed, and corrections from people with first-hand
+experience are the most useful contribution. Projects change licences, pricing and features, sometimes abruptly: check the project's own
 documentation before committing a team to anything.
 
 ## Project layout
