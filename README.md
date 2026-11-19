@@ -13,7 +13,8 @@ moves across, what does not, how hard the switch is, and the order to do it in.
 
 ## What it does
 
-- **Searchable catalog.** 16 proprietary tools, 30 alternatives and 45 migration paths between them. Each
+- **Searchable catalog.** 16 proprietary tools, 31 alternatives and 46 migration paths between them, from office suites and chat
+  to the company login. Each
   alternative carries its real licence, who funds it, a maturity rating with a written rationale, and a list
   of weaknesses as well as strengths. Open-core and source-available projects are labelled as such.
 - **Side-by-side comparison.** For any tool, compare its alternatives on features, licence, maturity,
@@ -103,20 +104,25 @@ To fix a rating or add an entry, see [CONTRIBUTING.md](CONTRIBUTING.md) and
 
 ## How scores work
 
-Every path gets a difficulty score from 0 to 100, built from five ratings on a 1–5 scale:
+Every path gets a difficulty score from 0 to 100, built from six ratings on a 1–5 scale:
 
 | Factor           | Weight | Comes from                                                  |
 | ---------------- | ------ | ----------------------------------------------------------- |
-| Getting data out | 20%    | The tool's export difficulty                                |
-| Getting data in  | 25%    | The path's import difficulty                                |
+| Getting data out | 15%    | The tool's export difficulty                                |
+| Getting data in  | 20%    | The path's import difficulty                                |
 | Running it       | 25%    | Self-hosting difficulty, or 1 if managed or nothing to host |
-| Feature gap      | 20%    | Six minus the path's fit rating                             |
+| Feature gap      | 15%    | Six minus the path's fit rating                             |
+| Lock-in          | 15%    | The tool's lock-in rating: other people, formats, habits    |
 | People to move   | 10%    | Your answer to "Who is moving?"                             |
 
-The score is 60% the weighted average of those factors and 40% the single hardest of the first four,
-because a migration is as hard as its hardest step. Effort is the path's per-person hours scaled by team
-size, plus server setup time. The whole model is one short
-function in [`src/lib/scoring.ts`](src/lib/scoring.ts), and it is meant to be argued with.
+The score is 60% the weighted average of those factors and 40% the single hardest of the first five,
+because a migration is as hard as its hardest part: files that open anywhere do not help much while
+everyone you work with still sends the old format. Effort is the path's per-person hours scaled by team
+size, plus server setup time. The whole model is one short function in
+[`src/lib/scoring.ts`](src/lib/scoring.ts), and it is meant to be argued with.
+
+A low score means the move is easy, not that the destination is better. Each path also shows its fit, a
+verdict, its main drawback, and the grade both self-hosted and hosted where a provider exists.
 
 Ratings are opinions, not measurements. The first version of the catalog was compiled with an AI assistant
 from each project's public documentation. Not every entry has been checked by someone who runs the
@@ -150,7 +156,8 @@ type, white space and hairlines, and detail stays folded away until you ask for 
   a red diamond and very hard a black double diamond. The shape and the word carry the grade, so nothing
   depends on telling colours apart. The four hues were checked for contrast and colour-blind separation
   on every background, in both themes.
-- **Ratings are legends.** Every 1–5 rating is five dots and a word, with the word in ink.
+- **Ratings are legends.** Every 1–5 rating is five dots and a word, with the word in ink. More filled
+  dots is always better news, whichever way the underlying scale runs.
 - **Lists are indexes.** A name, a row of dots, and what you will find there, as in the back of a
   guidebook.
 - **Checklists are trails.** Steps are waypoints on a dotted line; progress is the stretch already walked.

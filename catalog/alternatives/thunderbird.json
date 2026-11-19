@@ -39,6 +39,7 @@
     "webmail": "no",
     "mobile-apps": "partial",
     "calendar-contacts": "yes",
+    "free-busy": "partial",
     "spam-filtering": "partial",
     "exchange-protocols": "partial",
     "openpgp": "yes"
@@ -46,7 +47,8 @@
   "featureNotes": {
     "mobile-apps": "Android; iOS is in development",
     "spam-filtering": "Trainable junk filter in the client",
-    "exchange-protocols": "Native Exchange mail; calendar and contacts still rolling out"
+    "exchange-protocols": "Native Exchange mail; calendar and contacts still rolling out",
+    "free-busy": "Shows colleagues' availability when the calendar server provides it"
   },
   "reviewed": "2026-11"
 }

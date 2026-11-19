@@ -81,9 +81,12 @@ export function IndexRow({
 }
 
 /**
- * A 1–5 rating, drawn like a map legend: five dots, the filled ones in the
- * grade's colour, and the word beside them in ink. The colour never carries
- * the rating alone: the count and the word say the same thing.
+ * A 1–5 rating, drawn like a map legend: five dots and a word in ink.
+ *
+ * More filled dots is always better news for the reader, whichever way the
+ * underlying scale runs: an easy import fills the row just as a close fit
+ * does, and a hard one empties it. The colour says the same thing, and the
+ * word says it exactly.
  */
 export function Meter({
   level,
@@ -101,32 +104,32 @@ export function Meter({
   inline?: boolean
 }) {
   const tone = toneFor(scale, level)
+  const filled = SCALES[scale].higherIsBetter ? level : 6 - level
   const reading = (
     <>
       <span className="flex shrink-0 gap-[3px]" aria-hidden="true">
         {[1, 2, 3, 4, 5].map((dot) => (
           <span
             key={dot}
-            className={`size-[0.56rem] rounded-leaf ${dot <= level ? FILL[tone] : 'border-[1.5px] border-line-strong'}`}
+            className={`size-[0.56rem] rounded-leaf ${dot <= filled ? FILL[tone] : 'border-[1.5px] border-line-strong'}`}
           />
         ))}
       </span>
       <span className="leading-tight font-medium">{word ?? SCALES[scale].labels[level - 1]}</span>
-      <span className="sr-only">
-        ({level} out of 5{label ? ` for ${label.toLowerCase()}` : ''})
-      </span>
+      <span className="sr-only">({filled} of 5, where 5 is best)</span>
     </>
   )
+  const hint = 'More filled dots is better'
   if (inline) {
     return (
-      <span className="inline-flex flex-wrap items-center gap-x-2">
+      <span className="inline-flex flex-wrap items-center gap-x-2" title={hint}>
         {label && <span className="eyebrow whitespace-nowrap">{label}</span>}
         {reading}
       </span>
     )
   }
   return (
-    <div>
+    <div title={hint}>
       {label && <div className="eyebrow mb-0.5">{label}</div>}
       <div className="flex items-center gap-2">{reading}</div>
     </div>

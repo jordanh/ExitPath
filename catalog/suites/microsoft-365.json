@@ -2,13 +2,32 @@
   "id": "microsoft-365",
   "name": "Microsoft 365",
   "vendor": "Microsoft",
-  "summary": "Office apps, mail, files, chat and meetings under one subscription and one login. Leaving means replacing each part; they do not all have to go at once.",
+  "summary": "The everyday side of Microsoft 365, the part once sold as Office 365: Office apps, mail, files, chat and meetings, and the Entra ID login underneath them. Each part can be replaced separately. Device management with Intune, Defender and Windows licensing are not covered here.",
   "components": [
-    { "label": "Word, Excel, PowerPoint", "tool": "microsoft-office" },
-    { "label": "OneDrive and SharePoint", "tool": "onedrive" },
-    { "label": "Outlook and Exchange", "tool": "outlook-exchange" },
-    { "label": "Teams chat", "tool": "microsoft-teams" },
-    { "label": "Teams meetings", "tool": "zoom" }
+    {
+      "label": "Word, Excel, PowerPoint",
+      "tool": "microsoft-office"
+    },
+    {
+      "label": "OneDrive and SharePoint",
+      "tool": "onedrive"
+    },
+    {
+      "label": "Outlook and Exchange",
+      "tool": "outlook-exchange"
+    },
+    {
+      "label": "Teams chat",
+      "tool": "microsoft-teams"
+    },
+    {
+      "label": "Teams meetings",
+      "tool": "zoom"
+    },
+    {
+      "label": "Entra ID sign-in",
+      "tool": "microsoft-entra"
+    }
   ],
   "guide": "leaving-microsoft-365"
 }

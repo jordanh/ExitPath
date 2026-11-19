@@ -107,9 +107,9 @@ describe('planTotals', () => {
   })
 
   it('counts no servers for desktop apps and managed hosting', () => {
-    expect(planTotals(resolvePlan({ vscode: 'vscodium', 'closed-terminals': 'ghostty' }, solo)).servers).toBe(
-      0,
-    )
+    expect(
+      planTotals(resolvePlan({ vscode: 'vscodium', 'microsoft-office': 'libreoffice' }, solo)).servers,
+    ).toBe(0)
     expect(planTotals(resolvePlan({ onedrive: 'nextcloud' }, managed)).servers).toBe(0)
   })
 

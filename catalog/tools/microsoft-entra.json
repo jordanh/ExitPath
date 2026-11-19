@@ -1,0 +1,106 @@
+{
+  "id": "microsoft-entra",
+  "name": "Microsoft Entra ID",
+  "vendor": "Microsoft",
+  "category": "identity",
+  "alsoCovers": ["Azure Active Directory", "Azure AD", "Microsoft 365 sign-in"],
+  "summary": "The directory behind every Microsoft 365 login, formerly Azure Active Directory: accounts and groups, single sign-on to other apps, multi-factor sign-in and access rules tied to managed devices.",
+  "lockIn": {
+    "level": 5,
+    "factors": [
+      "Every Microsoft 365 service signs in through it, so it is the last part you can switch off",
+      "Other software is wired to it one app at a time, over SAML, OpenID Connect and SCIM",
+      "Windows sign-in, device enrolment and Conditional Access rules depend on it and on Intune",
+      "Passwords and multi-factor registrations cannot be exported: everyone enrols again",
+      "Joiner and leaver routines that rely on the groups and licences assigned here"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "Users, groups and the list of connected apps can be downloaded or read through Microsoft Graph. Credentials cannot: no password hashes and no authenticator registrations. Each app's sign-on settings have to be recreated by hand on the new side.",
+    "methods": [
+      {
+        "name": "Download users and groups",
+        "detail": "In the Entra admin centre, the Users and Groups lists have a bulk download that produces CSV files. That is enough to create the same accounts somewhere else."
+      },
+      {
+        "name": "Microsoft Graph",
+        "detail": "The Graph API and its PowerShell module list users, group memberships, enterprise applications and their sign-on settings. Use it to build the inventory of everything that depends on Entra.",
+        "url": "https://learn.microsoft.com/en-us/graph/overview"
+      }
+    ],
+    "caveats": [
+      "Find every app that signs in with Microsoft first: the Enterprise applications list and the sign-in logs show them",
+      "While any Microsoft 365 service remains, Entra stays underneath it. Your domain can be federated to the new provider so that people have one login, but Entra itself goes last",
+      "If you still run an on-premises Active Directory, point the new identity provider at that and most accounts need no migration",
+      "Entra-joined Windows PCs need a plan of their own: an identity provider does not manage devices",
+      "Keep one emergency admin account that does not depend on the new system"
+    ]
+  },
+  "paths": [
+    {
+      "to": "keycloak",
+      "fit": 3,
+      "verdict": "The safe long-term choice when you have someone to run it: nothing is held back for a paid edition, and it can sit in front of an existing Active Directory.",
+      "import": {
+        "difficulty": 4,
+        "summary": "There is no importer for Entra. Create users from the CSV download or through the admin API, or connect Keycloak to an on-premises Active Directory if you have one. Then reconnect each app, one at a time, and have people set a new password and second factor at first sign-in."
+      },
+      "effortHours": [8, 24],
+      "transfers": [
+        "User accounts and group memberships, from the export",
+        "Single sign-on to apps that speak SAML or OpenID Connect, once each is reconnected",
+        "Sign-in against an existing Active Directory, if you keep one"
+      ],
+      "lost": [
+        "Passwords and authenticator registrations: everyone enrols again",
+        "Conditional Access rules based on device compliance",
+        "Windows sign-in and device management through Entra and Intune",
+        "Automatic account creation in other apps, unless you add a SCIM extension"
+      ]
+    },
+    {
+      "to": "authentik",
+      "fit": 3,
+      "verdict": "The most approachable to run for a small company, and it can front older apps that never learned single sign-on. Check which features sit in the paid edition.",
+      "import": {
+        "difficulty": 4,
+        "summary": "No importer for Entra here either. Create users from the CSV download or through the API, or sync them from an on-premises Active Directory. Reconnect each app in turn; software without single sign-on can go behind its proxy. Everyone sets a new password and second factor."
+      },
+      "effortHours": [6, 20],
+      "transfers": [
+        "User accounts and group memberships, from the export",
+        "Single sign-on to apps that speak SAML or OpenID Connect, once each is reconnected",
+        "Automatic account creation and removal in apps that accept SCIM"
+      ],
+      "lost": [
+        "Passwords and authenticator registrations: everyone enrols again",
+        "Conditional Access rules based on device compliance, outside the paid edition",
+        "Windows sign-in and device management through Entra and Intune"
+      ]
+    },
+    {
+      "to": "zitadel",
+      "fit": 3,
+      "verdict": "Worth a look if you would rather not run the login server at all: the developers' hosted service removes the hardest part. Strongest where your apps speak OpenID Connect.",
+      "import": {
+        "difficulty": 4,
+        "summary": "No importer for Entra. Create users in the console or through its API; password hashes cannot come out of Entra, so people set new ones. Reconnect each app in turn."
+      },
+      "effortHours": [6, 20],
+      "transfers": [
+        "User accounts, recreated from the export",
+        "Single sign-on to apps that speak OpenID Connect or SAML, once each is reconnected",
+        "Passkeys and multi-factor, after people enrol again"
+      ],
+      "lost": [
+        "Passwords and authenticator registrations: everyone enrols again",
+        "Continuous sync from an Active Directory",
+        "Conditional Access rules based on device compliance",
+        "Windows sign-in and device management through Entra and Intune",
+        "Automatic account creation in other apps"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

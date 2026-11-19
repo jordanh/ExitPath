@@ -16,8 +16,8 @@ import {
 } from './scoring.ts'
 
 /** Minimal stand-ins: scoring only reads a handful of fields. */
-const tool = (exportDifficulty: number) =>
-  ({ name: 'Tool', export: { difficulty: exportDifficulty } }) as Tool
+const tool = (exportDifficulty: number, lockIn = 1) =>
+  ({ name: 'Tool', export: { difficulty: exportDifficulty }, lockIn: { level: lockIn } }) as Tool
 const path = (fit: number, importDifficulty: number, effortHours: [number, number] = [2, 4]) =>
   ({ fit, effortHours, import: { difficulty: importDifficulty } }) as Path
 const alternative = (
@@ -48,7 +48,7 @@ describe('scorePath', () => {
 
   it('is 100 when every factor is as hard as it gets', () => {
     const hardest = alternative({ difficulty: 5, setupHours: [10, 20] })
-    const result = scorePath(tool(5), path(1, 5), hardest, { teamSize: 'large', hosting: 'self' })
+    const result = scorePath(tool(5, 5), path(1, 5), hardest, { teamSize: 'large', hosting: 'self' })
     expect(result.score).toBe(100)
     expect(result.band.id).toBe('very-hard')
   })
@@ -67,6 +67,16 @@ describe('scorePath', () => {
     const result = scorePath(tool(1), path(5, 1), alternative(null), { teamSize: 'large', hosting: 'self' })
     // people: 60% x (10% x 1) = 0.06, and nothing from the "hardest factor" share
     expect(result.score).toBe(6)
+  })
+
+  it('counts how entangled you are, however easy the mechanics', () => {
+    // Nothing to export, import or host, and a like-for-like replacement:
+    // the only thing in the way is everyone else still using the old tool.
+    const free = scorePath(tool(1, 1), path(5, 1), alternative(null), solo).score
+    const tied = scorePath(tool(1, 4), path(5, 1), alternative(null), solo).score
+    // lock-in alone at 4 of 5: 60% x (15% x 0.75) + 40% x 0.75 = 0.3675
+    expect(free).toBe(0)
+    expect(tied).toBe(37)
   })
 
   it('treats a worse fit as a bigger gap', () => {
@@ -92,6 +102,7 @@ describe('scorePath', () => {
       'import',
       'hosting',
       'gap',
+      'lockIn',
       'people',
     ])
     for (const factor of result.factors) expect(factor.explanation).not.toBe('')
@@ -221,7 +232,19 @@ describe('with the real catalog', () => {
       ).score
     }
     // Swapping VS Code for its own open build is the easiest thing in the catalog.
-    expect(score('vscode', 'vscodium')).toBeLessThan(10)
+    const everything = tools.flatMap((realTool) => realTool.paths.map((p) => score(realTool.id, p.to)))
+    expect(score('vscode', 'vscodium')).toBe(Math.min(...everything))
+    expect(score('vscode', 'vscodium')).toBeLessThan(20)
+    // Office files open anywhere, but everyone else still sends them: not an easy exit.
+    expect(score('microsoft-office', 'libreoffice')).toBeGreaterThanOrEqual(40)
+    // The nearest thing to Notion ranks ahead of a wiki with no databases, in any situation.
+    for (const teamSize of ['solo', 'small', 'large'] as const) {
+      for (const hosting of ['self', 'managed'] as const) {
+        expect(score('notion', 'appflowy', { teamSize, hosting })).toBeLessThan(
+          score('notion', 'outline', { teamSize, hosting }),
+        )
+      }
+    }
     // Running your own mail server is harder than changing mail client.
     expect(score('gmail', 'mailcow')).toBeGreaterThan(score('gmail', 'thunderbird') + 20)
     // Leaving Teams is harder than leaving Slack for the same destination.

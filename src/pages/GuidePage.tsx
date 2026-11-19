@@ -150,7 +150,7 @@ function GuideView({ guide }: { guide: Guide }) {
         <h2 id="stack" className="text-[1.55rem] leading-tight font-extrabold">
           Where you are going
         </h2>
-        <p className="mt-1 text-muted">A sensible default, not the only answer.</p>
+        <p className="mt-1 text-muted">One combination that works. Each link shows the other options.</p>
         <dl className="mt-3">
           {guide.stack.map((entry) => {
             const alternative = getAlternative(entry.alternative)

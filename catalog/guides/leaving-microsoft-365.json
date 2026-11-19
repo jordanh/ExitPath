@@ -4,8 +4,13 @@
   "summary": "Replace mail, files, office apps, chat and meetings for a small organisation without losing data or a day of work.",
   "audience": "A small organisation of 2 to 50 people on Microsoft 365 Business, with its own domain name.",
   "timeframe": "Six to ten weeks. Most of that is waiting: for exports, for DNS, and for people to settle in while both systems run side by side.",
-  "tools": ["microsoft-office", "onedrive", "outlook-exchange", "microsoft-teams"],
+  "tools": ["microsoft-office", "onedrive", "outlook-exchange", "microsoft-teams", "microsoft-entra"],
   "stack": [
+    {
+      "role": "Company login",
+      "alternative": "authentik",
+      "why": "One place to add and remove people once there are too many services to manage by hand. Keycloak does the same job with more to learn; a handful of people can do without either."
+    },
     {
       "role": "Files, calendars and contacts",
       "alternative": "nextcloud",
@@ -97,10 +102,21 @@
           "detail": "For each piece, choose between running it and paying someone to. Files and chat are reasonable to self-host. Mail is the one to think hardest about: a hosted mailbox on your own domain keeps you independent of Microsoft without making you a mail administrator."
         },
         {
+          "id": "plan-login",
+          "title": "Decide what replaces the Microsoft login",
+          "detail": "Take the list of everything that signs in with Microsoft. For a handful of people, separate accounts in the new services and a password manager may be enough. Beyond that, set up an identity provider first and connect each new service to it, so that a leaver is removed in one place. Entra itself stays until the last Microsoft service is gone.",
+          "optional": true
+        },
+        {
           "id": "setup-files",
           "title": "Set up Nextcloud with office editing",
           "detail": "Install Nextcloud (All-in-One includes the office editor) or open an account with a managed host. Create users and groups that mirror your teams, and a shared folder for each SharePoint library you plan to move.",
-          "links": [{ "label": "Nextcloud All-in-One", "url": "https://github.com/nextcloud/all-in-one" }]
+          "links": [
+            {
+              "label": "Nextcloud All-in-One",
+              "url": "https://github.com/nextcloud/all-in-one"
+            }
+          ]
         },
         {
           "id": "setup-backups",
@@ -134,8 +150,14 @@
           "title": "Copy OneDrive and SharePoint files",
           "detail": "Use rclone to copy each OneDrive and each SharePoint library to its new folder in Nextcloud. Compare file counts and total sizes afterwards. Run the copy again just before the switch to pick up changes.",
           "links": [
-            { "label": "rclone: OneDrive and SharePoint", "url": "https://rclone.org/onedrive/" },
-            { "label": "rclone: WebDAV (Nextcloud)", "url": "https://rclone.org/webdav/" }
+            {
+              "label": "rclone: OneDrive and SharePoint",
+              "url": "https://rclone.org/onedrive/"
+            },
+            {
+              "label": "rclone: WebDAV (Nextcloud)",
+              "url": "https://rclone.org/webdav/"
+            }
           ]
         },
         {
@@ -148,7 +170,12 @@
           "id": "sync-mail",
           "title": "Start copying mailboxes",
           "detail": "Set up an IMAP sync job for every mailbox, shared mailboxes included. The first pass can take days for large mailboxes; later passes only copy what is new, so start early and let it repeat.",
-          "links": [{ "label": "imapsync", "url": "https://imapsync.lamiral.info/" }]
+          "links": [
+            {
+              "label": "imapsync",
+              "url": "https://imapsync.lamiral.info/"
+            }
+          ]
         },
         {
           "id": "move-calendars",

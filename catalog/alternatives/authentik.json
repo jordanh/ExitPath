@@ -1,0 +1,68 @@
+{
+  "id": "authentik",
+  "name": "authentik",
+  "tagline": "An identity provider built for small teams to self-host",
+  "description": "An identity provider with single sign-on over OpenID Connect and SAML, plus a login proxy and LDAP and RADIUS interfaces for software that supports neither. Sign-in, enrolment and recovery are assembled from configurable flows.",
+  "categories": ["identity"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "MIT",
+  "licenseNote": "The core is MIT-licensed and covers single sign-on, multi-factor sign-in, the proxy and the LDAP and RADIUS interfaces. Some features, such as pushing accounts to Google Workspace or Microsoft Entra and device checks, belong to a paid Enterprise edition. Check the current split before relying on a feature.",
+  "backing": "Authentik Security, Inc. (US), a venture-backed company funded by Enterprise subscriptions",
+  "since": 2018,
+  "maturity": {
+    "score": 4,
+    "rationale": "Released steadily for years, well documented, and now backed by a funded company. Younger than Keycloak, and releases arrive fast enough that upgrades are worth testing first."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://goauthentik.io",
+    "source": "https://github.com/goauthentik/authentik",
+    "docs": "https://docs.goauthentik.io"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "The official Docker Compose file brings up the server, a worker and PostgreSQL in a few minutes. The work is in what follows: connecting each app, setting up outgoing mail for recovery, backing up the database, and deciding what happens when the login server itself is down.",
+    "setupHours": [4, 10],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores"
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation guides (Docker Compose and Kubernetes)",
+        "url": "https://docs.goauthentik.io"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "Covers awkward software too: a login proxy for apps with no single sign-on, and LDAP and RADIUS for older systems",
+    "Can create and remove accounts in other apps over SCIM",
+    "A clear admin interface, with sign-in and enrolment flows you can change without writing code",
+    "Quick to get running from the official Docker Compose file"
+  ],
+  "weaknesses": [
+    "Open core: some integrations and device checks need the paid Enterprise edition",
+    "Flows and policies are flexible enough to misconfigure; test changes with a second admin account",
+    "A fast release pace means upgrades need attention",
+    "It becomes the door to everything: if it is down, nobody signs in"
+  ],
+  "features": {
+    "oidc-saml": "yes",
+    "directory-sync": "yes",
+    "scim": "yes",
+    "passkeys-mfa": "yes",
+    "self-service": "yes",
+    "legacy-apps": "yes",
+    "multi-tenant": "partial",
+    "device-rules": "addon"
+  },
+  "featureNotes": {
+    "legacy-apps": "Proxy, LDAP and RADIUS interfaces",
+    "multi-tenant": "Separate branding per domain rather than fully separate organisations",
+    "device-rules": "Enterprise edition"
+  },
+  "reviewed": "2026-11"
+}

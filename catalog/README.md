@@ -26,8 +26,12 @@ page explains the parts that need judgement.
 | `alternative.maturity.score`         | Experimental                      | Boring in the best way                       |
 | `alternative.selfHosting.difficulty` | An afternoon with Docker          | You are now an on-call sysadmin              |
 
-Higher is worse for the difficulty and lock-in scales, and better for fit and maturity. The app handles
-the colours; you only supply the number.
+Higher is worse for the difficulty and lock-in scales, and better for fit and maturity. That is only how
+the files are written: on screen the app always fills more dots for better news, so an easy import and a
+close fit look alike. You only supply the number.
+
+`tool.lockIn.level` also feeds the difficulty score, so rate it for what ties people to the tool beyond
+their own data: other people's files and habits, integrations, shared channels.
 
 `maturity` is about track record: age, release discipline, who maintains the project and how it is funded.
 It is not a feature count and it is not GitHub stars.

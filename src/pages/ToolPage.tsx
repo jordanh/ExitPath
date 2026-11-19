@@ -142,7 +142,11 @@ function ToolView({ tool }: { tool: Tool }) {
           summary="What keeps you here"
           hint={`Lock-in: ${SCALES.lockIn.labels[tool.lockIn.level - 1]}`}
         >
-          <Meter label="Lock-in" scale="lockIn" level={tool.lockIn.level} />
+          <Meter
+            scale="lockIn"
+            level={tool.lockIn.level}
+            word={`${SCALES.lockIn.labels[tool.lockIn.level - 1]} lock-in`}
+          />
           <div className="mt-3 max-w-2xl">
             <MarkedList kind="neutral" items={tool.lockIn.factors} />
           </div>
@@ -153,7 +157,7 @@ function ToolView({ tool }: { tool: Tool }) {
           hint={`Export: ${SCALES.difficulty.labels[tool.export.difficulty - 1]}`}
         >
           <div className="max-w-2xl">
-            <Meter label="Export difficulty" scale="difficulty" level={tool.export.difficulty} />
+            <Meter label="Getting data out" scale="difficulty" level={tool.export.difficulty} />
             <p className="mt-3">{tool.export.summary}</p>
             <dl className="mt-4 space-y-3">
               {tool.export.methods.map((method) => (

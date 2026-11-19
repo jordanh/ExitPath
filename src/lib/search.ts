@@ -87,8 +87,9 @@ function buildIndex(): Entry[] {
       subtitle: alternative.tagline,
       href: `/alternatives/${alternative.id}`,
       fields: [
+        // Names and categories only. Matching on the tagline made "docker"
+        // return a mail server that merely runs in Docker.
         field(alternative.name, 10),
-        field(alternative.tagline, 2),
         field(
           alternative.categories.map((id) => getCategory(id)?.name ?? ''),
           3,

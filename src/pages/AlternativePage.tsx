@@ -146,7 +146,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
                 Hosting it yourself{selfHosting.optional ? ' (optional)' : ''}
               </h3>
               <div className="mt-2">
-                <Meter label="Difficulty" scale="difficulty" level={selfHosting.difficulty} />
+                <Meter label="Running it" scale="difficulty" level={selfHosting.difficulty} />
               </div>
               <p className="mt-3">{selfHosting.summary}</p>
               <dl className="mt-3">

@@ -56,6 +56,7 @@
     "webmail": "no",
     "mobile-apps": "no",
     "calendar-contacts": "yes",
+    "free-busy": "partial",
     "spam-filtering": "yes",
     "exchange-protocols": "no",
     "openpgp": "partial"
@@ -64,7 +65,8 @@
     "desktop-app": "Use any mail client, for example Thunderbird",
     "webmail": "Planned; third-party webmail works today",
     "mobile-apps": "Use any IMAP or JMAP mail app",
-    "openpgp": "Can encrypt stored mail with your public key"
+    "openpgp": "Can encrypt stored mail with your public key",
+    "free-busy": "Calendar scheduling over CalDAV; no room-booking interface of its own"
   },
   "reviewed": "2026-11"
 }

@@ -43,10 +43,11 @@ export const HOSTING: Record<HostingPreference, { label: string; hint: string }>
 
 /** Share of the weighted average carried by each factor. Sums to 1. */
 export const WEIGHTS = {
-  export: 0.2,
-  import: 0.25,
+  export: 0.15,
+  import: 0.2,
   hosting: 0.25,
-  gap: 0.2,
+  gap: 0.15,
+  lockIn: 0.15,
   people: 0.1,
 } as const
 
@@ -166,6 +167,15 @@ export function scorePath(tool: Tool, path: Path, alternative: Alternative, cont
       explanation: 'What you give up or have to relearn',
     },
     {
+      key: 'lockIn',
+      label: 'Lock-in',
+      // Everything that ties you to the old tool beyond your own data: other
+      // people's files and habits, integrations, shared channels.
+      level: tool.lockIn.level,
+      weight: WEIGHTS.lockIn,
+      explanation: `How entangled you are with ${tool.name}`,
+    },
+    {
       key: 'people',
       label: 'People to move',
       level: team.level,
@@ -175,8 +185,9 @@ export function scorePath(tool: Tool, path: Path, alternative: Alternative, cont
   ]
 
   const average = factors.reduce((sum, factor) => sum + factor.weight * normalise(factor.level), 0)
-  // A migration is as hard as its hardest part. Team size is left out of the
-  // maximum so that head-count alone never dominates.
+  // A migration is as hard as its hardest part, and being deeply entangled
+  // counts as a part. Team size is left out of the maximum so that
+  // head-count alone never dominates.
   const hardest = Math.max(
     ...factors.filter((factor) => factor.key !== 'people').map((factor) => normalise(factor.level)),
   )

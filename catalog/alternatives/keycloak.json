@@ -1,0 +1,84 @@
+{
+  "id": "keycloak",
+  "name": "Keycloak",
+  "tagline": "The long-established open-source identity provider",
+  "description": "An identity and access management server: single sign-on over OpenID Connect and SAML, multi-factor sign-in, user federation with LDAP and Active Directory, and brokering to other identity providers. It is configured through an admin console and organised into realms.",
+  "categories": ["identity"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "Apache-2.0",
+  "backing": "A Cloud Native Computing Foundation project, started at Red Hat, which still does much of the development and sells a supported build",
+  "since": 2014,
+  "maturity": {
+    "score": 5,
+    "rationale": "More than a decade of releases, a CNCF project since 2023, and the login layer of a great many companies, universities and public bodies. Upgrades between major versions still need the migration notes read first."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://www.keycloak.org",
+    "source": "https://github.com/keycloak/keycloak",
+    "docs": "https://www.keycloak.org/documentation"
+  },
+  "selfHosting": {
+    "difficulty": 4,
+    "summary": "Runs as a container or on the JVM in front of PostgreSQL. A test instance takes minutes; a production one takes real care: TLS and hostname settings, a database with backups, a second node if a login outage would stop the company, and the habit of reading upgrade notes. After that, every app has to be connected to it.",
+    "setupHours": [6, 16],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores",
+      "notes": "Plus a PostgreSQL database. Allow more memory for thousands of active sessions."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Getting started with Docker",
+        "url": "https://www.keycloak.org/getting-started/getting-started-docker"
+      },
+      {
+        "kind": "guide",
+        "label": "Server guides, including production configuration",
+        "url": "https://www.keycloak.org/guides"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Cloud-IAM",
+      "url": "https://www.cloud-iam.com",
+      "note": "Managed Keycloak from a French provider"
+    },
+    {
+      "label": "Phase Two",
+      "url": "https://phasetwo.io",
+      "note": "Managed Keycloak with extra organisation features"
+    }
+  ],
+  "strengths": [
+    "Works with nearly every app: OpenID Connect, SAML and years of written-up integrations",
+    "Signs people in against an existing LDAP or Active Directory, so nobody has to be re-created",
+    "No paid edition: clustering, fine-grained authorisation and everything else are in the open build",
+    "A very large user base, so almost any problem has been met and documented"
+  ],
+  "weaknesses": [
+    "A lot to learn before the first app signs in: realms, clients, flows and mappers",
+    "No built-in way to push accounts to other apps (SCIM) or to protect apps that lack single sign-on; both need add-ons",
+    "The admin console and default login pages are functional rather than friendly",
+    "It becomes the door to everything: an outage or a botched upgrade locks the whole company out"
+  ],
+  "features": {
+    "oidc-saml": "yes",
+    "directory-sync": "yes",
+    "scim": "addon",
+    "passkeys-mfa": "yes",
+    "self-service": "yes",
+    "legacy-apps": "addon",
+    "multi-tenant": "yes",
+    "device-rules": "no"
+  },
+  "featureNotes": {
+    "scim": "Through community extensions",
+    "legacy-apps": "Pair it with a gateway such as oauth2-proxy",
+    "multi-tenant": "Realms, and organisations within a realm"
+  },
+  "reviewed": "2026-11"
+}

@@ -58,16 +58,19 @@ export function Home() {
 
   return (
     <>
-      <div className="relative overflow-hidden">
-        <TrailMap className="pointer-events-none absolute top-2 right-[max(1.5rem,calc(50%-31rem))] w-[26rem] max-lg:hidden" />
+      <div className="relative">
+        {/* The drawing is clipped to the hero; the search results below must not be. */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden max-lg:hidden">
+          <TrailMap className="absolute top-2 right-[max(1.5rem,calc(50%-31rem))] w-[26rem]" />
+        </div>
         <div className="relative mx-auto max-w-[60rem] px-4 pt-14 pb-10 sm:px-6 sm:pt-24 sm:pb-16">
           <div className="max-w-[33rem]">
             <h1 className="text-[3.2rem] leading-[0.95] font-black tracking-tight sm:text-[4.6rem]">
               Find your way <em className="text-accent">out.</em>
             </h1>
             <p className="mt-5 text-xl text-muted">
-              Open-source replacements for the tools you depend on: which ones hold up, what moves across, and
-              how much work the switch really is.
+              A guide to open-source replacements for the tools you depend on: which ones hold up, what moves
+              across, what does not, and how much work the switch really is.
             </p>
             <div className="mt-7">
               <SearchBox />
@@ -93,10 +96,7 @@ export function Home() {
             <SituationLine />
             <p className="text-muted">
               {tools.length} tools, {alternatives.length} alternatives, {totalPaths} routes between them. The
-              mark grades the easiest way out.{' '}
-              <Link to="/about" className="link">
-                How grades work
-              </Link>
+              mark grades the easiest way out, hosted or self-hosted as you choose.
             </p>
           </div>
         </section>

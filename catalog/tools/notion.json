@@ -38,30 +38,9 @@
   },
   "paths": [
     {
-      "to": "outline",
-      "fit": 3,
-      "verdict": "Best for teams whose Notion is mostly documents and wiki pages. Note that it is source-available rather than open source.",
-      "import": {
-        "difficulty": 2,
-        "summary": "Outline has a built-in Notion importer that takes the export archive and rebuilds collections and nested documents, images included."
-      },
-      "effortHours": [2, 6],
-      "transfers": [
-        "Pages and their hierarchy",
-        "Images and attachments",
-        "Formatting, tables and code blocks"
-      ],
-      "lost": [
-        "Databases, which arrive as static tables at best",
-        "Boards, calendars and timelines",
-        "Per-page permissions and comments",
-        "Public pages, which must be shared again"
-      ]
-    },
-    {
       "to": "appflowy",
       "fit": 4,
-      "verdict": "Closest in feel, databases included. Strong for one person; read the licence note before rolling it out to a team.",
+      "verdict": "The nearest match: documents, databases and boards in one place. Strong for one person; teams should read the licence note first.",
       "import": {
         "difficulty": 3,
         "summary": "AppFlowy imports a Notion export archive, turning pages into documents and simple databases into grids. Relations and formulas come through as plain values and need rebuilding."
@@ -77,6 +56,27 @@
         "Automations, buttons and synced blocks",
         "Comments and page history",
         "Fine-grained sharing and public pages as you had them"
+      ]
+    },
+    {
+      "to": "outline",
+      "fit": 2,
+      "verdict": "Covers the documents-and-wiki half of Notion only: it has no databases. It is also source-available rather than open source.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Outline has a built-in Notion importer that takes the export archive and rebuilds collections and nested documents, images included."
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Pages and their hierarchy",
+        "Images and attachments",
+        "Formatting, tables and code blocks"
+      ],
+      "lost": [
+        "Databases, which arrive as static tables at best",
+        "Boards, calendars and timelines",
+        "Per-page permissions and comments",
+        "Public pages, which must be shared again"
       ]
     },
     {

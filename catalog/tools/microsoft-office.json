@@ -6,9 +6,9 @@
   "alsoCovers": ["Word", "Excel", "PowerPoint", "Microsoft 365 Apps"],
   "summary": "Word, Excel and PowerPoint, on the desktop and in the browser, sold by subscription as part of Microsoft 365.",
   "lockIn": {
-    "level": 3,
+    "level": 4,
     "factors": [
-      "Everyone you work with sends, and expects, .docx, .xlsx and .pptx",
+      "Everyone you work with sends, and expects, .docx, .xlsx and .pptx, and complex files rarely survive a round trip through another suite unchanged",
       "Macros, Power Query, data models and add-ins exist only in Excel",
       "Templates, styles and fonts that render differently elsewhere",
       "Real-time co-authoring only works on files stored in OneDrive or SharePoint"
@@ -37,7 +37,7 @@
     {
       "to": "libreoffice",
       "fit": 4,
-      "verdict": "The default choice for individuals and for anyone who mostly works alone on documents.",
+      "verdict": "The default for individuals and for anyone who mostly works alone on documents. Expect friction if you trade complex files with Office users every day.",
       "import": {
         "difficulty": 2,
         "summary": "Opens Office files directly. Test your ten most complex documents first: long Word files with tracked changes, spreadsheets with pivot tables or macros, and animated slide decks are where differences show.",
@@ -55,6 +55,7 @@
         "Styles, charts and the great majority of formulas"
       ],
       "lost": [
+        "Trouble-free exchange with people who stay on Office: check complex files in both directions",
         "VBA macros beyond simple ones",
         "Power Query, Power Pivot and data-model features",
         "Real-time co-authoring",
@@ -78,7 +79,8 @@
       "lost": [
         "All VBA macros (it has a separate JavaScript macro system)",
         "Power Query, Power Pivot and data-model features",
-        "Some advanced Word features, such as complex mail merges and fields"
+        "Some advanced Word features, such as complex mail merges and fields",
+        "Certainty that a complex file looks the same to an Office user: closer than the others, still not identical"
       ]
     },
     {
@@ -96,6 +98,7 @@
         "Co-editing in the browser, once connected to a file platform"
       ],
       "lost": [
+        "Trouble-free exchange with people who stay on Office: check complex files in both directions",
         "VBA macros beyond simple ones",
         "Power Query, Power Pivot and data-model features",
         "Pixel-identical layout in complex documents"
