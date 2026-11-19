@@ -51,8 +51,7 @@
   "weaknesses": [
     "A task manager, not a full project suite: no sprints, time tracking or custom workflows",
     "No importer for Jira or Asana",
-    "Largely one maintainer",
-    "The mobile app covers less than the web version"
+    "Largely one maintainer"
   ],
   "features": {
     "kanban": "yes",
@@ -63,12 +62,12 @@
     "wiki": "no",
     "jira-import": "no",
     "task-app-import": "partial",
-    "mobile-apps": "partial",
+    "mobile-apps": "unknown",
     "free-sso": "yes"
   },
   "featureNotes": {
     "task-app-import": "Trello, Todoist, TickTick and Microsoft To Do; not Asana",
-    "mobile-apps": "An official app that covers less than the web version",
+    "mobile-apps": "There is an official app; how complete it is was not checked",
     "free-sso": "OpenID Connect"
   },
   "reviewed": "2026-11"

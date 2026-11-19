@@ -31,7 +31,6 @@
   "weaknesses": [
     "It cannot run VS Code extensions, and its own catalogue is smaller",
     "Backed by a venture-funded company whose business is AI subscriptions",
-    "Some long-tail language and framework tooling is less complete than in VS Code",
     "Collaboration goes through Zed's servers unless you run your own"
   ],
   "features": {

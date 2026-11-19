@@ -75,6 +75,7 @@ export const SUPPORT_LABELS: Record<Support, string> = {
   partial: 'Partly',
   addon: 'Add-on',
   no: 'No',
+  unknown: 'Not known',
 }
 
 export const PLATFORM_LABELS: Record<Platform, string> = {

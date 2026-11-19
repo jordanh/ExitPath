@@ -30,8 +30,7 @@
   "weaknesses": [
     "Sync is up to you: put the file in Syncthing or Nextcloud and deal with the occasional conflict",
     "Sharing with a team means sharing a file and its password; there are no per-user permissions",
-    "Phones need separate compatible apps",
-    "Browser integration takes a few minutes to set up and is less seamless than cloud managers"
+    "Phones need separate compatible apps"
   ],
   "features": {
     "browser-autofill": "yes",

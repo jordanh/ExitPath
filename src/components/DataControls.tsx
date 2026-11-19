@@ -104,7 +104,7 @@ export function DataControls() {
       </p>
       {exported !== null && (
         <div className="mt-3">
-          <label htmlFor={exportId} className="eyebrow">
+          <label htmlFor={exportId} className="label">
             Your data as text
           </label>
           <textarea

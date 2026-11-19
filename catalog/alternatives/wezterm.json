@@ -24,13 +24,11 @@
   "strengths": [
     "The same terminal and the same config file on Windows, macOS and Linux",
     "Built-in multiplexer with panes, tabs, workspaces and remote sessions over SSH",
-    "Configured in Lua, so its behaviour can be scripted",
-    "Ligatures, inline images and font fallback all work well"
+    "Configured in Lua, so its behaviour can be scripted"
   ],
   "weaknesses": [
     "Effectively a one-maintainer project with rare stable releases",
     "Lua configuration is powerful, but there is no settings window",
-    "Uses more memory and starts more slowly than Alacritty or Ghostty",
     "The interface is drawn by the app and does not look native"
   ],
   "features": {

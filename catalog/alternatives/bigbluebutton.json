@@ -57,8 +57,7 @@
   "weaknesses": [
     "Heavy: 8 cores and 16 GB of RAM as a starting point",
     "Overkill, and slower to start, for a quick one-to-one call",
-    "Needs a room manager (Greenlight or a learning platform) before anyone can create a meeting",
-    "No end-to-end encryption and no native mobile apps"
+    "Needs a room manager (Greenlight or a learning platform) before anyone can create a meeting"
   ],
   "features": {
     "guest-join": "yes",

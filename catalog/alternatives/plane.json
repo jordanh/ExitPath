@@ -46,7 +46,6 @@
   "strengths": [
     "Feels current: fast boards, keyboard shortcuts and the views people know from commercial trackers",
     "Cycles, modules and pages cover sprints, larger initiatives and written specs in one tool",
-    "Official mobile apps",
     "A hosted service with a free tier, so a team can try it before running it"
   ],
   "weaknesses": [
@@ -62,8 +61,8 @@
     "time-tracking": "addon",
     "custom-workflows": "partial",
     "wiki": "yes",
-    "jira-import": "partial",
-    "task-app-import": "partial",
+    "jira-import": "unknown",
+    "task-app-import": "unknown",
     "mobile-apps": "yes",
     "free-sso": "partial"
   },
@@ -72,8 +71,8 @@
     "time-tracking": "Paid editions",
     "custom-workflows": "Custom states are free; custom types and properties are in paid editions",
     "wiki": "Pages",
-    "jira-import": "An importer exists; check which edition includes it",
-    "task-app-import": "An Asana importer exists; check which edition includes it",
+    "jira-import": "An importer exists; which edition includes it was not checked",
+    "task-app-import": "An Asana importer exists; which edition includes it was not checked",
     "free-sso": "Sign-in with Google, GitHub or GitLab is free; SAML and OpenID Connect are paid"
   },
   "reviewed": "2026-11"

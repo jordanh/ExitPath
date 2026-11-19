@@ -12,7 +12,7 @@ import {
   ExternalLink,
   IndexRow,
   MarkedList,
-  Meter,
+  Rating,
   OpennessBadge,
   Page,
   ScoreBadge,
@@ -36,7 +36,7 @@ export function AlternativePage() {
 function Fact({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="grid gap-x-6 py-1.5 sm:grid-cols-[11rem_minmax(0,1fr)]">
-      <dt className="eyebrow sm:pt-0.5">{label}</dt>
+      <dt className="label sm:pt-0.5">{label}</dt>
       <dd>{children}</dd>
     </div>
   )
@@ -69,7 +69,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
       </nav>
 
       <header className="max-w-2xl">
-        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+        <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
           {alternative.name}
         </h1>
         <p className="mt-1 text-lg text-muted">{alternative.tagline}</p>
@@ -113,7 +113,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
 
       <Section title="The project">
         <div className="max-w-2xl">
-          <Meter label="Maturity" scale="maturity" level={alternative.maturity.score} />
+          <Rating label="Maturity" scale="maturity" level={alternative.maturity.score} />
           <p className="mt-2">{alternative.maturity.rationale}</p>
           <dl className="mt-4">
             <Fact label="Who is behind it">{alternative.backing}</Fact>
@@ -144,11 +144,11 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
         {selfHosting && (
           <div className="grid gap-x-14 gap-y-8 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
             <div>
-              <h3 className="font-display text-[1.3rem] font-extrabold">
+              <h3 className="text-[1.3rem] font-extrabold">
                 Self-hosting{selfHosting.optional ? ' (optional)' : ''}
               </h3>
               <div className="mt-2">
-                <Meter label="Running it" scale="difficulty" level={selfHosting.difficulty} />
+                <Rating label="Running it" scale="difficulty" level={selfHosting.difficulty} />
               </div>
               <p className="mt-3">{selfHosting.summary}</p>
               <dl className="mt-3">
@@ -161,7 +161,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
               {selfHosting.requirements.notes && (
                 <p className="mt-2 text-muted">{selfHosting.requirements.notes}</p>
               )}
-              <h4 className="eyebrow mt-5 mb-1.5">Official ways to install</h4>
+              <h4 className="label mt-5 mb-1.5">Official ways to install</h4>
               <ul className="space-y-1">
                 {selfHosting.deploy.map((link) => (
                   <li key={link.url + link.label}>
@@ -172,7 +172,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
               </ul>
             </div>
             <div>
-              <h3 className="font-display text-[1.3rem] font-extrabold">Managed hosting</h3>
+              <h3 className="text-[1.3rem] font-extrabold">Managed hosting</h3>
               {alternative.managedHosting.length > 0 ? (
                 <ul className="mt-2 space-y-3">
                   {alternative.managedHosting.map((host) => (

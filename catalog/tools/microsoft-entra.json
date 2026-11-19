@@ -75,7 +75,7 @@
       ],
       "lost": [
         "Passwords and authenticator registrations: everyone enrols again",
-        "Conditional Access rules based on device compliance, outside the paid edition",
+        "Conditional Access rules based on device compliance",
         "Windows sign-in and device management through Entra and Intune"
       ]
     },

@@ -115,7 +115,7 @@ export function SearchBox({
         className={
           inDialog
             ? 'mt-2 max-h-[min(24rem,55vh)] overflow-auto'
-            : 'absolute inset-x-0 top-full z-20 mt-2 max-h-[min(26rem,60vh)] overflow-auto rounded-stone border-[1.5px] border-ink bg-surface p-1.5'
+            : 'absolute inset-x-0 top-full z-20 mt-2 max-h-[min(26rem,60vh)] overflow-auto rounded-md border border-ink bg-surface p-1.5'
         }
       >
         {results.map((result, index) => {
@@ -133,13 +133,11 @@ export function SearchBox({
                 go(result.href)
               }}
               onMouseEnter={() => setActive(index)}
-              className={`flex cursor-pointer items-center gap-3 rounded-stone px-3 py-2 ${selected ? 'bg-sunken' : ''}`}
+              className={`flex cursor-pointer items-center gap-3 rounded-md px-3 py-2 ${selected ? 'bg-sunken' : ''}`}
             >
-              <span className="eyebrow w-[5.2rem] shrink-0">{KIND_LABEL[result.kind]}</span>
+              <span className="label w-[5.2rem] shrink-0">{KIND_LABEL[result.kind]}</span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-display text-lg leading-tight font-bold">
-                  {result.title}
-                </span>
+                <span className="block truncate text-lg leading-tight font-bold">{result.title}</span>
                 <span className="block truncate text-muted">{result.subtitle}</span>
               </span>
               <IconArrowRight className={`shrink-0 text-accent ${selected ? '' : 'invisible'}`} />
@@ -156,11 +154,11 @@ export function SearchBox({
               event.preventDefault()
               ask()
             }}
-            className="flex cursor-pointer items-center gap-3 rounded-stone bg-sunken px-3 py-2"
+            className="flex cursor-pointer items-center gap-3 rounded-md bg-sunken px-3 py-2"
           >
-            <span className="eyebrow w-[5.2rem] shrink-0">Not yet</span>
+            <span className="label w-[5.2rem] shrink-0">Not yet</span>
             <span className="min-w-0 flex-1">
-              <span className="block font-display text-lg leading-tight font-bold [overflow-wrap:anywhere]">
+              <span className="block text-lg leading-tight font-bold [overflow-wrap:anywhere]">
                 “{wanted}” is not covered yet
               </span>
               <span className="block text-muted">Ask for it on GitHub, in a new tab</span>

@@ -39,19 +39,16 @@
   "managedHosting": [],
   "strengths": [
     "No database: files live on disk, where ordinary backup tools can reach them",
-    "Fast and light compared with PHP-based file platforms",
     "Spaces give teams shared folders that do not belong to any one person",
     "Single sign-on over OpenID Connect is built in"
   ],
   "weaknesses": [
     "Young: a short track record as a project, and few independent hosting providers",
-    "It does files, not calendars, contacts or chat, and has far fewer add-ons than Nextcloud",
-    "Browser editing needs a separate office server",
-    "No end-to-end encryption"
+    "It does files, not calendars, contacts or chat, and has far fewer add-ons than Nextcloud"
   ],
   "features": {
     "desktop-sync": "yes",
-    "on-demand-files": "partial",
+    "on-demand-files": "unknown",
     "mobile-apps": "yes",
     "share-links": "yes",
     "browser-editing": "addon",
@@ -60,7 +57,6 @@
     "serverless": "no"
   },
   "featureNotes": {
-    "on-demand-files": "Not on every platform",
     "browser-editing": "With Collabora or ONLYOFFICE connected"
   },
   "reviewed": "2026-11"

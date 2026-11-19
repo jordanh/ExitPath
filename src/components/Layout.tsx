@@ -59,7 +59,7 @@ export function Layout() {
         <div className="mx-auto flex min-h-14 max-w-[68rem] flex-wrap items-center justify-end px-4 sm:px-6">
           <Link to="/" className="mr-auto flex shrink-0 items-center gap-2 rounded-md">
             <Logo className="size-7" />
-            <span className="font-display text-[1.3rem] leading-none font-black tracking-tight max-sm:sr-only">
+            <span className="text-[1.3rem] leading-none font-extrabold tracking-tight max-sm:sr-only">
               ExitPath
             </span>
           </Link>
@@ -74,7 +74,7 @@ export function Layout() {
                     : undefined
                 }
                 className={({ isActive }) =>
-                  `inline-flex items-baseline gap-1 rounded-md px-2 py-1.5 whitespace-nowrap decoration-accent decoration-[1.5px] underline-offset-[5px] sm:px-3 ${isActive ? 'text-ink underline' : 'text-muted hover:text-ink hover:underline'}`
+                  `inline-flex items-baseline gap-1 rounded-md px-2 py-1.5 whitespace-nowrap underline-offset-4 sm:px-3 ${isActive ? 'font-bold text-ink underline' : 'text-muted hover:text-ink hover:underline'}`
                 }
               >
                 {label}

@@ -5,7 +5,6 @@ import type { Guide, GuideStep } from '../catalog/schema.ts'
 import { ConfirmButton } from '../components/ConfirmButton.tsx'
 import { CopyText } from '../components/CopyText.tsx'
 import { EntryFooter } from '../components/EntryFooter.tsx'
-import { IconCheck } from '../components/icons.tsx'
 import { ExternalLink, Page, ProgressBar, Section } from '../components/ui.tsx'
 import { guideStatus } from '../lib/guides.ts'
 import { guideToMarkdown } from '../lib/markdown.ts'
@@ -19,36 +18,27 @@ export function GuidePage() {
   return guide ? <GuideView key={guide.id} guide={guide} /> : <NotFound what="guide" />
 }
 
-/**
- * One step, as a waypoint on the trail: the checkbox sits on the dotted line
- * that runs down the phase, and fills in once you have passed it.
- */
+/** One step of a checklist: a checkbox, what to do, and where to read more. */
 function Step({ guideId, step, done }: { guideId: string; step: GuideStep; done: boolean }) {
   const inputId = `step-${step.id}`
   return (
-    <li className="relative break-inside-avoid pb-6 pl-9 last:pb-1 sm:pl-11">
-      <span className="absolute top-0 left-[-1.5px] flex size-7 -translate-x-1/2">
-        <input
-          id={inputId}
-          type="checkbox"
-          checked={done}
-          onChange={(event) => setStepDone(guideId, step.id, event.target.checked)}
-          aria-describedby={`${inputId}-detail`}
-          className="peer size-7 cursor-pointer appearance-none rounded-full border-2 border-ink bg-bg checked:border-accent checked:bg-accent hover:border-accent"
-        />
-        <IconCheck
-          strokeWidth={2.4}
-          className="pointer-events-none absolute inset-0 m-auto hidden text-[1.05rem] text-on-accent peer-checked:block print:text-ink"
-        />
-      </span>
+    <li className="flex break-inside-avoid gap-3 pb-5 last:pb-1">
+      <input
+        id={inputId}
+        type="checkbox"
+        checked={done}
+        onChange={(event) => setStepDone(guideId, step.id, event.target.checked)}
+        aria-describedby={`${inputId}-detail`}
+        className="mt-1 size-[1.15rem] shrink-0 cursor-pointer"
+      />
       <div className="min-w-0">
         <label
           htmlFor={inputId}
-          className={`cursor-pointer font-display text-[1.2rem] leading-snug font-bold ${done ? 'text-muted line-through decoration-faint decoration-1' : ''}`}
+          className={`cursor-pointer text-[1.1rem] leading-snug font-bold ${done ? 'text-muted line-through' : ''}`}
         >
           {step.title}
         </label>
-        {step.optional && <span className="eyebrow ml-3">Optional</span>}
+        {step.optional && <span className="label ml-3">Optional</span>}
         <p id={`${inputId}-detail`} className={`mt-1 ${done ? 'text-faint' : 'text-muted'}`}>
           {step.detail}
         </p>
@@ -88,21 +78,21 @@ function GuideView({ guide }: { guide: Guide }) {
       </nav>
 
       <header>
-        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+        <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
           {guide.title}
         </h1>
         <p className="mt-3 text-xl text-muted">{guide.summary}</p>
         <dl className="mt-5">
           <div className="grid gap-x-4 py-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
-            <dt className="eyebrow sm:pt-0.5">For</dt>
+            <dt className="label sm:pt-0.5">For</dt>
             <dd>{guide.audience}</dd>
           </div>
           <div className="grid gap-x-4 py-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
-            <dt className="eyebrow sm:pt-0.5">Takes</dt>
+            <dt className="label sm:pt-0.5">Takes</dt>
             <dd>{guide.timeframe}</dd>
           </div>
           <div className="grid gap-x-4 py-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
-            <dt className="eyebrow sm:pt-0.5">Replaces</dt>
+            <dt className="label sm:pt-0.5">Replaces</dt>
             <dd>
               {guide.tools.flatMap((id, index) => {
                 const tool = getTool(id)
@@ -128,7 +118,7 @@ function GuideView({ guide }: { guide: Guide }) {
       >
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-0.5">
           <p>
-            <span className="figures font-display text-xl leading-none font-black">{done}</span>
+            <span className="figures text-xl leading-none font-extrabold">{done}</span>
             <span className="text-muted"> of {total} steps</span>
           </p>
           <p className="min-w-0 truncate text-muted" aria-live="polite">
@@ -160,7 +150,7 @@ function GuideView({ guide }: { guide: Guide }) {
                   key={`${entry.role}-${entry.alternative}`}
                   className="grid gap-x-6 py-1.5 sm:grid-cols-[11rem_minmax(0,1fr)]"
                 >
-                  <dt className="eyebrow sm:pt-0.5">{entry.role}</dt>
+                  <dt className="label sm:pt-0.5">{entry.role}</dt>
                   <dd>
                     <Link to={`/alternatives/${alternative.id}`} className="link">
                       {alternative.name}
@@ -203,14 +193,13 @@ function GuideView({ guide }: { guide: Guide }) {
                     {phase.title}
                   </h3>
                   <span className="leader" aria-hidden="true" />
-                  <p className={`eyebrow ${complete ? 'text-accent' : ''}`}>
+                  <p className={`label ${complete ? 'text-accent' : ''}`}>
                     {complete ? 'Done' : `${phaseDone} of ${phase.steps.length}`}
                   </p>
                   {phase.intro && <p className="w-full text-muted">{phase.intro}</p>}
                 </div>
-                {/* The dotted line is the trail; each step is a waypoint on it. */}
                 {steps.length > 0 && (
-                  <ul className="ml-3.5 border-l-[3px] border-dotted border-line-strong">
+                  <ul>
                     {steps.map((step) => (
                       <Step key={step.id} guideId={guide.id} step={step} done={doneIds.has(step.id)} />
                     ))}

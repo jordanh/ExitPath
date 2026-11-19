@@ -47,14 +47,12 @@
   "strengths": [
     "Indexes folders in place and leaves your directory structure alone",
     "Strong browsing: places, calendar, labels, faces, RAW and video",
-    "WebDAV access lets desktop tools and sync apps write straight into the library",
-    "Runs well on modest hardware"
+    "WebDAV access lets desktop tools and sync apps write straight into the library"
   ],
   "weaknesses": [
     "No first-party mobile apps or automatic phone backup: you pair it with a sync app",
     "Multi-user support in the free edition is limited",
-    "Reads Google Takeout metadata, but albums and sharing need manual rebuilding",
-    "Slower development pace than its main rival"
+    "Reads Google Takeout metadata, but albums and sharing need manual rebuilding"
   ],
   "features": {
     "auto-backup": "addon",

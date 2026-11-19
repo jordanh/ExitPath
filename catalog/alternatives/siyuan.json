@@ -25,7 +25,6 @@
   "strengths": [
     "Databases with table and board views sit inside ordinary documents, as in Notion",
     "Works fully offline; nothing leaves your device unless you turn sync on",
-    "Links and embeds work at the level of a single block",
     "Apps for every desktop and mobile platform, plus a container with a web interface"
   ],
   "weaknesses": [
@@ -39,7 +38,7 @@
     "databases": "yes",
     "offline": "yes",
     "plain-files": "no",
-    "public-sharing": "partial",
+    "public-sharing": "unknown",
     "mobile-apps": "yes",
     "permissions": "no",
     "notion-import": "partial",
@@ -47,7 +46,6 @@
   },
   "featureNotes": {
     "plain-files": "Its own JSON files in a local folder; exports to Markdown",
-    "public-sharing": "Read-only publishing from a running instance",
     "notion-import": "Via Notion's Markdown export; databases arrive as plain tables",
     "api": "Local HTTP API"
   },

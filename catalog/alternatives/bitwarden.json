@@ -57,7 +57,6 @@
   ],
   "weaknesses": [
     "Some features cost money wherever you host: integrated one-time codes, emergency access, advanced reports",
-    "Autofill is a little less smooth than 1Password's",
     "The full self-hosted stack is heavy and built around SQL Server",
     "Enterprise server modules are source-available rather than open source"
   ],

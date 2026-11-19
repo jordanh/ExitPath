@@ -152,18 +152,17 @@ nothing else ships to the browser.
 
 ## The look
 
-The site is laid out as a reference work: it opens with the search field and the index, tool pages are
-tables, and detail stays folded until asked for. There is no landing page.
+Deliberately plain: a white page, dark text, blue links and tables. The site opens with the search field
+and the index, tool pages are tables, and detail stays folded until asked for. There is no landing page.
 
+- **One typeface.** Alegreya Sans throughout, under the SIL Open Font License and bundled from npm at
+  build time, so no font service is contacted.
+- **Standard controls.** The browser's own checkboxes, progress bar and select menus; buttons and fields
+  with ordinary corners.
 - **Grades have shapes.** Easy is a green circle, moderate a blue square, demanding a gold triangle, hard
   a red diamond and very hard a black double diamond. The shape and the word carry the grade, so nothing
-  depends on telling colours apart. The four hues were checked for contrast and colour-blind separation
-  on every background, in both themes.
-- **Ratings are five dots and a word.** More filled dots is better on every scale, whichever way the
-  underlying number runs.
-- **Typefaces are self-hosted.** Vollkorn for headings, Alegreya Sans for text and its small caps for
-  labels, all under the SIL Open Font License and bundled from npm at build time. No font service is
-  contacted.
+  depends on telling colours apart.
+- **Ratings are words.** A 1–5 rating is shown as the word for it ("Mature", "Easy"), not as a meter.
 
 Colours are CSS variables in [`src/index.css`](src/index.css) with light, dark and print values.
 

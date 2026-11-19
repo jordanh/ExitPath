@@ -45,14 +45,13 @@
   ],
   "strengths": [
     "End-to-end encrypted: the server, and whoever runs it, cannot see your photos",
-    "The hosted plan is a genuine drop-in for people who do not want to run a server",
+    "The hosted plan suits people who do not want to run a server",
     "Face recognition and search run on your own devices, so privacy is not traded for features",
     "The desktop app imports Google Takeout directly, keeping dates, locations and albums"
   ],
   "weaknesses": [
     "On-device indexing is slower and uses phone battery at first",
     "Self-hosting works, but the paid cloud is clearly the main path",
-    "The web app is plainer than Immich's or Google's",
     "Encrypted storage means you cannot browse the files on the server's disk"
   ],
   "features": {

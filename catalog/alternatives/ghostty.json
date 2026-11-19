@@ -24,14 +24,11 @@
   "strengths": [
     "Native interface on each platform, so tabs, splits and windows behave like the rest of your system",
     "Works well with zero configuration, and ships hundreds of themes",
-    "Excellent standards support, including the Kitty keyboard and graphics protocols",
-    "Its core is a reusable library that other terminals build on"
+    "Excellent standards support, including the Kitty keyboard and graphics protocols"
   ],
   "weaknesses": [
     "No official Windows version; only third-party forks",
-    "Configuration lives in a text file rather than a settings window",
-    "Younger than its rivals, with a few power-user features still missing",
-    "No built-in multiplexing over SSH"
+    "Configuration lives in a text file rather than a settings window"
   ],
   "features": {
     "gpu-rendering": "yes",

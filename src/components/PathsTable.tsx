@@ -6,7 +6,7 @@ import { formatEffort, scorePath, type HostingPreference } from '../lib/scoring.
 import { removeFromPlan, setPlanChoice, usePlan, useSituation } from '../lib/storage.ts'
 import { IconCheck, IconPlus } from './icons.tsx'
 import { Provenance, ProvenanceMark } from './Provenance.tsx'
-import { ExternalLink, MarkedList, Meter, OpennessBadge, ScoreBadge } from './ui.tsx'
+import { ExternalLink, MarkedList, Rating, OpennessBadge, ScoreBadge } from './ui.tsx'
 
 const HOSTING_WORD = {
   none: 'Nothing to host',
@@ -101,7 +101,7 @@ function HostLinks({ hosts }: { hosts: ScoredPath['alternative']['managedHosting
 
 /** A label shown inside the cell on narrow screens, where the column headings are gone. */
 const CellLabel = ({ children }: { children: ReactNode }) => (
-  <span className="eyebrow mr-2 lg:hidden">{children}</span>
+  <span className="label mr-2 lg:hidden">{children}</span>
 )
 
 const cell = 'py-4 pr-5 align-top max-lg:block max-lg:py-0.5 max-lg:pr-0'
@@ -121,7 +121,7 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
         <th scope="row" className={`${cell} font-normal lg:w-[13rem]`}>
           <Link
             to={`/alternatives/${alternative.id}`}
-            className="font-display text-[1.3rem] leading-tight font-black decoration-accent decoration-2 underline-offset-4 hover:underline"
+            className="text-[1.2rem] leading-tight font-extrabold text-accent hover:underline"
           >
             {alternative.name}
           </Link>
@@ -185,15 +185,15 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
           <td colSpan={6} className="pt-1 pb-7 max-lg:block lg:pl-[13rem]">
             <div className="grid max-w-3xl gap-x-10 gap-y-5 md:grid-cols-2">
               <div>
-                <h4 className="eyebrow mb-2">Transfers</h4>
+                <h4 className="label mb-2">Transfers</h4>
                 <MarkedList kind="good" items={path.transfers} />
               </div>
               <div>
-                <h4 className="eyebrow mb-2">Does not transfer</h4>
+                <h4 className="label mb-2">Does not transfer</h4>
                 <MarkedList kind="bad" items={path.lost} />
               </div>
               <div className="md:col-span-2">
-                <h4 className="eyebrow mb-1.5">Import</h4>
+                <h4 className="label mb-1.5">Import</h4>
                 <p>{path.import.summary}</p>
                 {path.import.links && (
                   <ul className="mt-2 flex flex-wrap gap-x-6 gap-y-1">
@@ -206,11 +206,11 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
                 )}
               </div>
               <div className="md:col-span-2">
-                <h4 className="eyebrow mb-1.5">Running it</h4>
+                <h4 className="label mb-1.5">Running it</h4>
                 <HostingDetail scored={scored} />
               </div>
               <div className="md:col-span-2">
-                <h4 className="eyebrow mb-1.5">How the grade is worked out</h4>
+                <h4 className="label mb-1.5">How the grade is worked out</h4>
                 <p>
                   {result.band.label}: a score of {result.score} out of 100, from six ratings where 1 is
                   easiest and 5 hardest.
@@ -223,26 +223,25 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
                   ))}
                 </ul>
                 <div className="mt-2.5 flex flex-wrap gap-x-8 gap-y-1.5">
-                  <Meter inline label="Getting data in" scale="difficulty" level={path.import.difficulty} />
-                  <Meter
-                    inline
+                  <Rating label="Getting data in" scale="difficulty" level={path.import.difficulty} />
+                  <Rating
                     label="Running it"
                     scale="difficulty"
                     level={result.hosting.level}
                     word={HOSTING_WORD[result.hosting.mode]}
                   />
-                  <Meter inline label="Maturity" scale="maturity" level={alternative.maturity.score} />
+                  <Rating label="Maturity" scale="maturity" level={alternative.maturity.score} />
                 </div>
               </div>
               {otherDrawbacks.length > 0 && (
                 <div className="md:col-span-2">
-                  <h4 className="eyebrow mb-2">Other drawbacks of {alternative.name}</h4>
+                  <h4 className="label mb-2">Other drawbacks of {alternative.name}</h4>
                   <MarkedList kind="neutral" items={otherDrawbacks} />
                 </div>
               )}
               {alternative.licenseNote && (
                 <div className="md:col-span-2">
-                  <h4 className="eyebrow mb-1.5">
+                  <h4 className="label mb-1.5">
                     Licence: {alternative.license},{' '}
                     {OPENNESS_LABELS[alternative.openness].label.toLowerCase()}
                   </h4>
@@ -271,7 +270,7 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
  * becomes a block and the column headings move into the cells.
  */
 export function PathsTable({ paths, easiestId }: { paths: ScoredPath[]; easiestId?: string }) {
-  const heading = 'eyebrow py-2 pr-5 text-left font-normal'
+  const heading = 'label py-2 pr-5 text-left font-normal'
   return (
     <table className="w-full border-collapse text-left max-lg:block">
       <caption className="sr-only">Alternatives compared</caption>

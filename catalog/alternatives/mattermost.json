@@ -52,14 +52,12 @@
   "strengths": [
     "Feels like Slack on day one: same layout, channels, threads, reactions and slash commands",
     "Official tooling imports Slack channels, users, threads and message history",
-    "Simple to run and light on resources",
     "Slack-compatible webhooks mean many existing integrations work with a changed URL"
   ],
   "weaknesses": [
     "Open core, and the line keeps moving: single sign-on (GitLab sign-in included, since version 11), guest accounts and compliance features are paid",
     "Calls in the free edition are limited to one-to-one, with a time cap; group calls need a licence",
-    "The default free install since version 11 is the Entry edition, which limits message history; Team Edition has to be chosen explicitly",
-    "No end-to-end encryption"
+    "The default free install since version 11 is the Entry edition, which limits message history; Team Edition has to be chosen explicitly"
   ],
   "features": {
     "threads": "yes",

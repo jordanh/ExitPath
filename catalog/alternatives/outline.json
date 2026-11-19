@@ -46,8 +46,7 @@
   "strengths": [
     "A fast, uncluttered editor with Markdown shortcuts and real-time collaboration",
     "Imports Notion and Confluence exports and keeps the page hierarchy",
-    "Collections, granular permissions, public share links and a solid API",
-    "Fast full-text search"
+    "Collections, granular permissions, public share links and a solid API"
   ],
   "weaknesses": [
     "Source-available, not open source: see the licence note",

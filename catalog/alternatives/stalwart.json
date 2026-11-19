@@ -45,9 +45,8 @@
     "Web admin with DNS checks and DMARC and TLS reports built in"
   ],
   "weaknesses": [
-    "Young compared with Postfix and Dovecot: fewer war stories and fewer people who can help at 3 a.m.",
+    "Young compared with Postfix and Dovecot, with a smaller community to ask for help",
     "Deliverability is still your problem: IP reputation, reverse DNS and blocklists",
-    "No bundled webmail yet; bring a mail client or run a separate JMAP or IMAP webmail",
     "No Exchange ActiveSync, so Outlook and phones connect over IMAP, CalDAV and CardDAV"
   ],
   "features": {
@@ -56,7 +55,7 @@
     "webmail": "no",
     "mobile-apps": "no",
     "calendar-contacts": "yes",
-    "free-busy": "partial",
+    "free-busy": "unknown",
     "spam-filtering": "yes",
     "exchange-protocols": "no",
     "openpgp": "partial"
@@ -66,7 +65,7 @@
     "webmail": "Planned; third-party webmail works today",
     "mobile-apps": "Use any IMAP or JMAP mail app",
     "openpgp": "Can encrypt stored mail with your public key",
-    "free-busy": "Calendar scheduling over CalDAV; no room-booking interface of its own"
+    "free-busy": "It offers calendar scheduling over CalDAV; free/busy and room booking were not checked"
   },
   "reviewed": "2026-11"
 }

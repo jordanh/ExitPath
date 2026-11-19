@@ -25,13 +25,11 @@
   "strengths": [
     "Your notes stay with you: plain Markdown files in Logseq OG, a local database in 2.0",
     "Backlinks, block references and queries make a personal knowledge base genuinely useful",
-    "Works offline by design; the file-based version syncs with any file tool such as Syncthing or Git",
-    "A large plugin ecosystem"
+    "Works offline by design; the file-based version syncs with any file tool such as Syncthing or Git"
   ],
   "weaknesses": [
     "A personal tool, not a team wiki: no workspace permissions, and real-time collaboration is still alpha in the database version",
-    "The 2026 split means choosing between an app in maintenance mode and one in beta",
-    "An outliner does not map cleanly onto Notion pages, so imported notes need tidying",
+    "The file-based app and the newer database-backed one are separate, and the newer one is less mature",
     "Mobile apps and sync have historically been the rough edges"
   ],
   "features": {

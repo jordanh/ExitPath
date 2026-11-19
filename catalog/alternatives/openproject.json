@@ -47,14 +47,12 @@
   "strengths": [
     "Covers classic and agile planning in one place: Gantt charts, backlogs, boards, time and cost tracking",
     "Types, workflows, roles and custom fields can be shaped to an organisation's process",
-    "A stable company and release rhythm, with a hosted option in the EU",
-    "Meetings and a wiki are built in"
+    "A stable company and release rhythm, with a hosted option in the EU"
   ],
   "weaknesses": [
     "Open core: single sign-on and the more advanced boards need a paid plan",
     "Heavier and more formal than a team that just wants a board will enjoy",
-    "No one-step import from Jira or Asana that carries everything",
-    "The interface is dense; new users need a short introduction"
+    "No one-step import from Jira or Asana that carries everything"
   ],
   "features": {
     "kanban": "partial",
@@ -63,15 +61,15 @@
     "time-tracking": "yes",
     "custom-workflows": "yes",
     "wiki": "yes",
-    "jira-import": "partial",
+    "jira-import": "unknown",
     "task-app-import": "no",
-    "mobile-apps": "partial",
+    "mobile-apps": "unknown",
     "free-sso": "no"
   },
   "featureNotes": {
     "kanban": "Basic boards are free; boards driven by status or assignee are an Enterprise add-on",
-    "jira-import": "Migration tooling is still maturing; check what it covers",
-    "mobile-apps": "The web interface works on phones; the official app is newer and covers less",
+    "jira-import": "OpenProject has been building Jira migration tooling; what it covers today was not checked",
+    "mobile-apps": "The web interface works on phones; the state of the official app was not checked",
     "free-sso": "OpenID Connect and SAML are Enterprise add-ons; LDAP sign-in is free"
   },
   "reviewed": "2026-11"

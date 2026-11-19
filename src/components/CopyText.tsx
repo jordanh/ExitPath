@@ -34,7 +34,7 @@ export function CopyText({ label, getText }: { label: string; getText: () => str
       </span>
       {state === 'manual' && (
         <span className="mt-2 block w-full">
-          <label htmlFor={boxId} className="eyebrow">
+          <label htmlFor={boxId} className="label">
             Select and copy
           </label>
           <textarea

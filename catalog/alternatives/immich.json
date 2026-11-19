@@ -53,8 +53,7 @@
   "weaknesses": [
     "No end-to-end encryption: whoever runs the server can see the photos",
     "You are the backup. Immich is not a backup tool, and its documentation tells you to keep separate copies",
-    "Google Takeout import relies on the community tool immich-go, which works well but is not official",
-    "Editing tools are basic"
+    "Google Takeout import relies on the community tool immich-go, which works well but is not official"
   ],
   "features": {
     "auto-backup": "yes",

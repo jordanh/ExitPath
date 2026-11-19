@@ -74,7 +74,8 @@ export const CategorySchema = z.strictObject({
 // ---------------------------------------------------------------------------
 
 export const OPENNESS = ['open-source', 'open-core', 'source-available'] as const
-export const SUPPORT = ['yes', 'partial', 'addon', 'no'] as const
+/** `unknown` is an honest answer: use it rather than guess. */
+export const SUPPORT = ['yes', 'partial', 'addon', 'no', 'unknown'] as const
 export const PLATFORMS = ['web', 'windows', 'macos', 'linux', 'bsd', 'android', 'ios'] as const
 export const DEPLOY_KINDS = ['docker-compose', 'one-click', 'helm', 'installer', 'guide'] as const
 export const KINDS = ['server', 'desktop', 'peer-to-peer'] as const

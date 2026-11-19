@@ -48,7 +48,7 @@ function SuiteView({ suite }: { suite: Suite }) {
   return (
     <Page narrow>
       <header>
-        <h1 className="text-[2rem] leading-[1.1] font-black tracking-tight sm:text-[2.5rem]">
+        <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
           Replacing {suite.name}
         </h1>
         <p className="mt-1 text-muted">{suite.vendor}</p>
@@ -96,11 +96,11 @@ function SuiteView({ suite }: { suite: Suite }) {
             <li key={component.label} className="border-t border-line py-5">
               <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1">
                 <div className="flex min-w-0 flex-wrap items-baseline gap-x-3">
-                  <span className="eyebrow">{component.label} to</span>
-                  <h3 className="text-[1.45rem] leading-tight font-black">
+                  <span className="label">{component.label} to</span>
+                  <h3 className="text-[1.45rem] leading-tight font-extrabold">
                     <Link
                       to={`/alternatives/${easiest.alternative.id}`}
-                      className="decoration-accent decoration-2 underline-offset-4 hover:underline"
+                      className="text-accent hover:underline"
                     >
                       {easiest.alternative.name}
                     </Link>

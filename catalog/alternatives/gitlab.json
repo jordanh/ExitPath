@@ -47,14 +47,12 @@
   "strengths": [
     "Mature built-in CI/CD that many teams prefer to GitHub Actions",
     "The official GitHub importer brings repositories, issues, pull requests, comments and releases",
-    "Everything in one place: registry, Pages, environments, issue boards and wiki",
-    "Clear upgrade paths and a long history of self-managed installs"
+    "Everything in one place: registry, Pages, environments, issue boards and wiki"
   ],
   "weaknesses": [
     "Resource-hungry: 8 GB of RAM before your first repository",
     "GitHub Actions workflows must be rewritten as GitLab CI pipelines",
-    "Open core, with many attractive features locked to paid tiers",
-    "A busy interface; small teams use a fraction of it"
+    "Open core, with many attractive features locked to paid tiers"
   ],
   "features": {
     "pull-requests": "yes",
