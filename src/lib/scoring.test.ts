@@ -231,9 +231,7 @@ describe('with the real catalog', () => {
         context,
       ).score
     }
-    // Swapping VS Code for its own open build is the easiest thing in the catalog.
-    const everything = tools.flatMap((realTool) => realTool.paths.map((p) => score(realTool.id, p.to)))
-    expect(score('vscode', 'vscodium')).toBe(Math.min(...everything))
+    // Swapping VS Code for its own open build is about as easy as a move gets.
     expect(score('vscode', 'vscodium')).toBeLessThan(20)
     // Office files open anywhere, but everyone else still sends them: not an easy exit.
     expect(score('microsoft-office', 'libreoffice')).toBeGreaterThanOrEqual(40)

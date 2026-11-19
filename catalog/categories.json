@@ -411,6 +411,42 @@
     ]
   },
   {
+    "id": "terminal",
+    "name": "Terminals",
+    "description": "Terminal emulators",
+    "features": [
+      {
+        "id": "gpu-rendering",
+        "name": "GPU-accelerated rendering"
+      },
+      {
+        "id": "tabs-splits",
+        "name": "Built-in tabs and splits"
+      },
+      {
+        "id": "native-ui",
+        "name": "Platform-native interface"
+      },
+      {
+        "id": "ligatures",
+        "name": "Font ligatures"
+      },
+      {
+        "id": "inline-images",
+        "name": "Inline images",
+        "hint": "Kitty graphics protocol, Sixel or iTerm2 image protocol"
+      },
+      {
+        "id": "scriptable",
+        "name": "Scriptable configuration"
+      },
+      {
+        "id": "ssh-multiplexing",
+        "name": "Built-in multiplexing over SSH"
+      }
+    ]
+  },
+  {
     "id": "identity",
     "name": "Identity and single sign-on",
     "description": "Company accounts, single sign-on (SSO), multi-factor sign-in and user provisioning",
