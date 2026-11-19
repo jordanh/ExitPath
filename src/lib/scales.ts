@@ -82,6 +82,7 @@ export const PLATFORM_LABELS: Record<Platform, string> = {
   windows: 'Windows',
   macos: 'macOS',
   linux: 'Linux',
+  bsd: 'BSD',
   android: 'Android',
   ios: 'iOS',
 }

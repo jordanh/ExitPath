@@ -1,0 +1,50 @@
+{
+  "id": "alacritty",
+  "name": "Alacritty",
+  "tagline": "A minimal, fast terminal that does one thing",
+  "description": "A deliberately small GPU-accelerated terminal emulator. It draws text quickly and leaves tabs, splits and session management to your window manager or a multiplexer such as tmux.",
+  "categories": ["terminal"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "Apache-2.0",
+  "backing": "Volunteer maintainers",
+  "since": 2017,
+  "maturity": {
+    "score": 5,
+    "rationale": "Stable, conservative and widely packaged since 2017. It rarely surprises."
+  },
+  "platforms": ["windows", "macos", "linux"],
+  "links": {
+    "website": "https://alacritty.org",
+    "source": "https://github.com/alacritty/alacritty",
+    "docs": "https://alacritty.org/config-alacritty.html"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Starts instantly and stays out of the way",
+    "A simple TOML configuration file with live reload",
+    "Vi mode, search and clickable regex hints are built in",
+    "Available everywhere, including Windows and the BSDs"
+  ],
+  "weaknesses": [
+    "No tabs or splits: the project considers that the job of a window manager or multiplexer",
+    "No font ligatures",
+    "No inline image support",
+    "Deliberately slow to add features"
+  ],
+  "features": {
+    "gpu-rendering": "yes",
+    "tabs-splits": "no",
+    "native-ui": "no",
+    "ligatures": "no",
+    "inline-images": "no",
+    "scriptable": "no",
+    "ssh-multiplexing": "no"
+  },
+  "featureNotes": {
+    "tabs-splits": "By design; pair it with tmux or Zellij",
+    "scriptable": "Static TOML config"
+  },
+  "reviewed": "2026-11"
+}
