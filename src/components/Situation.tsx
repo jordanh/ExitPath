@@ -1,12 +1,14 @@
+import { Link } from 'react-router-dom'
 import { openOptions } from '../lib/options-dialog.ts'
 import { TEAM_SIZES } from '../lib/scoring.ts'
 import { usePrefs } from '../lib/storage.ts'
 
 /**
  * One quiet line saying whose situation the grades are for, with a way to
- * change it. The choices themselves live in the options dialog.
+ * change it and a way to see how they are worked out. The choices themselves
+ * live in the options dialog.
  */
-export function SituationLine({ hidden = 0 }: { hidden?: number }) {
+export function SituationLine({ hidden = 0, explain = true }: { hidden?: number; explain?: boolean }) {
   const { teamSize, hosting, licences } = usePrefs()
   return (
     <p className="text-muted print:hidden">
@@ -26,6 +28,14 @@ export function SituationLine({ hidden = 0 }: { hidden?: number }) {
       <button type="button" onClick={openOptions} className="link cursor-pointer">
         Change
       </button>
+      {explain && (
+        <>
+          {' · '}
+          <Link to="/about" className="link">
+            How grades work
+          </Link>
+        </>
+      )}
     </p>
   )
 }

@@ -1,7 +1,7 @@
 {
   "id": "appflowy",
   "name": "AppFlowy",
-  "tagline": "The closest open look-alike to Notion, local-first",
+  "tagline": "Documents, databases and boards in one local-first workspace",
   "description": "Pages, databases, boards, calendars and grids in native apps that store your data on your device first. Syncing and collaboration go through AppFlowy's cloud or a self-hosted server.",
   "categories": ["notes"],
   "kind": "desktop",

@@ -1,7 +1,7 @@
 import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { alternatives, getTool, guides, suites, tools } from './catalog/index.ts'
 import { stepIds } from './lib/guides.ts'
 import {
@@ -113,11 +113,41 @@ describe('interactions', () => {
     expect(router.state.location.pathname).toBe('/tools/onedrive')
   })
 
-  it('search says so when nothing matches', async () => {
+  it('offers a way to ask when search finds nothing', async () => {
+    const user = userEvent.setup()
+    const open = vi.spyOn(window, 'open').mockImplementation(() => null)
+    try {
+      renderAt('/')
+      await user.type(screen.getByRole('combobox'), 'zzzzzz')
+      expect(screen.getByRole('option')).toHaveTextContent('“zzzzzz” is not covered yet')
+      await user.keyboard('{Enter}')
+      expect(open).toHaveBeenCalledWith(
+        'https://github.com/noobmaster69/ExitPath/issues/new?title=Please%20cover%3A%20zzzzzz',
+        '_blank',
+        'noopener,noreferrer',
+      )
+    } finally {
+      open.mockRestore()
+    }
+  })
+
+  it('does not pass off a description match as an answer', async () => {
     const user = userEvent.setup()
     renderAt('/')
-    await user.type(screen.getByRole('combobox'), 'zzzzzz')
-    expect(screen.getByRole('option')).toHaveTextContent(/Nothing in the catalog matches/)
+    // mailcow runs in Docker; that does not make it an alternative to Docker.
+    await user.type(screen.getByRole('combobox'), 'docker')
+    expect(screen.getByRole('option')).toHaveTextContent('“docker” is not covered yet')
+  })
+
+  it('finds the company login by the names people use for it', async () => {
+    const user = userEvent.setup()
+    renderAt('/')
+    const box = screen.getByRole('combobox')
+    for (const query of ['sso', 'azure ad', 'entra']) {
+      await user.clear(box)
+      await user.type(box, query)
+      expect(screen.getAllByRole('option')[0]).toHaveTextContent('Microsoft Entra ID')
+    }
   })
 
   it('changing your situation changes the scores and is remembered', async () => {
@@ -132,12 +162,47 @@ describe('interactions', () => {
     const options = screen.getByRole('dialog', { name: 'Options' })
     await user.click(within(options).getByRole('radio', { name: /Managed/ }))
     await user.click(within(options).getByRole('radio', { name: /Small team/ }))
-    expect(within(nextcloud()).getByText(/Assumes a hosted Nextcloud/)).toBeDefined()
+    expect(within(nextcloud()).getByText(/hosting it for you/)).toBeDefined()
     expect(getPrefs()).toMatchObject({ hosting: 'managed', teamSize: 'small' })
 
     await user.click(within(options).getByRole('button', { name: 'Close options' }))
     expect(screen.queryByRole('radio')).toBeNull()
     expect(screen.getByText(/Graded for/)).toHaveTextContent('Graded for small team, managed hosting.')
+  })
+
+  it('says who can host a project for you, and what that does to the grade', () => {
+    renderAt('/tools/slack')
+    const zulip = screen.getByRole('article', { name: 'Zulip' })
+    expect(within(zulip).getByText(/You do not have to/)).toHaveTextContent(
+      /running it yourself.*hosted by Zulip Cloud.*it grades \d+ \((easy|moderate)\)/,
+    )
+    expect(within(zulip).getByRole('link', { name: /Zulip Cloud/ })).toHaveAttribute(
+      'href',
+      'https://zulip.com/plans/',
+    )
+  })
+
+  it('puts the main drawback and the licence catch on the path itself', () => {
+    renderAt('/tools/slack')
+    const mattermost = screen.getByRole('article', { name: 'Mattermost' })
+    expect(within(mattermost).getByText('Main drawback').parentElement).toHaveTextContent(
+      /Open core, and the line keeps moving/,
+    )
+    expect(within(mattermost).getByText(/^Licence: MIT, open core$/)).toBeDefined()
+    expect(within(mattermost).getByText(/no longer includes GitLab SSO/)).toBeDefined()
+  })
+
+  it('fills more dots for better news, whichever way the scale runs', () => {
+    renderAt('/tools/slack')
+    const mattermost = screen.getByRole('article', { name: 'Mattermost' })
+    const rating = (label: string) => within(mattermost).getByText(label).parentElement
+    // A like-for-like fit and an easy import both fill the row; neither reads as "1 out of 5".
+    expect(rating('Fit')).toHaveTextContent('Like for like(5 of 5, where 5 is best)')
+    expect(rating('Getting data in')).toHaveTextContent('Easy(4 of 5, where 5 is best)')
+    const element = screen.getByRole('article', { name: 'Element (Matrix)' })
+    expect(within(element).getByText('Getting data in').parentElement).toHaveTextContent(
+      'Hard(2 of 5, where 5 is best)',
+    )
   })
 
   it('says when managed hosting was asked for but does not exist', () => {
@@ -305,6 +370,7 @@ describe('interactions', () => {
     await user.click(screen.getByRole('button', { name: 'Add all of Microsoft 365' }))
     const plan = getPlan()
     expect(Object.keys(plan).sort()).toEqual([
+      'microsoft-entra',
       'microsoft-office',
       'microsoft-teams',
       'onedrive',

@@ -33,6 +33,11 @@ const FACTOR_SOURCES: Record<keyof typeof WEIGHTS, { name: string; source: strin
     name: 'Feature gap',
     source: 'Six minus the fit rating: a like-for-like replacement leaves no gap.',
   },
+  lockIn: {
+    name: 'Lock-in',
+    source:
+      'The lock-in rating of the tool you are leaving: other people’s files and habits, integrations, shared channels.',
+  },
   people: { name: 'People to move', source: 'Your answer to “Who is moving?”' },
 }
 
@@ -66,7 +71,7 @@ function WorkedExample() {
                 Factor
               </th>
               <th scope="col" className="eyebrow px-4 py-2">
-                Rating
+                Difficulty
               </th>
               <th scope="col" className="eyebrow px-4 py-2 text-right">
                 As 0–1
@@ -129,8 +134,8 @@ export function About() {
       <Section title="How migration difficulty is calculated">
         <div className="space-y-4">
           <p>
-            Every path gets a score from 0 to 100. It is built from five ratings on a 1–5 scale, each recorded
-            in the catalog where anyone can read it and dispute it. Four describe the migration itself and one
+            Every path gets a score from 0 to 100. It is built from six ratings on a 1–5 scale, each recorded
+            in the catalog where anyone can read it and dispute it. Five describe the migration and one
             describes you.
           </p>
           <dl className="divide-y divide-line border-y border-line">
@@ -144,12 +149,17 @@ export function About() {
           </dl>
           <p>
             The score is {percent(1 - HARDEST_FACTOR_SHARE)} the weighted average of those factors and{' '}
-            {percent(HARDEST_FACTOR_SHARE)} the single hardest of the first four. That second part matters: a
-            migration is as hard as its hardest step, and an easy import does not make up for a mail server
-            you have to keep alive. Team size is left out of the “hardest” part so that head-count alone never
+            {percent(HARDEST_FACTOR_SHARE)} the single hardest of the first five. That second part matters: a
+            migration is as hard as its hardest part. An easy import does not make up for a mail server you
+            have to keep alive, and files that open anywhere do not make up for everyone you work with still
+            sending the old format. Team size is left out of the “hardest” part so that head-count alone never
             dominates.
           </p>
-          <SituationLine />
+          <p>
+            A low score means the move is easy, not that the destination is better. Each path also carries a
+            fit rating, a verdict and its main drawback, and those matter more than the number.
+          </p>
+          <SituationLine explain={false} />
           <WorkedExample />
           <ul className="flex flex-wrap gap-2">
             {BANDS.map((band, index) => (
@@ -190,7 +200,32 @@ export function About() {
         </div>
       </Section>
 
-      <Section title="What the 1–5 scales mean">
+      <Section
+        title="If you would rather not run servers"
+        intro="Self-hosting is one way to use these projects, not the only one."
+      >
+        <ul className="prose-list list-disc space-y-2 pl-5 marker:text-accent [&>li]:pl-1">
+          <li>
+            <span className="font-bold">Hosted for you.</span> Many projects are run as a service by their own
+            developers or by independent providers. Every path says so and shows the grade both ways, and
+            choosing “Managed” in the options grades everything for the hosted route where one exists.
+          </li>
+          <li>
+            <span className="font-bold">On a self-hosting platform.</span> YunoHost, Cloudron and Coolify
+            install apps on a server you rent or own and handle much of the updating. A middle route, with
+            less to learn than doing it by hand.
+          </li>
+          <li>
+            <span className="font-bold">By hand.</span> Usually with Docker Compose. This is what the “Running
+            it” ratings and setup times assume, and they cover getting there, not the upkeep afterwards.
+          </li>
+        </ul>
+      </Section>
+
+      <Section
+        title="What the 1–5 scales mean"
+        intro="More filled dots is always better news for you: an easy import fills the row just as a close fit does."
+      >
         <dl className="space-y-4">
           {(Object.keys(SCALES) as ScaleId[]).map((id) => (
             <div key={id} className="border-t border-line pt-4 first:border-t-0 first:pt-0">

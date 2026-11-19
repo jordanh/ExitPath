@@ -1,0 +1,74 @@
+{
+  "id": "zitadel",
+  "name": "Zitadel",
+  "tagline": "An API-first identity platform with a hosted option",
+  "description": "An identity platform written in Go: single sign-on over OpenID Connect and SAML, passkeys and multi-factor sign-in, and organisations as a built-in concept, so one install can serve several companies or your own customers. Everything in the console is also available through its API.",
+  "categories": ["identity"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "licenseNote": "AGPL-3.0 since version 3 in 2025; earlier versions were Apache-2.0. The same code runs the company's own cloud service.",
+  "backing": "Zitadel, a venture-backed company founded in Switzerland, funded by its cloud service and support contracts",
+  "since": 2020,
+  "maturity": {
+    "score": 3,
+    "rationale": "In production use and actively developed, with an audit trail built into its design. Younger than Keycloak, it changed licence and narrowed its supported databases in 2025, and still moves at a pace that rewards reading release notes."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://zitadel.com",
+    "source": "https://github.com/zitadel/zitadel",
+    "docs": "https://zitadel.com/docs"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "A single binary or container in front of PostgreSQL. A test instance is quick; production needs TLS and a correct external domain setting, database backups, and outgoing mail for verification and recovery.",
+    "setupHours": [4, 10],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores",
+      "notes": "Plus a PostgreSQL database."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Self-hosting documentation",
+        "url": "https://zitadel.com/docs"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Zitadel Cloud",
+      "url": "https://zitadel.com/pricing",
+      "note": "Run by the developers, with a free tier"
+    }
+  ],
+  "strengths": [
+    "A hosted service from the developers, so you can leave Entra without running a login server",
+    "Organisations are built in: useful for agencies, groups of companies, or software with customer logins",
+    "Passkeys and multi-factor sign-in work out of the box",
+    "Every change is recorded in an audit trail and reachable through the API"
+  ],
+  "weaknesses": [
+    "Younger, with fewer ready-made app integrations and guides than Keycloak",
+    "LDAP support is for signing in only: there is no continuous sync from a directory",
+    "No login proxy or LDAP interface for software that lacks single sign-on",
+    "Does not push accounts out to other apps; it only accepts SCIM from them"
+  ],
+  "features": {
+    "oidc-saml": "yes",
+    "directory-sync": "partial",
+    "scim": "partial",
+    "passkeys-mfa": "yes",
+    "self-service": "yes",
+    "legacy-apps": "no",
+    "multi-tenant": "yes",
+    "device-rules": "no"
+  },
+  "featureNotes": {
+    "directory-sync": "LDAP sign-in, without continuous sync",
+    "scim": "Accepts SCIM from other systems; does not send it"
+  },
+  "reviewed": "2026-11"
+}

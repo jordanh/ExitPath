@@ -1,7 +1,8 @@
 import { useId, useMemo, useState, type KeyboardEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { search, type ResultKind } from '../lib/search.ts'
-import { IconArrowRight, IconSearch } from './icons.tsx'
+import { issueUrl } from '../lib/site.ts'
+import { IconArrowRight, IconExternal, IconSearch } from './icons.tsx'
 
 const KIND_LABEL: Record<ResultKind, string> = {
   tool: 'Leaving',
@@ -32,8 +33,15 @@ export function SearchBox({
   const listId = useId()
 
   const results = useMemo(() => search(query, 8), [query])
-  const showList = (open || inDialog) && query.trim().length > 0
+  const wanted = query.trim()
+  const showList = (open || inDialog) && wanted.length > 0
   const activeResult = results[Math.min(active, results.length - 1)]
+  const nothing = results.length === 0
+
+  // Nothing found: the one thing left to offer is a way to ask for it.
+  function ask() {
+    window.open(issueUrl(`Please cover: ${wanted}`), '_blank', 'noopener,noreferrer')
+  }
 
   function go(href: string) {
     setOpen(false)
@@ -50,9 +58,10 @@ export function SearchBox({
     } else if (event.key === 'ArrowUp') {
       event.preventDefault()
       setActive((index) => (results.length === 0 ? 0 : (index - 1 + results.length) % results.length))
-    } else if (event.key === 'Enter' && activeResult && showList) {
+    } else if (event.key === 'Enter' && showList && (activeResult || nothing)) {
       event.preventDefault()
-      go(activeResult.href)
+      if (activeResult) go(activeResult.href)
+      else ask()
     } else if (event.key === 'Escape' && !inDialog) {
       if (showList) setOpen(false)
       else setQuery('')
@@ -75,7 +84,11 @@ export function SearchBox({
         aria-controls={listId}
         aria-autocomplete="list"
         aria-activedescendant={
-          showList && activeResult ? `${listId}-${activeResult.kind}-${activeResult.id}` : undefined
+          !showList
+            ? undefined
+            : activeResult
+              ? `${listId}-${activeResult.kind}-${activeResult.id}`
+              : `${listId}-ask`
         }
         autoComplete="off"
         autoCorrect="off"
@@ -133,16 +146,26 @@ export function SearchBox({
             </div>
           )
         })}
-        {results.length === 0 && (
+        {nothing && (
           <div
+            id={`${listId}-ask`}
             role="option"
-            aria-selected="false"
-            aria-disabled="true"
+            aria-selected="true"
             tabIndex={-1}
-            className="px-3 py-4 text-muted"
+            onMouseDown={(event) => {
+              event.preventDefault()
+              ask()
+            }}
+            className="flex cursor-pointer items-center gap-3 rounded-stone bg-sunken px-3 py-2"
           >
-            Nothing in the catalog matches “{query.trim()}” yet. The catalog is a folder of JSON files, and
-            additions are welcome.
+            <span className="eyebrow w-[5.2rem] shrink-0">Not yet</span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-display text-lg leading-tight font-bold [overflow-wrap:anywhere]">
+                “{wanted}” is not covered yet
+              </span>
+              <span className="block text-muted">Ask for it on GitHub, in a new tab</span>
+            </span>
+            <IconExternal className="shrink-0 text-accent" />
           </div>
         )}
       </div>

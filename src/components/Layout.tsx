@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
 import { lastReviewed } from '../catalog/index.ts'
-import { REPO_URL } from '../lib/site.ts'
+import { REPO_URL, issueUrl } from '../lib/site.ts'
 import { usePlan } from '../lib/storage.ts'
 import { Logo } from './icons.tsx'
 import { OptionsDialog } from './OptionsDialog.tsx'
@@ -98,13 +98,21 @@ export function Layout() {
       </main>
 
       <footer className="border-t border-line print:hidden">
-        <div className="mx-auto flex max-w-[60rem] flex-wrap items-baseline gap-x-6 gap-y-1 px-4 py-6 text-muted sm:px-6">
-          <p className="mr-auto">Nothing you do here leaves your browser.</p>
-          <Link to="/about" className="link">
-            How it works
-          </Link>
-          <ExternalLink href={REPO_URL}>Source</ExternalLink>
-          {lastReviewed && <p>Catalog reviewed {lastReviewed}</p>}
+        <div className="mx-auto max-w-[60rem] px-4 py-6 text-muted sm:px-6">
+          <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+            <p className="mr-auto">Nothing you do here leaves your browser.</p>
+            <Link to="/about" className="link">
+              How it works
+            </Link>
+            <ExternalLink href={REPO_URL}>Source</ExternalLink>
+          </div>
+          <p className="mt-2">
+            The first catalog was compiled with an AI assistant and is being corrected by the people who use
+            these tools{lastReviewed ? `; last reviewed ${lastReviewed}` : ''}.{' '}
+            <ExternalLink href={issueUrl('Catalog correction: ')} className="link whitespace-nowrap">
+              Report a mistake
+            </ExternalLink>
+          </p>
         </div>
       </footer>
 

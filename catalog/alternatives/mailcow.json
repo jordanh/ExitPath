@@ -66,6 +66,7 @@
     "webmail": "yes",
     "mobile-apps": "partial",
     "calendar-contacts": "yes",
+    "free-busy": "yes",
     "spam-filtering": "yes",
     "exchange-protocols": "partial",
     "openpgp": "partial"
@@ -74,7 +75,8 @@
     "desktop-app": "Use any mail client, for example Thunderbird",
     "mobile-apps": "No app of its own; phones sync natively over ActiveSync or IMAP",
     "exchange-protocols": "ActiveSync via SOGo",
-    "openpgp": "In the SOGo webmail"
+    "openpgp": "In the SOGo webmail",
+    "free-busy": "Free/busy, shared calendars and bookable resources through the bundled SOGo"
   },
   "reviewed": "2026-11"
 }

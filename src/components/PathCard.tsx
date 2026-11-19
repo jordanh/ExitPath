@@ -1,7 +1,9 @@
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import type { ScoredPath } from '../lib/paths.ts'
-import { formatEffort } from '../lib/scoring.ts'
-import { removeFromPlan, setPlanChoice, usePlan } from '../lib/storage.ts'
+import { formatEffort, scorePath, type HostingPreference } from '../lib/scoring.ts'
+import { OPENNESS_LABELS } from '../lib/scales.ts'
+import { removeFromPlan, setPlanChoice, usePlan, useSituation } from '../lib/storage.ts'
 import { Disclosure } from './Disclosure.tsx'
 import { IconArrowRight, IconCheck, IconPlus } from './icons.tsx'
 import { ExternalLink, MarkedList, Meter, OpennessBadge, ScoreBadge, Tag } from './ui.tsx'
@@ -14,8 +16,70 @@ const HOSTING_WORD = {
 } as const
 
 /**
- * One way out of a tool: where to, how hard, and the verdict. What moves
- * and what does not is folded away until asked for.
+ * Who runs it, said both ways. The grade above follows the reader's own
+ * choice, but nobody should come away thinking a project has to be
+ * self-hosted when its developers will host it, or the other way round.
+ */
+function HostingNote({ scored }: { scored: ScoredPath }) {
+  const { tool, path, alternative, result } = scored
+  const situation = useSituation()
+  const { hosting } = result
+  const hosts = alternative.managedHosting
+  const gradeFor = (mode: HostingPreference) => {
+    const other = scorePath(tool, path, alternative, { ...situation, hosting: mode })
+    return (
+      <span className="whitespace-nowrap">
+        <span className="font-bold text-ink">{other.score}</span> ({other.band.label.toLowerCase()})
+      </span>
+    )
+  }
+  const hostNames = hosts.slice(0, 2).map((host, index) => (
+    <Fragment key={host.url + host.label}>
+      {index > 0 && ' or '}
+      <ExternalLink href={host.url}>{host.label}</ExternalLink>
+    </Fragment>
+  ))
+  const setup = formatEffort(hosting.setupHours).toLowerCase()
+
+  if (hosting.mode === 'none') return <>Runs on your own devices; there is no server to set up.</>
+  if (hosting.mode === 'local') {
+    return (
+      <>
+        Runs on your own device; a server is only needed for syncing with others
+        {hosts.length > 0 && <>, and {hostNames} can host that for you</>}.
+      </>
+    )
+  }
+  if (hosting.mode === 'managed') {
+    return (
+      <>
+        That grade is with {hostNames} hosting it for you. Running {alternative.name} yourself grades{' '}
+        {gradeFor('self')}.
+      </>
+    )
+  }
+  if (hosts.length === 0) {
+    return (
+      <>
+        {hosting.fellBack
+          ? `No managed ${alternative.name} hosting is listed, so this assumes you run it yourself.`
+          : 'You run this one yourself: no hosted option is listed.'}{' '}
+        Includes {setup} to set up and secure the server.
+      </>
+    )
+  }
+  return (
+    <>
+      That grade is for running it yourself, including {setup} to set up and secure the server. You do not
+      have to: hosted by {hostNames}, it grades {gradeFor('managed')}.
+    </>
+  )
+}
+
+/**
+ * One way out of a tool: where to, how hard, the verdict and the main
+ * drawback. What moves, what does not and the rest of the catches are folded
+ * away until asked for.
  */
 export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) {
   const { tool, path, alternative, result } = scored
@@ -23,6 +87,7 @@ export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boo
   const plan = usePlan()
   const planned = plan[tool.id] === alternative.id
   const toolInPlan = Object.hasOwn(plan, tool.id)
+  const [mainDrawback, ...otherDrawbacks] = alternative.weaknesses
 
   return (
     <article className="border-t border-line py-8 first:border-t-0 first:pt-3" aria-labelledby={headingId}>
@@ -48,6 +113,12 @@ export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boo
       </p>
 
       <p className="mt-3 max-w-2xl font-display text-[1.2rem] leading-snug italic">{path.verdict}</p>
+      {mainDrawback && (
+        <p className="mt-2 max-w-2xl">
+          <span className="eyebrow mr-2">Main drawback</span>
+          {mainDrawback}
+        </p>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-x-8 gap-y-1.5">
         <Meter inline label="Fit" scale="fit" level={path.fit} />
@@ -63,7 +134,7 @@ export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boo
       </div>
 
       <div className="mt-3">
-        <Disclosure summary="What moves, and what stays behind">
+        <Disclosure summary="What moves, what stays behind, and the other catches">
           <div className="grid gap-x-10 gap-y-5 md:grid-cols-2">
             <div>
               <h4 className="eyebrow mb-2">Comes with you</h4>
@@ -86,6 +157,22 @@ export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boo
                 </ul>
               )}
             </div>
+            {otherDrawbacks.length > 0 && (
+              <div className="md:col-span-2">
+                <h4 className="eyebrow mb-2">Other drawbacks of {alternative.name}</h4>
+                <div className="max-w-2xl">
+                  <MarkedList kind="neutral" items={otherDrawbacks} />
+                </div>
+              </div>
+            )}
+            {alternative.licenseNote && (
+              <div className="md:col-span-2">
+                <h4 className="eyebrow mb-1.5">
+                  Licence: {alternative.license}, {OPENNESS_LABELS[alternative.openness].label.toLowerCase()}
+                </h4>
+                <p className="max-w-2xl">{alternative.licenseNote}</p>
+              </div>
+            )}
           </div>
         </Disclosure>
       </div>
@@ -108,16 +195,8 @@ export function PathCard({ scored, easiest }: { scored: ScoredPath; easiest: boo
           <IconArrowRight className="text-accent" />
         </Link>
       </div>
-      <p className="mt-3 text-muted">
-        {result.hosting.fellBack
-          ? `No managed ${alternative.name} hosting is listed, so this assumes you run it yourself.`
-          : result.hosting.mode === 'managed'
-            ? `Assumes a hosted ${alternative.name}.`
-            : result.hosting.mode === 'self-hosted'
-              ? `Includes ${formatEffort(result.hosting.setupHours).toLowerCase()} to set up and secure the server.`
-              : result.hosting.mode === 'local'
-                ? 'Runs on your own device; a server is only needed for syncing with others.'
-                : 'Runs on your own devices; there is no server to set up.'}
+      <p className="mt-3 max-w-2xl text-muted">
+        <HostingNote scored={scored} />
       </p>
     </article>
   )

@@ -56,7 +56,7 @@
     "Slack-compatible webhooks mean many existing integrations work with a changed URL"
   ],
   "weaknesses": [
-    "Open core, and the line keeps moving: SSO, guest accounts and compliance features are paid",
+    "Open core, and the line keeps moving: single sign-on (GitLab sign-in included, since version 11), guest accounts and compliance features are paid",
     "Calls in the free edition are limited to one-to-one, with a time cap; group calls need a licence",
     "The default free install since version 11 is the history-limited Entry edition, which catches people out",
     "No end-to-end encryption"

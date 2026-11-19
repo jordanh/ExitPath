@@ -1,10 +1,11 @@
 import { useSearchParams } from 'react-router-dom'
 import { alternatives, categories, getCategory, tools } from '../catalog/index.ts'
 import type { Alternative } from '../catalog/schema.ts'
-import { EmptyState, IndexRow, OpennessBadge, Page, ScoreBadge } from '../components/ui.tsx'
+import { EmptyState, ExternalLink, IndexRow, OpennessBadge, Page, ScoreBadge } from '../components/ui.tsx'
 import { nameList } from '../lib/names.ts'
 import { scoredPathsFrom } from '../lib/paths.ts'
 import { tokenize } from '../lib/search.ts'
+import { issueUrl } from '../lib/site.ts'
 import { setPrefs, usePrefs, useSituation } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 
@@ -154,7 +155,8 @@ export function Browse() {
 
       {count === 0 ? (
         <EmptyState title="Nothing matches those filters">
-          Clear a filter, or add what is missing: the catalog is a folder of JSON files.
+          Clear a filter to see more, or{' '}
+          <ExternalLink href={issueUrl('Please cover: ')}>ask for something to be added</ExternalLink>.
         </EmptyState>
       ) : (
         <ul className="mt-1 gap-x-14 md:columns-2">
