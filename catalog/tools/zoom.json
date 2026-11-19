@@ -73,6 +73,28 @@
         "Cloud transcripts and AI summaries",
         "Meeting-room hardware integrations"
       ]
+    },
+    {
+      "to": "galene",
+      "fit": 3,
+      "verdict": "A good fit for lectures, seminars and small meetings on a server you run yourself; less so for large interactive calls.",
+      "import": {
+        "difficulty": 1,
+        "summary": "Nothing to import. Install the server, create a group for each standing meeting and send invitation links."
+      },
+      "effortHours": [0.5, 2],
+      "transfers": [
+        "Your meeting habits: links, screen sharing, chat, raised hands",
+        "Recording, kept on your own server",
+        "Downloaded recordings, as plain video files"
+      ],
+      "lost": [
+        "Shared whiteboard",
+        "Familiar breakout rooms",
+        "An iOS app, and screen sharing from phones",
+        "Cloud transcripts and AI summaries",
+        "Meeting-room hardware integrations"
+      ]
     }
   ],
   "reviewed": "2026-11"

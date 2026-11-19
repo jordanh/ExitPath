@@ -1,0 +1,73 @@
+{
+  "id": "galene",
+  "name": "Galène",
+  "tagline": "A light videoconference server in a single binary",
+  "description": "A videoconference server and browser client designed for lectures, conferences and tutorials, and used for ordinary meetings too. It is one Go program with a built-in TURN server, and runs comfortably in 512 MB of memory.",
+  "categories": ["video"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "MIT",
+  "backing": "Written and maintained mainly by Juliusz Chroboczek, funded by NLnet's NGI0 Core programme and previously by Nexedi",
+  "since": 2020,
+  "maturity": {
+    "score": 3,
+    "rationale": "Released since 2020, reached 1.0 in 2025 and ships several releases a year. It has run lectures at Université Paris Cité and Sorbonne Université and has had an NLnet-funded security audit. Development rests largely on one person and on grant funding."
+  },
+  "platforms": ["web", "android"],
+  "links": {
+    "website": "https://galene.org",
+    "source": "https://github.com/jech/galene",
+    "docs": "https://galene.org/galene.html"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "One binary, a data directory and a systemd unit. It needs a public IP rather than NAT, a real TLS certificate (it falls back to a self-signed one), and open UDP ports; most connection trouble comes from the ICE and TURN settings. Docker is possible but not recommended.",
+    "setupHours": [1, 3],
+    "requirements": {
+      "ram": "512 MB",
+      "cpu": "1 core",
+      "notes": "Meetings cost CPU in proportion to the square of the participants: about 20 people on camera per core, 40 on four cores. Lectures scale much further, to about 300 listeners per core."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation guide",
+        "url": "https://galene.org/galene-install.html"
+      }
+    ]
+  },
+  "managedHosting": [],
+  "strengths": [
+    "Very light: one binary, a few hundred megabytes of memory, a Raspberry Pi 5 will do",
+    "Guests join from a browser with an invitation link, no account needed",
+    "Server-side recording built in, with no extra component to run",
+    "Handles hundreds of listeners on a single core for lectures and talks"
+  ],
+  "weaknesses": [
+    "No shared whiteboard, and breakout rooms are a simpler subgroup mechanism",
+    "No end-to-end encryption for audio and video: the server must be trusted",
+    "No iOS app, and no screen sharing from mobile browsers",
+    "Meetings where everyone is on camera stop scaling at a few dozen people",
+    "A smaller project, essentially one maintainer, with no hosted offering and no Docker image to fall back on"
+  ],
+  "features": {
+    "guest-join": "yes",
+    "screen-sharing": "yes",
+    "recording": "yes",
+    "breakout-rooms": "partial",
+    "whiteboard": "no",
+    "e2ee": "no",
+    "dial-in": "addon",
+    "large-meetings": "partial",
+    "mobile-apps": "partial"
+  },
+  "featureNotes": {
+    "guest-join": "Through invitation links or public groups",
+    "recording": "Server-side, enabled per group",
+    "breakout-rooms": "Subgroups instead",
+    "dial-in": "Experimental SIP bridge",
+    "large-meetings": "Yes for lectures; meetings with everyone on camera top out at a few dozen",
+    "mobile-apps": "Mobile browsers, and an Android app with chat, audio and screen sharing"
+  },
+  "reviewed": "2026-11"
+}
