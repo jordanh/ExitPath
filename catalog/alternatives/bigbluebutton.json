@@ -43,8 +43,9 @@
   },
   "managedHosting": [
     {
-      "label": "Commercial hosting and support providers",
-      "url": "https://bigbluebutton.org/commercial-support/"
+      "label": "Blindside Networks",
+      "url": "https://blindsidenetworks.com",
+      "note": "The company that leads BigBlueButton's development; hosting and support"
     }
   ],
   "strengths": [
