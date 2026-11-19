@@ -292,6 +292,25 @@ describe('interactions', () => {
     )
   })
 
+  it('states the two answers in one line, which a phone shows in place of the toggles', async () => {
+    const user = userEvent.setup()
+    renderAt('/tools/slack')
+    const change = screen.getByRole('button', { name: 'Change' })
+    const line = change.closest('p')!
+    expect(line).toHaveTextContent('Graded for Just me · Self-host')
+    expect(change).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(change)
+    expect(screen.getByRole('button', { name: 'Done' })).toHaveAttribute('aria-expanded', 'true')
+    await user.click(screen.getByRole('radio', { name: /Larger team/ }))
+    await user.click(screen.getByRole('radio', { name: /Managed/ }))
+    expect(line).toHaveTextContent('Graded for Larger team · Managed')
+
+    setPrefs({ licences: 'open' })
+    expect(await screen.findByText('Open source only')).toBeDefined()
+    expect(line).toHaveTextContent('Graded for Larger team · Managed · Open source only')
+  })
+
   it('orders the alternatives by fit or maturity, and keeps the choice in the address', async () => {
     const user = userEvent.setup()
     const router = renderAt('/tools/slack')

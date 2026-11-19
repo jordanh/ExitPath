@@ -101,7 +101,8 @@ export function Layout() {
         <div className="mx-auto max-w-[68rem] px-4 py-6 text-muted sm:px-6">
           <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
             <p className="mr-auto">
-              No account and no tracking. Your plan and progress stay in this browser.
+              No account and no tracking.
+              <span className="max-sm:hidden"> Your plan and progress stay in this browser.</span>
             </p>
             <Link to="/about" className="link">
               About
@@ -109,8 +110,12 @@ export function Layout() {
             <ExternalLink href={REPO_URL}>Source</ExternalLink>
           </div>
           <p className="mt-2">
-            Most entries are AI drafts that nobody who uses the tool has checked yet; each page says which
-            {lastReviewed ? `. Catalog last reviewed ${lastReviewed}` : ''}.{' '}
+            Most entries are AI drafts
+            <span className="max-sm:hidden"> that nobody who uses the tool has checked yet</span>; each page
+            says which
+            {lastReviewed && (
+              <span className="max-sm:hidden">. Catalog last reviewed {lastReviewed}</span>
+            )}.{' '}
             <ExternalLink href={issueUrl('Catalog correction: ')} className="link whitespace-nowrap">
               Report a mistake
             </ExternalLink>

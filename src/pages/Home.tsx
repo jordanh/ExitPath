@@ -44,6 +44,7 @@ function ToolIndex() {
                       title={tool.name}
                       end={easiest && <ScoreBadge band={easiest.result.band} size="sm" />}
                       detail={nameList(paths.map(({ alternative }) => alternative.name))}
+                      detailOnPhone={false}
                     />
                   </li>
                 )
@@ -65,9 +66,9 @@ export function Home() {
       <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
         Open-source alternatives to {tools.length} tools
       </h1>
-      <p className="mt-3 max-w-2xl text-lg text-muted">
-        For each tool, this lists the replacements worth considering, what transfers and what does not, and
-        how much work the move is for one person or a team.
+      <p className="mt-3 max-w-2xl text-muted sm:text-lg">
+        For each tool: the replacements worth considering, what transfers and what does not, and how much work
+        the move is.
       </p>
       <div className="mt-6 max-w-xl">
         <SearchBox />
@@ -82,7 +83,7 @@ export function Home() {
           <h2 id="index" className="text-[1.55rem] leading-tight font-extrabold">
             Tools
           </h2>
-          <Link to="/plan" className="link">
+          <Link to="/plan" className="link max-sm:hidden">
             Plan several moves at once
           </Link>
         </div>
@@ -90,7 +91,8 @@ export function Home() {
         <div className="mt-6">
           <ToolIndex />
         </div>
-        <p className="text-muted">
+        {/* Left out on a phone: the footer of every page says the same about AI drafts, in a line. */}
+        <p className="text-muted max-sm:hidden">
           Each tool is followed by its alternatives and the grade of the easiest one. {tools.length} tools,{' '}
           {alternatives.length} alternatives and {totalPaths} migration paths in all. {checkedCounts.checked}{' '}
           of the {checkedCounts.total} entries have been written or checked by someone who uses the tool; the
@@ -113,6 +115,7 @@ export function Home() {
                   detail={nameList(
                     suite.components.flatMap((component) => getTool(component.tool)?.name ?? []),
                   ).replace(' or ', ' and ')}
+                  detailOnPhone={false}
                 />
               </li>
             ))}

@@ -81,7 +81,7 @@ function GuideView({ guide }: { guide: Guide }) {
         <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
           {guide.title}
         </h1>
-        <p className="mt-3 text-xl text-muted">{guide.summary}</p>
+        <p className="mt-3 text-muted sm:text-xl">{guide.summary}</p>
         <dl className="mt-5">
           <div className="grid gap-x-4 py-1 sm:grid-cols-[5rem_minmax(0,1fr)]">
             <dt className="label sm:pt-0.5">For</dt>

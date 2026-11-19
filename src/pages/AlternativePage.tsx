@@ -33,10 +33,15 @@ export function AlternativePage() {
   return alternative ? <AlternativeView alternative={alternative} /> : <NotFound what="alternative" />
 }
 
-function Fact({ label, children }: { label: string; children: ReactNode }) {
+function Fact({ label, children, short }: { label: string; children: ReactNode; short?: boolean }) {
   return (
-    <div className="grid gap-x-6 py-1.5 sm:grid-cols-[11rem_minmax(0,1fr)]">
-      <dt className="label sm:pt-0.5">{label}</dt>
+    <div
+      className={`grid gap-x-6 py-1.5 sm:grid-cols-[11rem_minmax(0,1fr)] ${
+        // A short value sits beside its label even on a phone, where a long one goes below it.
+        short ? 'max-sm:grid-cols-[7rem_minmax(0,1fr)] max-sm:py-1' : ''
+      }`}
+    >
+      <dt className={`label sm:pt-0.5 ${short ? 'pt-0.5' : ''}`}>{label}</dt>
       <dd>{children}</dd>
     </div>
   )
@@ -152,11 +157,17 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
               </div>
               <p className="mt-3">{selfHosting.summary}</p>
               <dl className="mt-3">
-                <Fact label="Memory">{selfHosting.requirements.ram}</Fact>
+                <Fact label="Memory" short>
+                  {selfHosting.requirements.ram}
+                </Fact>
                 {selfHosting.requirements.cpu && (
-                  <Fact label="Processor">{selfHosting.requirements.cpu}</Fact>
+                  <Fact label="Processor" short>
+                    {selfHosting.requirements.cpu}
+                  </Fact>
                 )}
-                <Fact label="Setup time">{formatEffort(selfHosting.setupHours)}</Fact>
+                <Fact label="Setup time" short>
+                  {formatEffort(selfHosting.setupHours)}
+                </Fact>
               </dl>
               {selfHosting.requirements.notes && (
                 <p className="mt-2 text-muted">{selfHosting.requirements.notes}</p>
@@ -203,18 +214,16 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
             <dl className="grid gap-x-10 sm:grid-cols-2">
               {category.features.map((feature) => {
                 const support = alternative.features[feature.id]
+                const note = alternative.featureNotes?.[feature.id]
+                // One line each: the feature, then whether it is there. A note, if any, goes below.
                 return (
-                  <div key={feature.id} className="border-b border-line py-2.5">
-                    <dt className="text-muted" title={feature.hint}>
-                      {feature.name}
-                    </dt>
-                    <dd className="mt-0.5">
-                      {support ? (
-                        <SupportMark support={support} note={alternative.featureNotes?.[feature.id]} />
-                      ) : (
-                        '—'
-                      )}
-                    </dd>
+                  <div
+                    key={feature.id}
+                    className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 border-b border-line py-2"
+                  >
+                    <dt title={feature.hint}>{feature.name}</dt>
+                    <dd>{support ? <SupportMark support={support} /> : '—'}</dd>
+                    {note && <dd className="col-span-2 mt-0.5 text-sm leading-snug text-muted">{note}</dd>}
                   </div>
                 )
               })}
@@ -233,6 +242,7 @@ function AlternativeView({ alternative }: { alternative: Alternative }) {
                 title={tool.name}
                 end={<ScoreBadge band={result.band} size="sm" />}
                 detail={path.verdict}
+                detailOnPhone={false}
               />
             </li>
           ))}

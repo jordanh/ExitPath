@@ -52,6 +52,7 @@ export function PickUp() {
               {moves.length > 3 ? ` · and ${moves.length - 3} more` : ''}
             </>
           }
+          detailOnPhone={false}
         />
       )}
       {underway.map(({ guide, status, next }) => (

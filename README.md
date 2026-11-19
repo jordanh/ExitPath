@@ -163,6 +163,9 @@ and the index, tool pages are tables, and detail stays folded until asked for. T
   a red diamond and very hard a black double diamond. The shape and the word carry the grade, so nothing
   depends on telling colours apart.
 - **Ratings are words.** A 1–5 rating is shown as the word for it ("Mature", "Easy"), not as a meter.
+- **Less on a phone.** Below 640 pixels a list shows one line per item, a name and its grade. The two
+  toggles fold into a line that states the current answers, and an alternative's fit, hosting and main
+  drawback move into its details. Nothing is removed: it is one tap further away.
 
 Colours are CSS variables in [`src/index.css`](src/index.css) with light, dark and print values.
 
