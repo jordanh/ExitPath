@@ -1,0 +1,80 @@
+{
+  "id": "plane",
+  "name": "Plane",
+  "tagline": "A modern issue tracker with boards, cycles and pages",
+  "description": "An issue and project tracker in the style of current commercial tools: work items in list, board, calendar, spreadsheet and timeline views, cycles for sprints, modules for larger pieces of work, and pages for notes and specifications.",
+  "categories": ["project-management"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "AGPL-3.0",
+  "licenseNote": "The Community edition is AGPL-3.0. A separate commercial edition, self-hosted or in Plane's cloud, adds features such as time tracking, custom work item types, SAML and OpenID Connect sign-in and some importers. The split has changed more than once: check the current comparison before choosing an edition.",
+  "backing": "Plane Software, Inc. (US), a venture-backed company funded by paid plans",
+  "since": 2022,
+  "maturity": {
+    "score": 3,
+    "rationale": "Popular and developed quickly, with frequent releases. Still young: features and the line between free and paid editions keep moving, and upgrades occasionally need manual steps."
+  },
+  "platforms": ["web", "android", "ios"],
+  "links": {
+    "website": "https://plane.so",
+    "source": "https://github.com/makeplane/plane",
+    "docs": "https://docs.plane.so"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "An official script sets up the Docker Compose stack: web, API, workers, PostgreSQL, a cache and object storage. It runs on a small server; the care goes on backing up the database and uploads, outgoing mail, and reading release notes before upgrading.",
+    "setupHours": [2, 6],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores"
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Self-hosting documentation",
+        "url": "https://docs.plane.so"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Plane Cloud",
+      "url": "https://plane.so/pricing",
+      "note": "Run by the developers; free tier, then paid per user"
+    }
+  ],
+  "strengths": [
+    "Feels current: fast boards, keyboard shortcuts and the views people know from commercial trackers",
+    "Cycles, modules and pages cover sprints, larger initiatives and written specs in one tool",
+    "Official mobile apps",
+    "A hosted service with a free tier, so a team can try it before running it"
+  ],
+  "weaknesses": [
+    "Open core, with a moving line: time tracking, custom types and enterprise sign-in are in paid editions",
+    "Young: fewer integrations and reports than Jira, and the occasional rough upgrade",
+    "Workflows are simple states rather than Jira's configurable transitions",
+    "Several services to run and back up when self-hosted"
+  ],
+  "features": {
+    "kanban": "yes",
+    "sprints": "yes",
+    "gantt": "yes",
+    "time-tracking": "addon",
+    "custom-workflows": "partial",
+    "wiki": "yes",
+    "jira-import": "partial",
+    "task-app-import": "partial",
+    "mobile-apps": "yes",
+    "free-sso": "partial"
+  },
+  "featureNotes": {
+    "sprints": "Called cycles",
+    "time-tracking": "Paid editions",
+    "custom-workflows": "Custom states are free; custom types and properties are in paid editions",
+    "wiki": "Pages",
+    "jira-import": "An importer exists; check which edition includes it",
+    "task-app-import": "An Asana importer exists; check which edition includes it",
+    "free-sso": "Sign-in with Google, GitHub or GitLab is free; SAML and OpenID Connect are paid"
+  },
+  "reviewed": "2026-11"
+}

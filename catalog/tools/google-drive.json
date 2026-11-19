@@ -49,7 +49,10 @@
         "difficulty": 2,
         "summary": "Use rclone to copy from Drive straight to Nextcloud over WebDAV, converting Google documents on the way, or unpack a Takeout archive into the sync folder.",
         "links": [
-          { "label": "rclone WebDAV backend (works with Nextcloud)", "url": "https://rclone.org/webdav/" }
+          {
+            "label": "rclone WebDAV backend (works with Nextcloud)",
+            "url": "https://rclone.org/webdav/"
+          }
         ]
       },
       "effortHours": [2, 6],
@@ -72,7 +75,12 @@
       "import": {
         "difficulty": 2,
         "summary": "Create libraries that mirror your top-level folders, then copy with rclone from Drive to Seafile, converting Google documents on the way.",
-        "links": [{ "label": "rclone Seafile backend", "url": "https://rclone.org/seafile/" }]
+        "links": [
+          {
+            "label": "rclone Seafile backend",
+            "url": "https://rclone.org/seafile/"
+          }
+        ]
       },
       "effortHours": [2, 6],
       "transfers": [
@@ -102,6 +110,33 @@
         "Browser editing of documents",
         "Sharing with people outside your own devices",
         "A proper mobile experience on iOS"
+      ]
+    },
+    {
+      "to": "opencloud",
+      "fit": 3,
+      "verdict": "A lighter, files-only alternative to Nextcloud. Young, so better suited to teams happy to be early than to ones that need a long track record.",
+      "import": {
+        "difficulty": 2,
+        "summary": "Use rclone to copy from Drive over WebDAV, converting Google documents on the way, or unpack a Takeout archive into the desktop client's sync folder. Recreate shares afterwards.",
+        "links": [
+          {
+            "label": "rclone WebDAV backend",
+            "url": "https://rclone.org/webdav/"
+          }
+        ]
+      },
+      "effortHours": [2, 6],
+      "transfers": [
+        "Files and folder structure",
+        "Google documents, converted to open or Office formats",
+        "Access from desktop, web and phone"
+      ],
+      "lost": [
+        "Existing share links and permissions",
+        "Version history",
+        "Files that were only shared with you",
+        "Drive's search inside images and scans"
       ]
     }
   ],

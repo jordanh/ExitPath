@@ -1,0 +1,99 @@
+{
+  "id": "asana",
+  "name": "Asana",
+  "vendor": "Asana, Inc.",
+  "category": "project-management",
+  "summary": "Task and project tracking for teams of every kind: lists, boards, timelines, forms and rules that move work along.",
+  "lockIn": {
+    "level": 3,
+    "factors": [
+      "Rules, forms and templates that run the team's routines",
+      "Tasks that live in several projects at once, which few other tools copy",
+      "Portfolios, goals and reporting that managers read",
+      "Integrations with chat, mail and calendars",
+      "Guests and clients who have accounts in your workspace"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "Each project exports to CSV or JSON. Ordinary plans have no whole-workspace export, so you go project by project or use the API. Attachments are not included.",
+    "methods": [
+      {
+        "name": "Project export",
+        "detail": "From a project's menu, export to CSV or JSON. CSV is enough for most importers; JSON keeps more of the detail."
+      },
+      {
+        "name": "API",
+        "detail": "The API returns tasks with their subtasks, comments, attachments and custom fields. Importers in other tools use it, with a personal access token."
+      }
+    ],
+    "caveats": [
+      "Attachments have to be downloaded separately or moved through the API",
+      "Rules, forms and reporting do not export at all",
+      "A task that sits in several projects comes out once per project",
+      "Export before the subscription ends: access to your data ends with it"
+    ]
+  },
+  "paths": [
+    {
+      "to": "plane",
+      "fit": 4,
+      "verdict": "The nearest in feel: projects with list, board, calendar and timeline views. Check which edition includes the importer.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Plane has an importer for Asana that brings projects, tasks, comments and users across through the API. It has moved between the free and paid editions, so confirm it is in the one you plan to run. Rules and forms are rebuilt by hand."
+      },
+      "effortHours": [3, 10],
+      "transfers": [
+        "Projects, sections and tasks",
+        "Assignees, due dates and labels",
+        "Comments and attachments"
+      ],
+      "lost": [
+        "Rules, forms and templates",
+        "Tasks shared between several projects",
+        "Portfolios, goals and reporting",
+        "Guest access as you had it"
+      ]
+    },
+    {
+      "to": "taiga",
+      "fit": 3,
+      "verdict": "For teams that used Asana mostly as a board or a backlog. The importer is built in; the tool is plainer.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Taiga's project importer connects to Asana and brings across projects, tasks, comments and users. Development of Taiga has slowed, so test the importer on one project first."
+      },
+      "effortHours": [3, 8],
+      "transfers": ["Projects and tasks, as user stories", "Assignees and due dates", "Comments"],
+      "lost": [
+        "Rules, forms and templates",
+        "Timeline view and task dependencies",
+        "Tasks shared between several projects",
+        "Portfolios, goals and reporting"
+      ]
+    },
+    {
+      "to": "vikunja",
+      "fit": 3,
+      "verdict": "For a small team or one person whose Asana is really a set of shared task lists. Light to run, but nothing brings your tasks across for you.",
+      "import": {
+        "difficulty": 4,
+        "summary": "There is no Asana importer. Recreate the projects and move open tasks by hand, or write a short script against both APIs. Most teams take the chance to leave finished work behind in an export file."
+      },
+      "effortHours": [3, 10],
+      "transfers": [
+        "Open tasks, re-entered or scripted",
+        "Due dates, labels and assignees",
+        "Board and timeline views of the same tasks"
+      ],
+      "lost": [
+        "Task history, comments and attachments, unless you script the move",
+        "Rules, forms and templates",
+        "Portfolios, goals and reporting",
+        "Guest access as you had it"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

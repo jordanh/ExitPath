@@ -99,6 +99,23 @@
         "Any form of team workspace",
         "Publishing pages to the web as you did in Notion"
       ]
+    },
+    {
+      "to": "siyuan",
+      "fit": 3,
+      "verdict": "For one person who wants Notion's documents-with-databases model on their own machine. Not a team workspace, and sync between devices is a paid extra.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Export Notion as Markdown and CSV and import the folder into a notebook. Pages and their hierarchy come across; databases arrive as plain tables and need rebuilding as SiYuan databases."
+      },
+      "effortHours": [3, 10],
+      "transfers": ["Pages and their hierarchy", "Text formatting, images and attachments", "Simple tables"],
+      "lost": [
+        "Databases as live views: relations, rollups and formulas need rebuilding",
+        "Shared workspaces, comments and permissions",
+        "Public pages",
+        "Automations, buttons and synced blocks"
+      ]
     }
   ],
   "reviewed": "2026-11"

@@ -1,0 +1,55 @@
+{
+  "id": "siyuan",
+  "name": "SiYuan",
+  "tagline": "A local-first notebook with blocks, backlinks and databases",
+  "description": "A personal knowledge app that keeps everything on your own device: block-based documents, links between any two blocks, and databases with table and board views inside ordinary pages. It runs as a desktop and mobile app, or as a single container with a web interface.",
+  "categories": ["notes"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "licenseNote": "The app is AGPL-3.0 and free to use. Syncing between devices is a paid feature, whether through the developers' cloud or your own S3 or WebDAV storage, and the developers advise against syncing its folder with other tools. Check current terms before depending on sync.",
+  "backing": "B3log, a small company in China, funded by subscriptions and one-off purchases",
+  "since": 2020,
+  "maturity": {
+    "score": 3,
+    "rationale": "Released very frequently for years and widely used. A small team, a fast release pace and data kept in its own format mean you should keep exports of anything important."
+  },
+  "platforms": ["windows", "macos", "linux", "android", "ios"],
+  "links": {
+    "website": "https://b3log.org/siyuan/",
+    "source": "https://github.com/siyuan-note/siyuan",
+    "docs": "https://github.com/siyuan-note/siyuan/blob/master/README.md"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Databases with table and board views sit inside ordinary documents, as in Notion",
+    "Works fully offline; nothing leaves your device unless you turn sync on",
+    "Links and embeds work at the level of a single block",
+    "Apps for every desktop and mobile platform, plus a container with a web interface"
+  ],
+  "weaknesses": [
+    "A personal tool: no shared workspace, permissions or real-time editing with colleagues",
+    "Sync between devices costs money, even to your own storage",
+    "Notes are kept in its own JSON format rather than Markdown, though it exports Markdown",
+    "The interface and documentation are translated from Chinese and uneven in places"
+  ],
+  "features": {
+    "realtime-collab": "no",
+    "databases": "yes",
+    "offline": "yes",
+    "plain-files": "no",
+    "public-sharing": "partial",
+    "mobile-apps": "yes",
+    "permissions": "no",
+    "notion-import": "partial",
+    "api": "yes"
+  },
+  "featureNotes": {
+    "plain-files": "Its own JSON files in a local folder; exports to Markdown",
+    "public-sharing": "Read-only publishing from a running instance",
+    "notion-import": "Via Notion's Markdown export; databases arrive as plain tables",
+    "api": "Local HTTP API"
+  },
+  "reviewed": "2026-11"
+}

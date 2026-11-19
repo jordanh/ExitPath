@@ -1,0 +1,75 @@
+{
+  "id": "vikunja",
+  "name": "Vikunja",
+  "tagline": "A to-do and project app light enough for the smallest server",
+  "description": "A task manager for individuals and small teams: projects with list, board, table and Gantt views, shared with people or teams, with reminders, labels, saved filters and calendar access over CalDAV. It runs as a single program.",
+  "categories": ["project-management"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "AGPL-3.0",
+  "backing": "Developed mainly by its founder, funded by the hosted service and sponsors",
+  "since": 2018,
+  "maturity": {
+    "score": 3,
+    "rationale": "Developed steadily for years and pleasant to run, but it rests largely on one maintainer and is aimed at tasks rather than at large projects."
+  },
+  "platforms": ["web", "android"],
+  "links": {
+    "website": "https://vikunja.io",
+    "source": "https://github.com/go-vikunja/vikunja",
+    "docs": "https://vikunja.io/docs/"
+  },
+  "selfHosting": {
+    "difficulty": 2,
+    "summary": "One binary or one container, with SQLite for a household or PostgreSQL for a team. Put it behind a reverse proxy with TLS, set up outgoing mail for reminders, and back up the database and attachments.",
+    "setupHours": [1, 3],
+    "requirements": {
+      "ram": "512 MB",
+      "cpu": "1 core"
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation guide",
+        "url": "https://vikunja.io/docs/installing/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Vikunja Cloud",
+      "url": "https://vikunja.cloud",
+      "note": "Run by the developer; paid plans"
+    }
+  ],
+  "strengths": [
+    "Very light: a single program that runs on the smallest server",
+    "List, board, table and Gantt views of the same tasks",
+    "Sign-in with OpenID Connect and calendar access over CalDAV are built in",
+    "Importers for Trello, Todoist, TickTick and Microsoft To Do"
+  ],
+  "weaknesses": [
+    "A task manager, not a full project suite: no sprints, time tracking or custom workflows",
+    "No importer for Jira or Asana",
+    "Largely one maintainer",
+    "The mobile app covers less than the web version"
+  ],
+  "features": {
+    "kanban": "yes",
+    "sprints": "no",
+    "gantt": "yes",
+    "time-tracking": "no",
+    "custom-workflows": "no",
+    "wiki": "no",
+    "jira-import": "no",
+    "task-app-import": "partial",
+    "mobile-apps": "partial",
+    "free-sso": "yes"
+  },
+  "featureNotes": {
+    "task-app-import": "Trello, Todoist, TickTick and Microsoft To Do; not Asana",
+    "mobile-apps": "An official app that covers less than the web version",
+    "free-sso": "OpenID Connect"
+  },
+  "reviewed": "2026-11"
+}

@@ -1,0 +1,78 @@
+{
+  "id": "openproject",
+  "name": "OpenProject",
+  "tagline": "Project management for whole organisations, from Gantt charts to sprints",
+  "description": "A web-based project management suite: work packages with configurable types and workflows, Gantt charts, agile boards and backlogs, time and cost tracking, meetings and a wiki. It is built for organisations that plan in both classic and agile styles.",
+  "categories": ["project-management"],
+  "kind": "server",
+  "openness": "open-core",
+  "license": "GPL-3.0",
+  "licenseNote": "The Community edition is GPL-3.0 and covers the core planning features. Some features, including single sign-on over OpenID Connect and SAML and the more advanced boards, are Enterprise add-ons that need a paid plan, self-hosted or in the cloud. Check the current list before relying on a feature.",
+  "backing": "OpenProject GmbH (Germany), funded by Enterprise subscriptions and its hosted service",
+  "since": 2012,
+  "maturity": {
+    "score": 5,
+    "rationale": "More than a decade of regular releases from a stable company, with wide use in public administration, universities and industry. Upgrades are well documented."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://www.openproject.org",
+    "source": "https://github.com/opf/openproject",
+    "docs": "https://www.openproject.org/docs/"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "Official Docker images and Linux packages, with PostgreSQL included or external. Installing is straightforward; the time goes on outgoing mail, backups, and setting up types, workflows and roles to match how the organisation works.",
+    "setupHours": [3, 8],
+    "requirements": {
+      "ram": "4 GB",
+      "cpu": "2 cores",
+      "notes": "More for a few hundred active users."
+    },
+    "deploy": [
+      {
+        "kind": "guide",
+        "label": "Installation guide (Docker and Linux packages)",
+        "url": "https://www.openproject.org/docs/installation-and-operations/installation/"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "OpenProject Cloud",
+      "url": "https://www.openproject.org/pricing/",
+      "note": "Run by the developers and hosted in the EU; paid per user"
+    }
+  ],
+  "strengths": [
+    "Covers classic and agile planning in one place: Gantt charts, backlogs, boards, time and cost tracking",
+    "Types, workflows, roles and custom fields can be shaped to an organisation's process",
+    "A stable company and release rhythm, with a hosted option in the EU",
+    "Meetings and a wiki are built in"
+  ],
+  "weaknesses": [
+    "Open core: single sign-on and the more advanced boards need a paid plan",
+    "Heavier and more formal than a team that just wants a board will enjoy",
+    "No one-step import from Jira or Asana that carries everything",
+    "The interface is dense; new users need a short introduction"
+  ],
+  "features": {
+    "kanban": "partial",
+    "sprints": "yes",
+    "gantt": "yes",
+    "time-tracking": "yes",
+    "custom-workflows": "yes",
+    "wiki": "yes",
+    "jira-import": "partial",
+    "task-app-import": "no",
+    "mobile-apps": "partial",
+    "free-sso": "no"
+  },
+  "featureNotes": {
+    "kanban": "Basic boards are free; boards driven by status or assignee are an Enterprise add-on",
+    "jira-import": "Migration tooling is still maturing; check what it covers",
+    "mobile-apps": "The web interface works on phones; the official app is newer and covers less",
+    "free-sso": "OpenID Connect and SAML are Enterprise add-ons; LDAP sign-in is free"
+  },
+  "reviewed": "2026-11"
+}

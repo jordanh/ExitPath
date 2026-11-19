@@ -1,0 +1,77 @@
+{
+  "id": "taiga",
+  "name": "Taiga",
+  "tagline": "A plain, friendly tool for Scrum and Kanban teams",
+  "description": "A project tool built around agile practice: a backlog of user stories with sprints, a Kanban board, epics, an issue list and a wiki. It deliberately does less than Jira.",
+  "categories": ["project-management"],
+  "kind": "server",
+  "openness": "open-source",
+  "license": "MPL-2.0",
+  "backing": "Kaleidos (Spain), which also runs the hosted service. Development of this version has slowed in recent years",
+  "since": 2014,
+  "maturity": {
+    "score": 4,
+    "rationale": "A decade old, stable and widely used, with a hosted service still running. Marked down because development has slowed to maintenance: do not expect new features."
+  },
+  "platforms": ["web"],
+  "links": {
+    "website": "https://taiga.io",
+    "source": "https://github.com/taigaio/taiga-back",
+    "docs": "https://docs.taiga.io"
+  },
+  "selfHosting": {
+    "difficulty": 3,
+    "summary": "The official taiga-docker repository brings up the back end, front end, events and workers with PostgreSQL and a message broker. That is more containers than the tool's simplicity suggests, all configured through environment variables.",
+    "setupHours": [2, 6],
+    "requirements": {
+      "ram": "2 GB",
+      "cpu": "2 cores"
+    },
+    "deploy": [
+      {
+        "kind": "docker-compose",
+        "label": "taiga-docker",
+        "url": "https://github.com/taigaio/taiga-docker"
+      }
+    ]
+  },
+  "managedHosting": [
+    {
+      "label": "Taiga Cloud",
+      "url": "https://taiga.io",
+      "note": "Run by the developers"
+    }
+  ],
+  "strengths": [
+    "Easy to learn: a backlog, sprints and a board without Jira's configuration",
+    "Built-in importers for Jira, Trello, Asana and GitHub",
+    "Fully open source, with no paid edition",
+    "Works for Scrum and for Kanban, with epics and a wiki"
+  ],
+  "weaknesses": [
+    "Development has slowed to maintenance: few new features in recent years",
+    "No Gantt chart, time tracking or configurable workflows",
+    "No official mobile apps",
+    "More containers to run than a tool this simple should need"
+  ],
+  "features": {
+    "kanban": "yes",
+    "sprints": "yes",
+    "gantt": "no",
+    "time-tracking": "no",
+    "custom-workflows": "partial",
+    "wiki": "yes",
+    "jira-import": "yes",
+    "task-app-import": "yes",
+    "mobile-apps": "no",
+    "free-sso": "addon"
+  },
+  "featureNotes": {
+    "custom-workflows": "Custom fields and statuses, without workflow rules",
+    "jira-import": "Built-in project importer",
+    "task-app-import": "Built-in importers for both",
+    "mobile-apps": "The web app works on phones",
+    "free-sso": "Through community plugins"
+  },
+  "reviewed": "2026-11"
+}

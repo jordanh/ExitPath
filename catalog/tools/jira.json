@@ -1,0 +1,104 @@
+{
+  "id": "jira",
+  "name": "Jira",
+  "vendor": "Atlassian",
+  "category": "project-management",
+  "alsoCovers": ["Jira Software", "Jira Cloud", "Jira Data Center"],
+  "summary": "Issue tracking and agile planning for software teams: projects, boards, sprints and workflows that can be configured almost without limit.",
+  "lockIn": {
+    "level": 4,
+    "factors": [
+      "Workflows, custom fields, screens and permission schemes built up over years",
+      "Automation rules and marketplace apps that exist only inside Jira",
+      "Issue keys quoted in commits, pull requests, documents and chat history",
+      "Saved filters, dashboards and reports that other teams and managers rely on",
+      "Links into Confluence, Bitbucket and service desks"
+    ]
+  },
+  "export": {
+    "difficulty": 3,
+    "summary": "Issues export to CSV from any search, and the REST API returns everything issue by issue. Neither carries the configuration: workflows, schemes and automation have to be rebuilt wherever you go.",
+    "methods": [
+      {
+        "name": "CSV export",
+        "detail": "Run a search and export all fields to CSV. Jira Cloud caps an export at 1,000 issues, so large projects need several filters. Attachments are not included."
+      },
+      {
+        "name": "REST API",
+        "detail": "The API returns issues with their comments, history, links and attachments. Most importers in other tools use it, with an API token from an admin account."
+      },
+      {
+        "name": "Site backup",
+        "detail": "Jira Cloud's backup manager produces a full archive. It is meant for restoring into another Jira, but it is worth keeping as a record."
+      }
+    ],
+    "caveats": [
+      "Comments and change history are awkward in CSV; use an importer that reads the API if you need them",
+      "Decide what happens to old issue keys: most tools keep them as a text field at best",
+      "Data held by marketplace apps, such as test plans or time sheets, usually has to be exported separately",
+      "Export before the subscription ends: access to your data ends with it"
+    ]
+  },
+  "paths": [
+    {
+      "to": "openproject",
+      "fit": 4,
+      "verdict": "The closest in scope: issues, agile boards, Gantt charts and time tracking for a whole organisation rather than one team. Expect to rebuild workflows by hand.",
+      "import": {
+        "difficulty": 4,
+        "summary": "No one-step import carries everything. Create users, types and custom fields first, bring issues across from CSV or with a script against both APIs, and rebuild workflows by hand. OpenProject has been working on Jira migration tooling of its own: check what it covers today before planning around it."
+      },
+      "effortHours": [6, 20],
+      "transfers": [
+        "Issues, with types, statuses, priorities and assignees",
+        "Comments and attachments, when moved through the API",
+        "Versions and sprints, recreated"
+      ],
+      "lost": [
+        "Workflows, schemes and automation rules",
+        "Marketplace apps and their data",
+        "Issue history in its original form",
+        "Links from commits and documents to old issue keys"
+      ]
+    },
+    {
+      "to": "plane",
+      "fit": 4,
+      "verdict": "The most familiar feel for teams used to current Jira boards and sprints. Check which edition includes the importer and the features you rely on.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Plane has an importer for Jira that brings projects, issues, comments and users across through the API. It has moved between the free and paid editions, so confirm it is in the one you plan to run. Workflows and automation are rebuilt by hand."
+      },
+      "effortHours": [4, 12],
+      "transfers": [
+        "Issues, with states, labels, priorities and assignees",
+        "Comments and attachments",
+        "Sprints, as cycles"
+      ],
+      "lost": [
+        "Custom workflows and automation rules",
+        "Marketplace apps and their data",
+        "Dashboards and saved filters",
+        "Links from commits and documents to old issue keys"
+      ]
+    },
+    {
+      "to": "taiga",
+      "fit": 3,
+      "verdict": "A simpler tool for a team that mainly wants a backlog, sprints and a board. Its built-in Jira importer makes it the least work to try.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Taiga's project importer connects to Jira, lists your projects and brings across issues, comments, attachments and users. Development of Taiga has slowed, so test the importer against your own Jira before relying on it."
+      },
+      "effortHours": [3, 10],
+      "transfers": ["User stories, tasks and issues", "Comments and attachments", "Sprints and epics"],
+      "lost": [
+        "Custom workflows, schemes and automation",
+        "Gantt charts and time tracking, which Taiga does not have",
+        "Marketplace apps and their data",
+        "Links from commits and documents to old issue keys"
+      ]
+    }
+  ],
+  "reviewed": "2026-11"
+}

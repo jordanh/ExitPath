@@ -13,7 +13,7 @@ moves across, what does not, how hard the switch is, and the order to do it in.
 
 ## What it does
 
-- **Searchable catalog.** 17 proprietary tools, 35 alternatives and 50 migration paths between them, from office suites and chat
+- **Searchable catalog.** 19 proprietary tools, 41 alternatives and 60 migration paths between them, from office suites and chat
   to the company login. Each
   alternative carries its real licence, who funds it, a maturity rating with a written rationale, and a list
   of weaknesses as well as strengths. Open-core and source-available projects are labelled as such.
