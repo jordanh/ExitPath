@@ -1,0 +1,52 @@
+{
+  "id": "kitty",
+  "name": "kitty",
+  "tagline": "A fast, feature-rich, GPU-based terminal emulator",
+  "description": "A GPU-accelerated terminal emulator written in C, Python, and Go. Unlike minimal terminals, it builds tabs, splits, window layouts, inline graphics, and scriptable extensions ('kittens') directly into the terminal.",
+  "categories": ["terminal"],
+  "kind": "desktop",
+  "openness": "open-source",
+  "license": "GPL-3.0",
+  "backing": "Independent maintainer (Kovid Goyal)",
+  "since": 2017,
+  "maturity": {
+    "score": 5,
+    "rationale": "Actively developed and widely adopted since 2017, pioneering protocols for terminal graphics and keyboard handling."
+  },
+  "platforms": ["macos", "linux", "bsd"],
+  "links": {
+    "website": "https://sw.kovidgoyal.net/kitty/",
+    "source": "https://github.com/kovidgoyal/kitty",
+    "docs": "https://sw.kovidgoyal.net/kitty/conf/"
+  },
+  "selfHosting": null,
+  "managedHosting": [],
+  "strengths": [
+    "Built-in tabs, splits, and flexible window layouts without needing tmux",
+    "Rich feature set including font ligatures, inline images, and shell integration",
+    "Extensible via Python 'kittens' and a remote-control CLI API",
+    "Config file auto-reloads on save and includes built-in theme and font pickers"
+  ],
+  "weaknesses": [
+    "No Windows support",
+    "Custom xterm-kitty terminfo often requires using 'kitten ssh' on remote servers",
+    "Opinionated maintainer and non-standard plain-text configuration syntax",
+    "Heavier scope and footprint than minimal terminals"
+  ],
+  "features": {
+    "gpu-rendering": "yes",
+    "tabs-splits": "yes",
+    "native-ui": "no",
+    "ligatures": "yes",
+    "inline-images": "yes",
+    "scriptable": "yes",
+    "ssh-multiplexing": "yes"
+  },
+  "featureNotes": {
+    "tabs-splits": "Built-in tabs, splits, and stack/grid layouts",
+    "inline-images": "Originator of the kitty graphics protocol (kitten icat)",
+    "scriptable": "Custom Python kittens, watchers, and 'kitten @' remote control",
+    "ssh-multiplexing": "Via 'kitten ssh' with automatic terminfo upload and connection reuse"
+  },
+  "reviewed": "2026-11"
+}
