@@ -1,0 +1,29 @@
+name: Check catalog links
+
+# The catalog points at a few hundred outside pages: project sites, docs,
+# install guides, hosting providers. This fetches every one of them from
+# GitHub's network once a week, and whenever it is started by hand from the
+# Actions tab, and fails when a link is dead (404, 410 or a domain that no
+# longer resolves). Sites that merely refuse robots are listed, not failed.
+#
+# Kept apart from CI on purpose: somebody else's site having a bad day
+# should not block a pull request.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 5 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check-links
