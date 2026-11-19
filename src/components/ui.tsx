@@ -3,15 +3,7 @@ import { Link } from 'react-router-dom'
 import type { Openness, Support } from '../catalog/schema.ts'
 import { OPENNESS_LABELS, SCALES, SUPPORT_LABELS, type ScaleId } from '../lib/scales.ts'
 import type { BANDS } from '../lib/scoring.ts'
-import {
-  GradeMark,
-  IconCheck,
-  IconExternal,
-  IconPartial,
-  IconPlus,
-  IconUnknown,
-  IconX,
-} from './icons.tsx'
+import { GradeMark, IconCheck, IconExternal, IconPartial, IconPlus, IconUnknown, IconX } from './icons.tsx'
 
 // Tailwind only generates classes it can see as whole strings, so the
 // level-to-class lookups are spelled out rather than built by concatenation.

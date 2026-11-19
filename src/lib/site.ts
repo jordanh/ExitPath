@@ -10,3 +10,6 @@ export const editUrl = (folder: CatalogFolder, id: string) =>
 
 /** A new issue with the title filled in. */
 export const issueUrl = (title: string) => `${REPO_URL}/issues/new?title=${encodeURIComponent(title)}`
+
+/** GitHub's own list of everyone who has contributed. It is always current, so the site keeps no copy. */
+export const CONTRIBUTORS_URL = `${REPO_URL}/graphs/contributors`

@@ -1,14 +1,5 @@
 import { Link } from 'react-router-dom'
-import {
-  alternatives,
-  checkedCounts,
-  contributors,
-  getAlternative,
-  getTool,
-  lastReviewed,
-  tools,
-  totalPaths,
-} from '../catalog/index.ts'
+import { alternatives, getAlternative, getTool, lastReviewed, tools, totalPaths } from '../catalog/index.ts'
 import { SituationBar } from '../components/Situation.tsx'
 import { ExternalLink, OpennessBadge, Page, ScoreBadge, Section } from '../components/ui.tsx'
 import { OPENNESS_LABELS, SCALES, type ScaleId } from '../lib/scales.ts'
@@ -23,7 +14,7 @@ import {
   type TeamSize,
 } from '../lib/scoring.ts'
 import { openOptions } from '../lib/options-dialog.ts'
-import { REPO_URL } from '../lib/site.ts'
+import { CONTRIBUTORS_URL, REPO_URL } from '../lib/site.ts'
 import { usePrefs } from '../lib/storage.ts'
 import { useTitle } from '../lib/use-title.ts'
 import type { Openness } from '../catalog/schema.ts'
@@ -139,31 +130,6 @@ export function About() {
         The catalog covers {tools.length} proprietary tools, {alternatives.length} alternatives and{' '}
         {totalPaths} migration paths between them{lastReviewed ? `, last reviewed in ${lastReviewed}` : ''}.
       </p>
-
-      <Section title="Who wrote the catalog">
-        <p>
-          Most of it was drafted with an AI assistant from each project’s public documentation. An entry stays
-          marked “AI draft” until someone who uses the tool has written or checked it and added their name. So
-          far that is true of {checkedCounts.checked} of the {checkedCounts.total} entries.
-        </p>
-        {contributors.length > 0 && (
-          <p className="mt-3">
-            Written or checked by:{' '}
-            {contributors.map((person, index) => (
-              <span key={person.name}>
-                {index > 0 && ', '}
-                {person.url ? <ExternalLink href={person.url}>{person.name}</ExternalLink> : person.name}
-              </span>
-            ))}
-            .
-          </p>
-        )}
-        <p className="mt-3">
-          If you use one of these tools, checking its entry is the most useful contribution: each page has an
-          “Edit this entry” link, and adding yourself to <code>checkedBy</code> in the file marks it as
-          checked.
-        </p>
-      </Section>
 
       <Section title="How migration difficulty is calculated">
         <div className="space-y-4">
@@ -329,8 +295,17 @@ export function About() {
           for anything surprising.
         </p>
         <p className="mt-3">
-          <ExternalLink href={REPO_URL}>Source code and catalog</ExternalLink>
+          If you use one of these tools, checking its entry is the most useful contribution: each page has an
+          “Edit this entry” link.
         </p>
+        <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
+          <li>
+            <ExternalLink href={REPO_URL}>Source code and catalog</ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href={CONTRIBUTORS_URL}>Everyone who has contributed</ExternalLink>
+          </li>
+        </ul>
       </Section>
 
       <Section
