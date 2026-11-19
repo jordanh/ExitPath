@@ -55,26 +55,30 @@ export function IndexRow({
   title,
   detail,
   end,
+  detailOnPhone = true,
 }: {
   to: string
   title: ReactNode
   detail?: ReactNode
   end?: ReactNode
+  /** Off for long lists: on a phone the name and what is at the end are enough, and the page for it has the rest. */
+  detailOnPhone?: boolean
 }) {
   return (
-    <div className="group relative py-2">
-      {/* Wraps when there is no room, so a long name never pushes the grade off a small screen. */}
-      <div className="flex flex-wrap items-baseline gap-x-2">
+    <div className="group relative py-2 max-sm:py-2.5">
+      {/* A long name wraps inside its own space, so what is at the end stays on the first line. */}
+      <div className="flex items-baseline gap-x-2">
         <Link
           to={to}
-          className="text-[1.15rem] leading-tight font-bold text-accent group-hover:underline after:absolute after:inset-0"
+          className="min-w-0 text-[1.15rem] leading-tight font-bold text-accent group-hover:underline after:absolute after:inset-0"
         >
           {title}
         </Link>
-        <span className="leader" aria-hidden="true" />
-        {end}
+        {/* On a phone the dots give way entirely before a name has to wrap. */}
+        <span className="leader max-sm:min-w-0 max-sm:basis-0" aria-hidden="true" />
+        {end && <span className="shrink-0">{end}</span>}
       </div>
-      {detail && <div className="text-muted">{detail}</div>}
+      {detail && <div className={`text-muted ${detailOnPhone ? '' : 'max-sm:hidden'}`}>{detail}</div>}
     </div>
   )
 }

@@ -52,7 +52,7 @@ function SuiteView({ suite }: { suite: Suite }) {
           Replacing {suite.name}
         </h1>
         <p className="mt-1 text-muted">{suite.vendor}</p>
-        <p className="mt-4 text-xl">{suite.summary}</p>
+        <p className="mt-4 text-lg sm:text-xl">{suite.summary}</p>
         <p className="mt-4 flex flex-wrap items-baseline gap-x-6 gap-y-1">
           {guide && (
             <Link to={`/guides/${guide.id}`} className="link inline-flex items-center gap-1">
@@ -94,9 +94,10 @@ function SuiteView({ suite }: { suite: Suite }) {
         <ol className="mt-5">
           {parts.map(({ component, tool, easiest, others }) => (
             <li key={component.label} className="border-t border-line py-5">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1">
+              {/* On a phone the part's label gets its own line, and the grade stays beside the name. */}
+              <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1 max-sm:flex-nowrap max-sm:items-baseline-last max-sm:gap-x-4">
                 <div className="flex min-w-0 flex-wrap items-baseline gap-x-3">
-                  <span className="label">{component.label} to</span>
+                  <span className="label max-sm:basis-full">{component.label} to</span>
                   <h3 className="text-[1.45rem] leading-tight font-extrabold">
                     <Link
                       to={`/alternatives/${easiest.alternative.id}`}
@@ -114,7 +115,7 @@ function SuiteView({ suite }: { suite: Suite }) {
                   <span className="font-bold text-ink">{formatEffort(easiest.result.hours)}</span> of work
                 </span>
               </p>
-              <p className="mt-2 text-muted">{easiest.path.verdict}</p>
+              <p className="mt-2 text-muted max-sm:hidden">{easiest.path.verdict}</p>
               <p className="mt-2">
                 {others.length > 0 && (
                   <span className="text-muted">

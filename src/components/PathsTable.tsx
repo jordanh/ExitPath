@@ -117,7 +117,9 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
 
   return (
     <>
-      <tr className={`max-lg:block max-lg:pt-5 ${open ? '' : 'border-b border-line max-lg:pb-5'}`}>
+      <tr
+        className={`max-lg:block max-lg:pt-5 max-sm:grid max-sm:grid-cols-[minmax(0,1fr)_auto] max-sm:gap-x-4 ${open ? '' : 'border-b border-line max-lg:pb-5'}`}
+      >
         <th scope="row" className={`${cell} font-normal lg:w-[13rem]`}>
           <Link
             to={`/alternatives/${alternative.id}`}
@@ -127,37 +129,46 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
           </Link>
           <span className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
             <OpennessBadge openness={alternative.openness} />
-            <span className="text-muted">{alternative.license}</span>
-          </span>
-          <span className="mt-0.5 block text-sm">
-            <ProvenanceMark entry={alternative} />
+            <span className="text-muted max-sm:hidden">{alternative.license}</span>
+            <span className="text-sm sm:basis-full">
+              <ProvenanceMark entry={alternative} />
+            </span>
           </span>
         </th>
-        <td className={`${cell} lg:w-[7.5rem]`}>
-          <CellLabel>Difficulty</CellLabel>
+        <td className={`${cell} max-sm:text-right lg:w-[7.5rem]`}>
+          <span className="max-sm:hidden">
+            <CellLabel>Difficulty</CellLabel>
+          </span>
           <ScoreBadge band={result.band} size="sm" />
-          <span className="text-muted max-lg:ml-2 lg:block">{formatEffort(result.hours)}</span>
+          <span className="text-muted max-lg:ml-2 max-sm:ml-0 max-sm:block lg:block">
+            {formatEffort(result.hours)}
+          </span>
           {easiest && (
-            <span className="text-sm font-bold text-accent max-lg:ml-2 lg:block">Easiest for you</span>
+            <span className="text-sm font-bold text-accent max-lg:ml-2 max-sm:ml-0 max-sm:block lg:block">
+              Easiest for you
+            </span>
           )}
         </td>
-        <td className={`${cell} lg:w-[6.5rem]`}>
+        <td className={`${cell} max-sm:hidden lg:w-[6.5rem]`}>
           <CellLabel>Fit</CellLabel>
           {SCALES.fit.labels[path.fit - 1]}
         </td>
-        <td className={`${cell} lg:w-[10rem]`}>
+        <td className={`${cell} max-sm:hidden lg:w-[10rem]`}>
           <CellLabel>Hosting</CellLabel>
           {hostingSummary(scored)}
         </td>
-        <td className={`${cell} max-lg:mt-1.5`}>
+        <td className={`${cell} max-lg:mt-1.5 max-sm:col-span-2`}>
           <span className="block">{path.verdict}</span>
           {mainDrawback && (
-            <span className="mt-1.5 block text-muted">
+            <span className="mt-1.5 block text-muted max-sm:hidden">
               <span className="font-bold">Main drawback:</span> {mainDrawback}
             </span>
           )}
         </td>
-        <td aria-label="Actions" className={`${cell} pr-0 max-lg:mt-2 lg:w-[9.5rem] print:hidden`}>
+        <td
+          aria-label="Actions"
+          className={`${cell} pr-0 max-lg:mt-2 max-sm:col-span-2 lg:w-[9.5rem] print:hidden`}
+        >
           <span className="flex flex-wrap items-center gap-x-4 gap-y-2 lg:flex-col lg:items-end">
             <button
               type="button"
@@ -184,6 +195,22 @@ function PathRow({ scored, easiest }: { scored: ScoredPath; easiest: boolean }) 
         <tr id={detailId} className="border-b border-line max-lg:block">
           <td colSpan={6} className="pt-1 pb-7 max-lg:block lg:pl-[13rem]">
             <div className="grid max-w-3xl gap-x-10 gap-y-5 md:grid-cols-2">
+              {/* On a phone the row itself is cut down to the name, grade and verdict; the rest starts here. */}
+              <div className="sm:hidden">
+                <p>
+                  <span className="label mr-2">Fit</span>
+                  {SCALES.fit.labels[path.fit - 1]}
+                </p>
+                <p>
+                  <span className="label mr-2">Hosting</span>
+                  {hostingSummary(scored)}
+                </p>
+                {mainDrawback && (
+                  <p className="mt-1.5 text-muted">
+                    <span className="font-bold">Main drawback:</span> {mainDrawback}
+                  </p>
+                )}
+              </div>
               <div>
                 <h4 className="label mb-2">Transfers</h4>
                 <MarkedList kind="good" items={path.transfers} />

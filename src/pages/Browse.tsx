@@ -189,6 +189,7 @@ export function Browse() {
                       title={tool.name}
                       end={easiest && <ScoreBadge band={easiest.result.band} size="sm" />}
                       detail={nameList(paths.map(({ alternative }) => alternative.name))}
+                      detailOnPhone={false}
                     />
                   </li>
                 )
@@ -201,7 +202,9 @@ export function Browse() {
                     end={<OpennessBadge openness={alternative.openness} />}
                     detail={
                       <>
-                        {alternative.categories.map((id) => getCategory(id)?.name).join(', ')}.{' '}
+                        <span className="max-sm:hidden">
+                          {alternative.categories.map((id) => getCategory(id)?.name).join(', ')}.{' '}
+                        </span>
                         {alternative.tagline}
                         {isChecked(alternative) && <span className="text-ink"> · Checked by a person</span>}
                       </>

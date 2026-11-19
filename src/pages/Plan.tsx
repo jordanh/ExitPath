@@ -104,9 +104,10 @@ function Move({ item, done }: { item: PlanItem; done: boolean }) {
         className="mt-2 size-[1.15rem] shrink-0 cursor-pointer"
       />
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1">
+        {/* On a phone the tool being left gets its own line, and the grade stays beside the name. */}
+        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1 max-sm:flex-nowrap max-sm:items-baseline-last max-sm:gap-x-4">
           <div className="flex min-w-0 flex-wrap items-baseline gap-x-3">
-            <span className="label">{tool.name} to</span>
+            <span className="label max-sm:basis-full">{tool.name} to</span>
             <h3
               className={`text-[1.4rem] leading-tight font-extrabold ${done ? 'text-muted line-through' : ''}`}
             >
@@ -123,7 +124,7 @@ function Move({ item, done }: { item: PlanItem; done: boolean }) {
             <span className="font-bold text-ink">{formatEffort(chosen.result.hours)}</span> of work
           </span>
         </p>
-        {!done && <p className="mt-2 max-w-2xl text-muted">{chosen.path.verdict}</p>}
+        {!done && <p className="mt-2 max-w-2xl text-muted max-sm:hidden">{chosen.path.verdict}</p>}
 
         <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 print:hidden">
           <div className="w-full min-w-0 sm:w-auto">
@@ -259,7 +260,7 @@ export function PlanPage() {
         <h1 className="text-[2rem] leading-[1.1] font-extrabold tracking-tight sm:text-[2.5rem]">
           Your plan
         </h1>
-        <p className="mt-3 text-xl text-muted">
+        <p className="mt-3 text-muted sm:text-xl">
           Select the tools you use. The plan lists a replacement for each, the work it adds up to and an order
           to do them in.
         </p>
