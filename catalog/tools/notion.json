@@ -59,6 +59,27 @@
       ]
     },
     {
+      "to": "parabol",
+      "fit": 3,
+      "verdict": "For teams using Notion for shared documents, wikis and meeting notes. Pages combines collaborative block editing, nested pages and typed databases with meeting summaries and AI insights. Self-hostable, including on air-gapped networks.",
+      "import": {
+        "difficulty": 3,
+        "summary": "Export Notion as Markdown and CSV with subpages and files, then use an agent with Parabol's API to recreate documents in Pages. Have the agent map page IDs and repair internal links; check hierarchy, formatting and attachments after import. Rebuild supported database structures and sharing separately."
+      },
+      "effortHours": [3, 10],
+      "transfers": [
+        "Document text and supported formatting, through agent-assisted API import",
+        "Page hierarchy and internal links, with explicit mapping and verification",
+        "Images and attachments, with migration and verification by the agent"
+      ],
+      "lost": [
+        "Notion database views, relations, rollups and formulas as working configurations",
+        "Automations, buttons and synced blocks",
+        "Comments and page history from the workspace export",
+        "Existing permissions, guest access and public URLs; sharing must be recreated"
+      ]
+    },
+    {
       "to": "outline",
       "fit": 2,
       "verdict": "Covers the documents-and-wiki half of Notion only: it has no databases. It is also source-available rather than open source.",
